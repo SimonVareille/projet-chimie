@@ -2,7 +2,10 @@
 import matplotlib
 matplotlib.use('module://kivy.garden.matplotlib.backend_kivy')
 
+import kivy
+kivy.require('1.0.7')
 from kivy.app import App
+from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 from kivy.clock import Clock
 import numpy as np
@@ -40,17 +43,21 @@ def axUpdate(t, I):
 axUpdate(t,I)
 canvas = fig.canvas
 
+class MainWindow(BoxLayout):
+    pass
+
 
 #plt.show()
 
-class MyApp(App):
+class AppApp(App):
     def build(self):
+        self.mainWindow = MainWindow()
         self.i=1
-        self.box = BoxLayout()
-        self.box.add_widget(canvas)#FigureCanvas(fig))
+        #self.box = BoxLayout()
+        #self.box.add_widget(canvas)#FigureCanvas(fig))
         #canvas.draw()
-        Clock.schedule_interval(self.update, 1 / 60.)
-        return self.box
+        #Clock.schedule_interval(self.update, 1 / 60.)
+        #return self.mainWindow#self.box
     def update(self, delta):
         I = courbeA(self.i, 1,10**-3, 10**(-5), t)
         ax.clear()
@@ -60,4 +67,4 @@ class MyApp(App):
 
 
 if __name__ == '__main__':
-    MyApp().run()
+    AppApp().run()

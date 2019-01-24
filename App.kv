@@ -1,58 +1,59 @@
-
-BoxLayout:
-	canvas.before:
-		Color:
-			rgba:0.85,0.85,1,1
-		Rectangle:
-			pos:self.pos
-			size:self.size
+#kivy 1.0
+MainWindow:
     BoxLayout:
-    	id:'ChoixCourbe'
-    	orientation:'vertical'
-        size_hint:(0.2, 1) 
-        pos:(0, 0)
+    	canvas.before:
+    		Color:
+    			rgba:0.85,0.85,1,1
+    		Rectangle:
+    			pos:self.pos
+    			size:self.size
         BoxLayout:
-        	id:'CourbeExp'
+        	id:'ChoixCourbe'
         	orientation:'vertical'
-        	BoxLayout:
-        		Label:
-        			size_hint:(0.85,1)
-        			text:'[color=ff3399]Courbe\n experimentale[/color]'
-        			markup:True
-        		CheckBox:
-        	BoxLayout:
-        		Label:
-        			size_hint:(0.85,1)
-        			id:'CourbeTh'
-        			text:'[color=0066ff]Courbe\n théorique[/color]'
-        			markup:True
-        		CheckBox:
-        	BoxLayout:
-        		Label:
-        			size_hint:(0.85,1)
-        			id:'SelecIntervalle'
-        			text:'[color=00ff00]selectionner\n un intervalle\''
-        			markup:True
-        		CheckBox:
-        	BoxLayout:
-        		Label:
-        			size_hint:(0.85,1)
-        			id:'CourbeD'
-        			text:'[color=ffff00]Courbe D[/color]'
-        			markup:True
-        		CheckBox:
-        StackLayout:		        			
-        	Label:
-        		text : '[color=000000]Un truc'
-        		markup:True
-        	
-        	
-        Label :
-        	text : '[color=000000]selection'
+            size_hint:(0.2, 1) 
+            pos:(0, 0)
+            BoxLayout:
+            	id:'CourbeExp'
+            	orientation:'vertical'
+            	BoxLayout:
+            		Label:
+            			size_hint:(0.85,1)
+            			text:'[color=ff3399]Courbe\n experimentale[/color]'
+            			markup:True
+            		CheckBox:
+            	BoxLayout:
+            		Label:
+            			size_hint:(0.85,1)
+            			id:'CourbeTh'
+            			text:'[color=0066ff]Courbe\n théorique[/color]'
+            			markup:True
+            		CheckBox:
+            	BoxLayout:
+            		Label:
+            			size_hint:(0.85,1)
+            			id:'SelecIntervalle'
+            			text:'[color=00ff00]selectionner\n un intervalle\''
+            			markup:True
+            		CheckBox:
+            	BoxLayout:
+            		Label:
+            			size_hint:(0.85,1)
+            			id:'CourbeD'
+            			text:'[color=ffff00]Courbe D[/color]'
+            			markup:True
+            		CheckBox:
+            StackLayout:		        			
+            	Label:
+            		text : '[color=000000]Un truc'
+            		markup:True
+            	
+            	
+            Label :
+            	text : '[color=000000]selection'
+            	markup:True
+        Label:
+        	text:'[color=000000]courbe'
         	markup:True
-    Label:
-    	text:'[color=000000]courbe'
-    	markup:True
-    	size_hint:(0.8,1)
+        	size_hint:(0.8,1)
 
 
