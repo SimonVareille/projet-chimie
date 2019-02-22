@@ -1,22 +1,18 @@
 # -*- coding: utf-8 -*-
 
-"""Ces deux prochaines lignes servent à dire à matplotlib d'utiliser le backend
-interactif de kivy.
-Le backend est l'environnement de dessin (pour plus d'infos : 
-https://matplotlib.org/tutorials/introductory/usage.html#what-is-a-backend
-Il faut mettre ces deux lignes avant toute autre importation et déclaration de
- matplotlib.
-Il est possible qu'on puisse le laisser dans ce main.py et que ça affectera les
-autres fichiers (ce qui serait le mieux pour du clean code),
-mais c'est à tester.
-"""
-
 import config
 
 """On gère ici les modules que l'on veut importer (en fonction de ce qui est
  disponible).
 """
 if config.USE_MATPLOTLIB:
+    """Ces deux prochaines lignes servent à dire à matplotlib d'utiliser le backend
+    interactif de kivy.
+    Le backend est l'environnement de dessin (pour plus d'infos : 
+    https://matplotlib.org/tutorials/introductory/usage.html#what-is-a-backend
+    Il faut mettre ces deux lignes avant toute autre importation et déclaration de
+    matplotlib.
+    """
     import matplotlib
     matplotlib.use('module://kivy.garden.matplotlib.backend_kivy')
     
