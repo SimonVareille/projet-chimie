@@ -67,8 +67,8 @@ class LinearRegression:
             Coefficient directeur de la droite.
         """
         F = 96485.3329
-        coeffdirecteur,_,_,_,_=linregress(
-                np.sqrt(self.t[self.indicetMin : self.indicetMax]),
+        coeffdirecteur,_,_,_,_=linregress(1/(
+                np.sqrt(self.t[self.indicetMin : self.indicetMax])),
                 self.I[self.indicetMin:self.indicetMax])
         D = (coeffdirecteur**2 * np.pi)/(n**2 * F**2 * S**2 * C**2)    
         return D, coeffdirecteur
