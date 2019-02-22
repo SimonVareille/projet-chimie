@@ -1,0 +1,67 @@
+#kivy 1.0
+<MainWindow>:
+    # import curveBoxLayout
+    curveBoxLayout: curveBoxLayout
+    choixCourbe: choixCourbe
+    BoxLayout:
+        size: root.width, root.height
+        canvas.before:
+            Color:
+                rgba:0.85,0.85,1,1
+            Rectangle:
+                pos:self.pos
+                size:self.size
+        BoxLayout:
+            id: choixCourbe
+            orientation:'vertical'
+            size_hint:(0.2, 1) 
+            pos:(0, 0)
+            BoxLayout:
+                orientation:'vertical'
+                BoxLayout:
+                    Label:
+                        id: expCurveLabel
+                        size_hint:(0.85,1)
+                        text:'[color=ff3399]Courbe\n experimentale[/color]'
+                        markup:True
+                    CheckBox:
+                        id: expCurveCheckBox
+                BoxLayout:
+                    Label:
+                        id: thCurve
+                        size_hint:(0.85,1)
+                        text:'[color=0066ff]Courbe\n théorique[/color]'
+                        markup:True
+                    CheckBox:
+                        id: thCurveCheckBox
+                BoxLayout:
+                    Label:
+                        id: intervalSelectionLabel
+                        size_hint:(0.85,1)
+                        text:'[color=00ff00]Selectionner\n un intervalle\''
+                        markup:True
+                    CheckBox:
+                        id: intervalSelectionCheckBox
+                BoxLayout:
+                    Label:
+                        id: dCurveLabel 
+                        size_hint:(0.85,1)
+                        text:'[color=ffff00]Courbe D[/color]'
+                        markup:True
+                    CheckBox:
+                        id: dCurveCheckBox
+            StackLayout:                            
+                Label:
+                    text : '[color=000000]Un truc'
+                    markup:True
+            Label :
+                text : '[color=000000]selection'
+                markup:True
+        BoxLayout:
+            id: curveBoxLayout
+            #text:'[color=000000]courbe'
+            #markup:True
+            size_hint:(0.8,1)
+
+
+
