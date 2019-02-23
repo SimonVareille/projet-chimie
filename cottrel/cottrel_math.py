@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import math 
 
 F = 96485.3329
