@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from math import sqrt, erfc
 
 def cox_curve(D, t, x):
