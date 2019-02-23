@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+"""Pour la compatibilité avec python2"""
+from __future__ import division
 import numpy as np
 
 F = 96485.3329
