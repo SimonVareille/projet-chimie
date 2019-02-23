@@ -6,6 +6,8 @@ Le repo du projet, le nom pourra être changé ulterieurement.
 Afin de pouvoir exécuter ce projet, il faut avoir installé les modules suivants:  
 - `numpy`, `scipy` et `matplotlib` :  
     https://www.scipy.org/install.html
+- `backports.csv` :  
+    `pip install backports.csv`
 - `kivy` :  
     https://kivy.org/#download
 - `kivy-garden` :  
