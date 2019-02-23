@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+"""Pour la compatibilité avec python2"""
+from __future__ import division
+
 import config
 
 """On gère ici les modules que l'on veut importer (en fonction de ce qui est
