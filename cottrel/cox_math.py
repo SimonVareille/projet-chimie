@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+"""Pour la compatibilité avec python2"""
+from __future__ import division
 from math import sqrt, erfc
 
 def cox_curve(D, t, x):
