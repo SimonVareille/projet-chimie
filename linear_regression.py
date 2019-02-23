@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""Pour la compatibilité avec python2"""
+from __future__ import division
+
 from scipy.stats import linregress 
 import numpy as np
 
