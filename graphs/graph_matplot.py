@@ -23,7 +23,7 @@ class MainGraph(MainGraphBase):
         self.ax.set_xlim(float(self.tleft), float(self.tright), auto=True)
 
         self.ax.legend()
-        #self.fig.canvas.draw()
+        self.fig.canvas.draw()
 
     def get_canvas(self):
         return self.fig.canvas
