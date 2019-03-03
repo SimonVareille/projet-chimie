@@ -1,0 +1,62 @@
+    def manage_input_filter(self, myString, from_undo=False):
+        print("Test filter",self.myTexte.text)
+
+        myRePattern = re.compile('[^0-9]')
+        if '.' in myString:
+            s = re.sub(myRePattern, '', myString)
+        else:
+            s = '.'.join([re.sub(myRePattern, '', s) for s in myString.split('.', 1)])
+        return super(ButtonPlusMinus, myTexte).insert_text(s, from_undo=from_undo)
+
+
+<MyTextInput>:
+    TextInput:
+		multiline : False
+		font_size: .3*self.height
+		padding: self.get_center_x(), self.get_center_y()
+		#text: '123'
+		#input_filter: root.manage_input_filter(self.text, False)
+		on_text: root.read_instant_value()
+		on_text_validate: root.read_value()
+
+
+               
+<ButtonPlusMinus>
+	myTexte: myTexte
+    orientation:"horizontal"
+    Button:
+		id:minus
+		text:"-"
+		on_release: root.substract_one()
+    TextInput:
+        id: myTexte
+		MyTextInput:
+    Button:
+        id:plus
+        text:"+"
+		on_release: root.add_one()
+
+
+class ButtonPlusMinus(BoxLayout):
+
+    myTexte = ObjectProperty()
+
+    def read_value(self):
+        print("Final value = ",self.myTexte.text)
+
+    def read_instant_value(self):
+        print("Value = ",self.myTexte.text)
+
+
+    def add_one(self):
+        value = float(self.myTexte.text)
+        value = round(value + 0.1, 2)
+        self.myTexte.text = str(value)
+
+    def substract_one(self):
+        value = float(self.myTexte.text)
+        if value <= 0:
+            value = 0 
+        else:
+            value = round(value - 0.1, 2)
+        self.myTexte.text = str(value)

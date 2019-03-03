@@ -1,8 +1,0 @@
-d=dict()
-d["n"]="nombre d'électrons transférés" #inséré par l'utilisateur
-d["C"]="concentration molaire de l'oxydant en mol.m-3" #inséré par l'utilisateur
-d["S"]="surface de l'électrode en m2" #inséré par l'utilisateur
-d["D"]="coefficient de diffusion en m2.s-1"#inséré par l'utilisateur
-d["t"]="temps en s"
-d["I"]="intensité du courant en A" 
-d["F"]="constante de Faraday en C.mol-1"
