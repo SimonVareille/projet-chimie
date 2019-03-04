@@ -70,14 +70,13 @@
 			text:"C"
 		ButtonPlusMinus:
 
-<CenteredTextInput>:
+<MyTextInput>:
     TextInput:
-		#input_filter: root.manage_input_filter(self.text, False)
 		multiline : False
-		text: '123'
-        font_size: .3*self.height
-        padding_x: self.get_center_x()
-        padding_y: self.get_center_y()
+		font_size: .3*self.height
+		padding: self.get_center_x(), self.get_center_y()
+		#text: "123"
+		#input_filter: root.manage_input_filter(self.text, False)
 		on_text: root.read_instant_value()
 		on_text_validate: root.read_value()
 
@@ -88,8 +87,8 @@
         id: minus
         text:"-"
 		on_release: root.substract_one()
-    CenteredTextInput:
-        id: zone_de_texte
+    MyTextInput:
+        id: myTexte
     Button:
         id:plus
         text:"+"

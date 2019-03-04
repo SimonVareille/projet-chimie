@@ -24,18 +24,6 @@ class CoxCurveBox(BoxLayout):
 class ParametresBox(BoxLayout):
     pass
 
-class CenteredTextInput(RelativeLayout):
-
-    def manage_input_filter(self, myString, from_undo=False):
-        print("Test filter",self.zone_de_texte.text)
-
-    def read_value(self):
-        print("Final value = ",self.zone_de_texte.text)
-
-    def read_instant_value(self):
-        print("Value = ",self.zone_de_texte.text)
-
-        
 
 class ThreeButton(BoxLayout):
     def __init__(self):
@@ -52,8 +40,19 @@ class ThreeButton(BoxLayout):
             print("ledeuxieme")
         if self.troisieme is True:
             print("letroisieme")
-            
-            
+
+class MyTextInput(RelativeLayout):
+
+    def manage_input_filter(self, myTexte, from_undo=False):
+        print("Test filter",self.myTexte.text)
+
+    def read_value(self):
+        print("Final value = ",self.myTexte.text)
+
+    def read_instant_value(self):
+        print("Value = ",self.myTexte.text)
+
+ 
 class ButtonPlusMinus(BoxLayout):
 
     myTexte = ObjectProperty()
@@ -78,7 +77,7 @@ class Application(BoxLayout):
 
 class testApp(App):
         def build(self):
-            self.title="Un putain de bon titre"
+            self.title="Titre"
             return Application()
 
         
