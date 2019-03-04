@@ -9,8 +9,9 @@ class MainGraph(MainGraphBase):
        
     def update(self):
         self.ax.clear()
-        self.ax.plot(self.t, self.I, label='Theoric')
-        if self.displayExperimental:
+        if self.display_theoric:
+            self.ax.plot(self.t, self.I, label='Theoric')
+        if self._display_experimental:
             if self.expD != None:
                 self.ax.plot(self.expt, self.expI,'r.', label='Expérimental\nD = {}'.format(self.expD) )
             else:
