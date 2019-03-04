@@ -12,7 +12,7 @@ Afin de pouvoir exécuter ce projet, il faut avoir installé les modules suivant
     https://kivy.org/#download
 - `kivy-garden` :  
     https://kivy.org/doc/stable/api-kivy.garden.html
-- `kivy.garden.matplotlib` et `kivy.garden.graph` :  
+- `kivy.garden.matplotlib`:  
     https://kivy.org/doc/stable/api-kivy.garden.html  
     En remplaçant `graph` par `matplotlib` pour installer `kivy.garden.matplotlib`  
 
