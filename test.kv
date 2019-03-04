@@ -70,29 +70,30 @@
 			text:"C"
 		ButtonPlusMinus:
 
-<CentredTextInput>:
+<CenteredTextInput>:
     TextInput:
-		input_filter:'float',from_undo: text[:5 - len(self.text)]
+		#input_filter: root.manage_input_filter(self.text, False)
 		multiline : False
+		text: '123'
         font_size: .3*self.height
-        # left, right
-        padding_x:
-            [self.center[0] - self._get_text_width(max(self._lines, key=len), self.tab_width, self._label_cached) / 2.0,
-            0] if self.text else [self.center[0], 0]
-        # top, bottom
-        padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]    
-    
-               
+        padding_x: self.get_center_x()
+        padding_y: self.get_center_y()
+		on_text: root.read_instant_value()
+		on_text_validate: root.read_value()
+
 <ButtonPlusMinus>
+	myTexte: myTexte
     orientation:"horizontal"
     Button:
         id: minus
         text:"-"
-    CentredTextInput:
+		on_release: root.substract_one()
+    CenteredTextInput:
         id: zone_de_texte
     Button:
         id:plus
         text:"+"
+		on_release: root.add_one()
  
 
     
