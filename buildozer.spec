@@ -13,7 +13,7 @@ package.domain = org.projetchimie
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas
+source.include_exts = py,png,jpg,kv,atlas,csv
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
@@ -28,22 +28,22 @@ source.include_exts = py,png,jpg,kv,atlas
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.1
+version = 0.1.2
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
 # version.filename = %(source.dir)s/main.py
 
 # (list) Application requirements
-# comma separated e.g. requirements = sqlite3,kivy, python3crystax, , matplotlib, numpy
-requirements = kivy, backports.csv
+# comma separated e.g. requirements = sqlite3,kivy, hostpython3crystax, python3crystax, 
+requirements = python3, kivy, backports.csv
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
 # requirements.source.kivy = ../../kivy
 
 # (list) Garden requirements
-garden_requirements = graph
+#garden_requirements = graph, matplotlib
 
 # (str) Presplash of the application
 #presplash.filename = %(source.dir)s/data/presplash.png
@@ -68,7 +68,7 @@ orientation = landscape
 osx.python_version = 3
 
 # Kivy version to use
-osx.kivy_version = 1.9.1
+osx.kivy_version = 1.10.1
 
 #
 # Android specific
@@ -88,26 +88,26 @@ fullscreen = 0
 #android.permissions = INTERNET
 
 # (int) Android API to use
-#android.api = 19
+android.api = 26
 
 # (int) Minimum API required
-#android.minapi = 9
+android.minapi = 24
 
 # (int) Android SDK version to use
-#android.sdk = 20
+#android.sdk = 24
 
 # (str) Android NDK version to use
-#android.ndk = 9c
+android.ndk = 17c
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
 #android.private_storage = True
 
 # (str) Android NDK directory (if empty, it will be automatically downloaded.)
-android.ndk_path = /home/simon/.buildozer/android/platform/android-ndk-r9c/
+#android.ndk_path = /home/simon/.buildozer/android/platform/android-ndk-r9c/
 #android.ndk_path = /home/simon/crystax-ndk-10.3.2/
 
 # (str) Android SDK directory (if empty, it will be automatically downloaded.)
-android.sdk_path = /home/simon/.buildozer/android/platform/android-sdk-20/
+#android.sdk_path = /home/simon/.buildozer/android/platform/android-sdk-20/
 
 # (str) ANT directory (if empty, it will be automatically downloaded.)
 android.ant_path = /home/simon/.buildozer/android/platform/apache-ant-1.9.4/
@@ -115,7 +115,7 @@ android.ant_path = /home/simon/.buildozer/android/platform/apache-ant-1.9.4/
 # (bool) If True, then skip trying to update the Android sdk
 # This can be useful to avoid excess Internet downloads or save time
 # when an update is due and you just want to test/build your package
-android.skip_update = True
+#android.skip_update = True
 
 # (str) Android entry point, default is ok for Kivy-based app
 #android.entrypoint = org.renpy.android.PythonActivity
