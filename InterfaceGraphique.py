@@ -75,7 +75,7 @@ class ButtonPlusMinus(BoxLayout):
 class Application(BoxLayout):
     pass
 
-class testApp(App):
+class test47App(App):
         def build(self):
             self.title="Titre"
             return Application()

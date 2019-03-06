@@ -1,0 +1,129 @@
+<CottrellCurveBox>:
+    orientation:"vertical"
+    Label:
+        text:"Courbe de Cottrel"
+    BoxLayout:
+        orientation:"horizontal"
+        Label :
+            size_hint_x: .80
+            text:"Theorique"
+        CheckBox:
+            
+    BoxLayout:
+        orientation:"horizontal"
+        Label:
+            size_hint_x: .80
+            text:"Experimentale"
+        CheckBox:
+
+<ICurveBox>:
+	orientation:"vertical"
+	BoxLayout:
+		orientation:"horizontal"
+		Label:
+			size_hint_x: .80
+			text:"Courbe I = f(1/sqrt(t))"
+		CheckBox:
+	BoxLayout:
+		orientation:"horizontal"
+		Label:
+			text:"Selectionner\nun intervalle"
+		BoxLayout:
+			Label:
+				text:"tmin ="
+		CentredTextInput:
+		BoxLayout:
+			Label:
+				text:"tmax ="
+		CentredTextInput:
+
+<CoxCurveBox>:
+	orientation:"vertical"
+	Label:
+		text:"Courbe Cox"
+	BoxLayout:
+		orientation:"horizontal"
+		Label
+
+<ParametresBox>:
+	orientation:"vertical"
+	Label:
+		text:"Parametres"
+	BoxLayout:
+		Label:
+			text:"Dth"
+		BoxLayout:
+			orientation:"vertical"
+			ButtonPlusMinus:
+			Slider:
+				orientation:"horizontal"
+	BoxLayout:
+		Label:
+			text:"n"
+		ButtonPlusMinus:
+	BoxLayout:
+		Label:
+			text:"s"
+		ButtonPlusMinus:
+	BoxLayout:
+		Label:
+			text:"C"
+		ButtonPlusMinus:
+
+<MyTextInput>:
+    TextInput:
+		multiline : False
+		font_size: .3*self.height
+		padding: self.get_center_x(), self.get_center_y()
+		#text: "123"
+		#input_filter: root.manage_input_filter(self.text, False)
+		on_text: root.read_instant_value()
+		on_text_validate: root.read_value()
+
+<ButtonPlusMinus>
+	myTexte: myTexte
+    orientation:"horizontal"
+    Button:
+        id: minus
+        text:"-"
+		on_release: root.substract_one()
+    MyTextInput:
+        id: myTexte
+    Button:
+        id:plus
+        text:"+"
+		on_release: root.add_one()
+ 
+
+    
+<ThreeButton>:
+    orientation:"vertical"
+    Button:
+        on_press:self.root.test1(self)
+    ToggleButton:
+        group:"troisboutons"
+        value:root.premier
+        text:"text1"
+        state:"down"
+    ToggleButton:
+        group:"troisboutons"
+        value:root.deuxieme
+        text:"text2"
+    ToggleButton:
+        group:"troisboutons"
+        value:root.troisieme
+        text:"texte 3" 
+ 
+     
+       
+<Application>
+    orientation:"vertical"
+    ButtonPlusMinus:
+    
+    
+    
+    
+    
+    
+    
+    
