@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-
-import csv
+from __future__ import unicode_literals
+import io
+from backports import csv
 
 class _DataRow:
     def __init__(self):
@@ -11,7 +12,7 @@ class DataReader():
     """Classe s'occupant de lire un fichier CSV affin d'obtenir les valeurs
     expérimentales.
     """
-    def __init__(self, filename, delimiter = ';', encoding='ISO-8859-15'):
+    def __init__(self, filename, delimiter = ";", encoding='ISO-8859-15'):
         """
         Paramètres
         ----------
@@ -23,7 +24,7 @@ class DataReader():
         self.tData = _DataRow()
         self.IData = _DataRow()
         
-        with open(filename, newline='', encoding=encoding) as csvfile:
+        with  io.open(filename, newline='', encoding=encoding) as csvfile:
             self.rawData = csv.reader(csvfile, delimiter=delimiter)
             data = list(self.rawData)
             self.tData.name = data[0][0]

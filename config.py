@@ -2,5 +2,5 @@
 """Ce fichier regroupe les variables globales permettant de spécifier quelles
 technologies utiliser.
 """
-USE_NUMPY = True
-USE_MATPLOTLIB = True
+USE_NUMPY = False
+USE_MATPLOTLIB = False
