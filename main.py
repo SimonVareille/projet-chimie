@@ -19,10 +19,10 @@ if config.USE_MATPLOTLIB:
     import matplotlib
     matplotlib.use('module://kivy.garden.matplotlib.backend_kivy')
     
-    import graphs.graph_matplot as maingraph
+    import graphs.cottrel_graph_matplot as cottrel_graph
     import graphs.graphCox_matplot as coxgraph
 else:
-    import graphs.graph_kivy as maingraph
+    import graphs.cottrel_graph_kivy as cottrel_graph
     import graphs.graphCox_kivy as coxgraph
 
 if config.USE_NUMPY:
@@ -59,18 +59,18 @@ class MainWindow(Widget):
     def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
         
-        
-        self.t = cottrel.create_t(0, 20, 1000)
-        self.I = cottrel.courbe_cottrel_th(1, 1, 10**-3, 10**(-5), self.t)
-        
-        
-        self.mainGraph = maingraph.MainGraph(self.t, self.I)
-        
         reader = DataReader("experimental.csv")
         
         self.expt = reader.get_t()
         self.expI = reader.get_I()
         
+        if self.expt:
+            self.t = cottrel.create_t(0, max(self.expt), 1000)
+        else:
+            self.t = cottrel.create_t(0, 20, 1000)
+        self.I = cottrel.courbe_cottrel_th(1, 1, 10**-3, 10**(-5), self.t)
+        
+        self.mainGraph = cottrel_graph.CottrelGraph(self.t, self.I)
         
         self.mainGraph.set_experimental_data(self.expt, self.expI)
         self.mainGraph.display_experimental()
@@ -112,6 +112,7 @@ class MainWindow(Widget):
 class AppApp(App):
     '''L'application en elle même.
     '''
+    title = "Cottrel"
     def build(self):
         return MainWindow()
     

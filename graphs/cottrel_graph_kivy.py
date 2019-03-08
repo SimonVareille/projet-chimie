@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 from kivy.garden.graph import Graph, SmoothLinePlot, DotPlot
-from .graph_base import MainGraphBase
+from .cottrel_graph_base import CottrelGraphBase
 
-class MainGraph(MainGraphBase):
-    """Cette classe crée le graphique principal en utilisant kivy.garden.graph.
+class CottrelGraph(CottrelGraphBase):
+    """Cette classe crée le graphique contenant les courbes de Cottrel en 
+    utilisant kivy.garden.graph.
     """
     def __init__(self, t, I):
         """
         """
-        MainGraphBase.__init__(self, t, I)
+        super(CottrelGraph, self).__init__(t, I)
         graph_theme = {
                 'label_options': {
                     'color': [0, 0, 0, 1],  # color of tick labels and titles
@@ -19,14 +20,13 @@ class MainGraph(MainGraphBase):
                 
         self.graph = Graph(title = 'Cottrel Curve',
                            xlabel='Time (s)',
-                           ylabel='Intensity (A)', 
+                           ylabel='Intensity (A)',
                            x_ticks_minor=5,
                            x_ticks_major=5,
                            y_ticks_major=0.2,
-                           y_ticks_minor=5,
+                           y_ticks_minor=4,
                            y_grid_label=True,
                            x_grid_label=True,
-                           draw_border=True,
                            padding=5,
                            x_grid=False,
                            y_grid=False, 
@@ -37,31 +37,42 @@ class MainGraph(MainGraphBase):
                            **graph_theme)
         
         self.thplot = SmoothLinePlot(color=[0, 0, 1, 1])
-        self.thplot.label = 'Theoric'
-        self.graph.add_plot(self.thplot)
+        self.thplot.label = "Theoric"
         
         self.expplot = DotPlot(color=[1, 0, 0, 1])
-        self.expplot.label = 'Expérimental'
+        self.expplot.label = "Experimental"
         self.expplot.point_size = 3
-        self.graph.add_plot(self.expplot)
         
-        self.graph.legend = False
+#        self.testplot = SmoothLinePlot(color=[0, 1, 0, 1])
+#        self.testplot.points = [(5,0), (5,1.2)]
+#        self.graph.add_plot(self.testplot)
+        
+        self.graph.legend = True
             
     def update(self): 
         """Met à jour l'affichage.
         """
         if self._display_theoric:
             self.thplot.points = list(zip(self.t,self.I))
+            if self.thplot not in self.graph.plots:
+                self.graph.add_plot(self.thplot)
         else:
-            self.thplot.points = list()
-        if self._display_experimental:
+            if self.thplot in self.graph.plots:
+                self.graph.remove_plot(self.thplot)
+                
+        if self._display_experimental:                
             self.expplot.points = list(zip(self.expt,self.expI))
             if self.expD != None:
-                self.expplot.label = 'Expérimental\nD = {}'.format(self.expD)
+                self.expplot.label = 'Experimental\nD = {}'.format(self.expD)
             else:
-                self.expplot.label = 'Expérimental'
+                self.expplot.label = 'Experimental'
+            
+            if self.expplot not in self.graph.plots:
+                self.graph.add_plot(self.expplot)
         else:
-            self.expplot.points = list()
+            if self.expplot in self.graph.plots:
+                self.graph.remove_plot(self.expplot)
+                
         self.graph.xmin = float(self.tleft)
         self.graph.xmax = float(self.tright)
         

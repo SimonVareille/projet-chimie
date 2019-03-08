@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-class MainGraphBase:
+class CottrelGraphBase:
     """Cette classe est la classe mère permettant d'avoir une base commune pour
     la création du graphique principal, que l'on utilise **matplotlib** ou 
     **kivy.garden.graph**.
@@ -81,11 +81,17 @@ class MainGraphBase:
         if tleft == None:
             tleft = 0
         if tright == None:
-            tright = max(max(self.t), max(self.expt)) if self._display_experimental else max(self.t)
+            if self._display_theoric:
+                tright = max(max(self.t), max(self.expt)) if self._display_experimental else max(self.t)
+            else:
+                tright = max(self.expt) if self._display_experimental else 5
         if Ibottom == None:
             Ibottom = 0
         if Itop == None:
-            Itop = max(max(self.I), max(self.expI)) if self._display_experimental else max(self.I)
+            if self._display_theoric:
+                Itop = max(max(self.I), max(self.expI)) if self._display_experimental else max(self.I)
+            else:
+                Itop = max(self.expI) if self._display_experimental else 1
         
         self.tleft=tleft
         self.tright=tright

@@ -1,21 +1,28 @@
 # -*- coding: utf-8 -*-
-from .graph_base import MainGraphBase
+from .cottrel_graph_base import CottrelGraphBase
 import matplotlib.pyplot as plt
 
-class MainGraph(MainGraphBase):
+class CottrelGraph(CottrelGraphBase):
+    """Cette classe crée le graphique contenant les courbes de Cottrel en 
+    utilisant matplotlib.
+    """
     def __init__(self, t, I):
-        MainGraphBase.__init__(self, t, I)
+        """
+        """
+        super(CottrelGraph, self).__init__(t, I)
         self.fig, self.ax = plt.subplots()
        
     def update(self):
+        """Met à jour l'affichage.
+        """
         self.ax.clear()
-        if self.display_theoric:
+        if self._display_theoric:
             self.ax.plot(self.t, self.I, label='Theoric')
         if self._display_experimental:
             if self.expD != None:
-                self.ax.plot(self.expt, self.expI,'r.', label='Expérimental\nD = {}'.format(self.expD) )
+                self.ax.plot(self.expt, self.expI,'r.', label='Experimental\nD = {}'.format(self.expD) )
             else:
-                self.ax.plot(self.expt, self.expI,'r.', label='Expérimental')
+                self.ax.plot(self.expt, self.expI,'r.', label='Experimental')
 
         self.ax.set_title("Cottrel Curve")
         self.ax.set_xlabel('Time (s)')

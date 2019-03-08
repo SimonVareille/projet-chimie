@@ -59,9 +59,9 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.stencilview import StencilView
 from kivy.properties import NumericProperty, BooleanProperty,\
     BoundedNumericProperty, StringProperty, ListProperty, ObjectProperty,\
-    DictProperty, AliasProperty
+    DictProperty, AliasProperty, OptionProperty
 from kivy.clock import Clock
-from kivy.graphics import Mesh, Color, Rectangle, Point
+from kivy.graphics import Mesh, Color, Rectangle, Point, RoundedRectangle
 from kivy.graphics import Fbo
 from kivy.graphics.texture import Texture
 from kivy.event import EventDispatcher
@@ -123,6 +123,8 @@ class Graph(Widget):
     _trigger_size = ObjectProperty(None)
     # triggers only a update of colors, e.g. tick_color
     _trigger_color = ObjectProperty(None)
+    # triggers only a redraw of legend.
+    _trigger_legend = ObjectProperty(None)
     # holds widget with the main title label
     _title = ObjectProperty(None)
     # holds widget with the x-axis label
@@ -202,14 +204,16 @@ class Graph(Widget):
         t = self._trigger = Clock.create_trigger(self._redraw_all)
         ts = self._trigger_size = Clock.create_trigger(self._redraw_size)
         tc = self._trigger_color = Clock.create_trigger(self._update_colors)
+        tl = self._trigger_legend = Clock.create_trigger(self._redraw_legend)
 
+        self.bind(plots=tl)
         self.bind(center=ts, padding=ts, precision=ts, plots=ts, x_grid=ts,
                   y_grid=ts, draw_border=ts)
         self.bind(xmin=t, xmax=t, xlog=t, x_ticks_major=t, x_ticks_minor=t,
                   xlabel=t, x_grid_label=t, ymin=t, ymax=t, ylog=t,
                   y_ticks_major=t, y_ticks_minor=t, ylabel=t, y_grid_label=t,
                   font_size=t, label_options=t, x_ticks_angle=t, title=t,
-                  legend=t)
+                  legend=t, legend_pos=t)
         self.bind(tick_color=tc, background_color=tc, border_color=tc)
         self._trigger()
 
@@ -588,14 +592,11 @@ class Graph(Widget):
         if self.title:
             title = self._title
             if not title:
-                title = Label()
+                title = Label(**self.label_options)
                 self.add_widget(title)
                 self._title = title
 
             title.font_size = font_size
-            for k, v in self.label_options.items():
-                setattr(title, k, v)
-
         else:
             title = self._title
             if title:
@@ -720,9 +721,8 @@ class Graph(Widget):
                 self._legend = legend
             
             legend.font_size = font_size
-            legend.label_option = self.label_options
+            legend.label_options = self.label_options
             legend.background_color = self.background_color
-            legend.border_color = self.border_color
             
             legend.update_plots(self.plots)
                     
@@ -733,10 +733,21 @@ class Graph(Widget):
                 self._legend = None
     
     def _update_legend(self, size):
-        legend = self._legend
-        legend.right = size[2] - 5
-        legend.top = size[3] - 5
-        legend._redraw_all()
+        if self.legend:
+            legend = self._legend
+            if self.legend_pos == "top right":
+                legend.right = self.x + size[2] - 5
+                legend.top = self.y + size[3] - 5
+            elif self.legend_pos == "bottom right":
+                legend.right = self.x + size[2] - 5
+                legend.y = self.y + size[1] + 5
+            elif self.legend_pos == "bottom left":
+                legend.x = self.x + size[0] + 5
+                legend.y = self.y + size[1] + 5
+            elif self.legend_pos == "top left":
+                legend.x = self.x + size[0] + 5
+                legend.top = self.y + size[3] - 5
+            legend._redraw_all()
 
     def _clear_buffer(self, *largs):
         fbo = self._fbo
@@ -1052,9 +1063,36 @@ class Graph(Widget):
     
     legend = BooleanProperty(False)
     '''Whether a legend is added.
+    Don't forget to set the `label` property of the plot, otherwise no legend
+    will be added for this plot.
     
     :data:`legend` is a :class:`~kivy.properties.BooleanProperty`,
     defaults to False.
+    
+    >>> graph = Graph()
+    >>> plot = MeshLinePlot(mode='line_strip', color=[1, 0, 0, 1])
+    >>> plot.points = [(x / 10., sin(x / 50.)) for x in range(-0, 101)]
+    >>> plot.label = "sin plot"
+    >>> graph.add_plot(plot)
+    >>> graph.legend = True
+    '''
+    
+    legend_pos = OptionProperty("top right", options=["top right", 
+                                                      "bottom right", 
+                                                      "bottom left", 
+                                                      "top left"])
+    '''The pos of the legend, relative to the graph viewing area.
+    
+    :data:`legend_pos` is a :class:`~kivy.properties.OptionProperty`,
+    defaults to "top right".
+    
+    >>> graph = Graph()
+    >>> plot = MeshLinePlot(mode='line_strip', color=[1, 0, 0, 1])
+    >>> plot.points = [(x / 10., 200) for x in range(-0, 101)]
+    >>> plot.label = "constant"
+    >>> graph.add_plot(plot)
+    >>> graph.legend = True
+    >>> graph.legend_pos = "bottom left"
     '''
 
 class Plot(EventDispatcher):
@@ -1108,6 +1146,7 @@ class Plot(EventDispatcher):
     
     label = StringProperty('')
     '''Set the label for auto legend.
+    if `label` is empty, no legend will be added for this plot.
     
     :data:`label` is a :class:`~kivy.properties.StringProperty`, defaults to
     ''.
@@ -1274,6 +1313,11 @@ class DotPlot(Plot):
         if hasattr(self, '_mesh'):
             self._mesh.pointsize = value
     point_size = AliasProperty(lambda self: self._mesh.pointsize, _set_pointsize)
+    '''Set the point size.
+    
+    :data:`point_size` is a :class:`~kivy.properties.AliasProperty`, defaults 
+    to 1.
+    '''
 
     def _set_source(self, value):
         if hasattr(self, '_mesh'):
@@ -1672,10 +1716,13 @@ class VBar(MeshLinePlot):
             vert[k * 8 + 5] = px_ymax
         mesh.vertices = vert
 
-class _LegendHandle(Widget):
+class _LegendSymbol(Widget):
+    
+    # triggers an update of graphics
+    _trigger = ObjectProperty(None)
     
     background_color = ListProperty([0, 0, 0, 0])
-    '''Color of the background. Default transparent.
+    '''Color of the background. Default Transparent.
     
     :data:`background_color` is a :class:`~kivy.properties.ListProperty`, defaults to
     [0, 0, 0, 0].
@@ -1690,20 +1737,47 @@ class _LegendHandle(Widget):
     def __init__(self, plot, **kwargs):
         from kivy.graphics import Line
         
-        super(_LegendHandle, self).__init__(**kwargs)
+        super(_LegendSymbol, self).__init__(**kwargs)
+        
+        self.size_hint = (None, None)
+        self.size = (75, 25)
         with self.canvas:
             self._background_color = Color(*self.background_color)
-            Rectangle(size=self.size, pos=self.pos)
+            self._background_rect = Rectangle(size=self.size, pos=self.pos)
             
             self.plot_color = plot.color
-            first_third = self.x + self.width/3
-            second_third = first_third + self.width/3
+            Color(*self.plot_color)
+            
+            first_third = self.x + self.width/4
+            second_third = self.x + 3*self.width/4
+            
             if isinstance(plot, DotPlot):
-                Point(points=self.center, pointsize=plot.point_size)
+                self._plot = Point(points=self.center, pointsize=plot.point_size)
+                self.plot_type = DotPlot
             elif isinstance(plot, (SmoothLinePlot, LinePlot) ):
-                Line(points=[first_third, self.center_y, second_third, self.center_y], width=plot.line_width)
+                self._plot = Line(points=[first_third, self.center_y, second_third, self.center_y], width=plot.line_width)
+                self.plot_type = LinePlot
             elif isinstance(plot, (MeshLinePlot, MeshStemPlot)):
-                Line(points=[first_third, self.center_y, second_third, self.center_y], width=2.)
+                self._plot = Line(points=[first_third, self.center_y, second_third, self.center_y], width=2.)
+                self.plot_type = MeshLinePlot
+            
+        t = self._trigger = Clock.create_trigger(self._update_pos)
+        self.bind(pos=t, size=t)
+        
+    def _update_pos(self, *args):
+        self._background_rect.pos = self.pos
+        self._background_rect.size = self.size
+        
+        first_third = self.x + self.width/4
+        second_third = self.x + 3*self.width/4
+        
+        if self.plot_type == DotPlot:
+            points = self.center
+        elif self.plot_type == LinePlot:
+            points = [first_third, self.center_y, second_third, self.center_y]
+        elif self.plot_type == MeshLinePlot:
+            points = [first_third, self.center_y, second_third, self.center_y]
+        self._plot.points = points
 
 class LegendBox(Widget):
     '''LegendBox draw a legend top right of the grapĥ.
@@ -1713,6 +1787,8 @@ class LegendBox(Widget):
     _trigger = ObjectProperty(None)
     # triggers only a update of colors, e.g. tick_color
     _trigger_color = ObjectProperty(None)
+    # holds Instruction object for border
+    _border = ObjectProperty(None)
     
     font_size = NumericProperty('15sp')
     '''Font size of the labels.
@@ -1723,54 +1799,88 @@ class LegendBox(Widget):
     background_color = ListProperty([0, 0, 0, 0])
     '''Color of the background, defaults to transparent
     '''
-    border_color = ListProperty([0.92, 0.92, 0.92, 1])
+    border_color = ListProperty([0.7, 0.7, 0.7, 1])
     '''Color of the border, defaults to grey
     '''
     label_options = DictProperty()
     '''Label options that will be passed to `:class:`kivy.uix.Label`.
-    '''  
+    '''
+    draw_border = BooleanProperty(True)
+    '''Whether a border is drawn around the canvas of the legend.
+
+    :data:`draw_border` is a :class:`~kivy.properties.BooleanProperty`,
+    defaults to True.
+    '''
     
     _plots = ListProperty([])
     '''List of plots to legend.
     '''  
     _labels = ListProperty([])
-    '''List of labels objects.
+    '''List of Label objects that hold the labels.
     '''
-    _handles = ListProperty([])
-    '''List of object that represent the line type.
+    _symbols = ListProperty([])
+    '''List of object (_LegendSymbol) that represent the line symbols.
     '''
     
     def __init__(self, **kwargs):
         super(LegendBox, self).__init__(**kwargs)
         
+        self.size_hint = (None, None)
+        
         self.root = GridLayout(cols=2)
+        self.root.height = self.root.minimum_height
+        self.root.width = self.root.minimum_width
+        self.add_widget(self.root)
         
         with self.canvas.before:
             self._background_color = Color(*self.background_color)
-            self.rect = Rectangle(size=self.size, pos=self.pos)
+            self._background_rect = RoundedRectangle(size=(self.width+5,self.height), pos=self.pos, radius=[10])
         
         self._border_color = Color(*self.border_color)
         
         t = self._trigger = Clock.create_trigger(self._redraw_all)
         tc = self._trigger_color = Clock.create_trigger(self._update_colors)
         
-        self.bind(label_options=t)
+        self.bind(label_options=t, font_size=t, pos=t, size=t, draw_border=t)
         self.bind(background_color=tc, border_color=tc)
         self._trigger()
             
     def add_plot(self, plot):
+        """Add the plot so that it will be legended.
+        :Parameters:
+            `plot`:
+                Plot to add.
+                `plot` will be added only if his label is not empty and if it 
+                is not already legended.
+        """
         if plot in self._plots or not plot.label:
             return
         self._plots.append(plot)
+        self._update_widgets()
         self._redraw_all()
         
     def remove_plot(self, plot):
+        """Remove the plot so that it will not be legended.
+        :Parameters:
+            `plot`:
+                Plot to remove.
+        """
         if plot not in self._plots:
             return
         self._plots.remove(plot)
+        self._update_widgets()
         self._redraw_all()
     
     def update_plots(self, plots):
+        """Update the plot list to legend.
+        :Parameters:
+            `plots`:
+                Plot list to legend.
+                A plot will be added only if his label is not empty and if it 
+                is not already legended.
+                All plots already legended that does not appear in `plots` will
+                be removed.
+        """
         for plot in self._plots:
             if plot not in plots or not plot.label:
                 self._plots.remove(plot)
@@ -1778,39 +1888,96 @@ class LegendBox(Widget):
             if plot in self._plots or not plot.label:
                 continue
             self._plots.append(plot)
+        
+        self._update_widgets()
         self._redraw_all()
         
     def _redraw_all(self, *args):
         self._update_colors()
-        self._update_widgets()
+        self._redraw_widgets()
+        self._update_size()
+        
     
+    def _update_size(self, *args):
+        self._background_rect.size = (self.root.width+5, self.root.height)
+        
+        self._background_rect.pos = self.pos
+        self.root.pos = self.pos
+        
+        self._update_border()
+        
+        if self.draw_border:
+            self.width = self.root.width + 8
+            self.height = self.root.height + 3
+        else:
+            self.size = self.root.size
+        
     def _update_colors(self, *args):
         self._background_color.rgba = tuple(self.background_color)
         self._border_color.rgba = tuple(self.border_color)
-        
-    def _update_widgets(self):
-        self.root.clear_widgets()
-        print("Update widget")
-        
-        for plot in self._plots:
-            label = Label(text=plot.label)
-            label.font_size = self.font_size
+    
+    def _update_border(self, *args):
+        from kivy.graphics import Line
+        if self.draw_border:
+            if self._border:
+                self.canvas.remove(self._border)
+            with self.canvas:
+                self._border_color = Color(*self.border_color)
+                self._border = Line(rounded_rectangle=(self.x, self.y, self.root.width + 5, self.root.height, 10))
+        else:
+            if self._border:
+                self.canvas.remove(self._border)
+                self._border = None      
+                
+    def _redraw_widgets(self, *args):
+        width_symbol = 0
+        for label, symbol in zip(self._labels, self._symbols):
             for k, v in self.label_options.items():
                 setattr(label, k, v)
+            label.font_size = self.font_size
             label.texture_update()
-            
-            handle = _LegendHandle(plot)
-            
-            self.root.add_widget(handle)
-            self.root.add_widget(label)
-            
+            label.size = label.texture_size
+            label.height += 10
+            width_symbol = symbol.width
+        if self._labels:
+            width = max(label.width for label in self._labels)
+            height = sum(label.height for label in self._labels)
+            self.root.width = width + width_symbol
+            self.root.height = height
+    
+    def _update_widgets(self, *args):
+        self.root.clear_widgets()
+        self._labels.clear()
+        self._symbols.clear(), 
+        width_symbol = 0
+        for plot in self._plots:
+            label = Label(text=plot.label, **self.label_options)
+            label.font_size = self.font_size
+            label.texture_update()
+            label.size_hint = (None, None)
+            label.size = label.texture_size
+            label.height += 10
+            symbol = _LegendSymbol(plot, pos = self.pos)
+            symbol.height = label.height
+            width_symbol = symbol.width
             self._labels.append(label)
-            self._handles.append(handle)
+            self._symbols.append(symbol)
         
+        if self._labels:
+            width = max(label.width for label in self._labels)
+            height = sum(label.height for label in self._labels)
+            
+            self.root.width = width + width_symbol
+            self.root.height = height
+        
+        for label, symbol in zip(self._labels, self._symbols):
+            self.root.add_widget(symbol)
+            self.root.add_widget(label)
+            symbol.pos = self.pos
 
 if __name__ == '__main__':
     import itertools
-    from math import sin, cos, pi
+    from math import sin, cos, pi, sqrt
     from random import randrange
     from kivy.utils import get_color_from_hex as rgb
     from kivy.uix.boxlayout import BoxLayout
@@ -1832,7 +1999,6 @@ if __name__ == '__main__':
                 'border_color': rgb('808080')}  # border drawn around each graph
 
             graph = Graph(
-                title='Title',
                 xlabel='Cheese',
                 ylabel='Apples',
                 x_ticks_minor=5,
@@ -1871,6 +2037,8 @@ if __name__ == '__main__':
             plot.points = [(x, .1 + randrange(10) / 10.) for x in range(-50, 1)]
 
             Clock.schedule_interval(self.update_points, 1 / 60.)
+            
+            b.add_widget(graph)
 
             graph2 = Graph(
                 xlabel='Position (m)',
@@ -1886,7 +2054,6 @@ if __name__ == '__main__':
                 xmin=0,
                 ymin=0,
                 **graph_theme)
-            b.add_widget(graph)
 
             if np is not None:
                 (xbounds, ybounds, data) = self.make_contour_data()
@@ -1905,6 +2072,42 @@ if __name__ == '__main__':
                 self.contourplot = plot
 
                 Clock.schedule_interval(self.update_contour, 1 / 60.)
+            
+            graph3 = Graph(
+                title='Some curves',
+                xlabel='x',
+                ylabel='y',
+                x_ticks_minor=5,
+                x_ticks_major=25,
+                y_ticks_major=1,
+                y_grid_label=True,
+                x_grid_label=True,
+                padding=5,
+                xlog=False,
+                ylog=False,
+                x_grid=True,
+                y_grid=True,
+                xmin=0,
+                xmax=100,
+                ymin=0,
+                ymax=10,
+                **graph_theme)
+            
+            plot = SmoothLinePlot(color=next(colors))
+            plot.points = [(x/10., sqrt(x/10.)) for x in range(0, 1000)]
+            plot.label = "y = sqrt(x)"
+            graph3.add_plot(plot)
+
+            plot = DotPlot(color=next(colors))
+            plot.points = [(x,x*1/10.) for x in range(0, 100)]
+            plot.point_size = 3
+            plot.label="y = x * 1/10"
+            graph3.add_plot(plot)
+            
+            graph3.legend = True
+            graph3.legend_pos = "bottom right"
+            
+            b.add_widget(graph3)
 
             return b
 
