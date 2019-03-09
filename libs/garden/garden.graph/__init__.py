@@ -242,7 +242,7 @@ class Graph(Widget):
                 # not logs.
                 n_decades = floor(s_max - s_min)
                 # for the fractional part of the last decade, we need to
-                # convert the log value, x, to 10**x but need to symbol
+                # convert the log value, x, to 10**x but need to handle
                 # differently if the last incomplete decade has a decade
                 # boundary in it
                 if floor(s_min + n_decades) != floor(s_max):
@@ -597,7 +597,6 @@ class Graph(Widget):
                 self._title = title
 
             title.font_size = font_size
-
         else:
             title = self._title
             if title:
@@ -1788,7 +1787,6 @@ class LegendBox(Widget):
     _trigger = ObjectProperty(None)
     # triggers only a update of colors, e.g. tick_color
     _trigger_color = ObjectProperty(None)
-    
     # holds Instruction object for border
     _border = ObjectProperty(None)
     

@@ -24,7 +24,7 @@ class CottrelGraph(CottrelGraphBase):
                            x_ticks_minor=5,
                            x_ticks_major=5,
                            y_ticks_major=0.2,
-                           y_ticks_minor=5,
+                           y_ticks_minor=4,
                            y_grid_label=True,
                            x_grid_label=True,
                            padding=5,
