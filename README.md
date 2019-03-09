@@ -12,7 +12,7 @@ Afin de pouvoir exécuter ce projet, il faut avoir installé les modules suivant
     https://kivy.org/#download
 - `kivy-garden` :  
     https://kivy.org/doc/stable/api-kivy.garden.html
-- `kivy.garden.matplotlib`:  
+- `kivy.garden.matplotlib` :  
     https://kivy.org/doc/stable/api-kivy.garden.html  
     En remplaçant `graph` par `matplotlib` pour installer `kivy.garden.matplotlib`  
 
@@ -23,3 +23,4 @@ On peut maintenant lancer `main.py`. Cela affiche la courbe principale mais ce n
 Pour utiliser `kivy.garden.graph`, il suffit de changer la valeur de `USE_MATPLOTLIB` du fichier `config.py` à `False`.  
 Pour ne pas utiliser `numpy`, il suffit de changer la valeur de `USE_NUMPY` du fichier `config.py` à `False`.  
       
+
