@@ -7,8 +7,12 @@
     curveBoxLayout: curveBoxLayout
     choixCourbe: choixCourbe
     
-    expCurveCheckBox: expCurveCheckBox
-    
+    expCurveCheckBox: expCurveCheckBox    
+    buttonDth: buttonDth
+    buttonN: buttonN
+    buttonS: buttonS
+    buttonC: buttonC
+       
     BoxLayout:
         size: root.width, root.height
         canvas.before:
@@ -65,8 +69,47 @@
                 Label:
                     text : '[color=000000]Un truc'
                     markup:True
-            BoxLayout:
-                SpinBox:
+            BoxLayout:  #parametres
+                orientation:"vertical"
+                Button:
+                    on_release:root.on_buttonparametre_active(self)
+                Label:
+                    text:"Parametres"
+                BoxLayout:
+                    
+                    Label:
+                        text:"Dth"
+                    BoxLayout:
+                        orientation:"vertical"
+                        SpinBox:
+                            id:buttonDth                        
+                              
+                        Slider:
+                            orientation:"horizontal"
+                BoxLayout:
+                    
+                    Label:
+                        text:"n"
+                    SpinBox:
+                        id:buttonN
+                        
+                BoxLayout:
+                    Label:
+                        text:"s"
+                    SpinBox:
+                        id:buttonS
+
+                BoxLayout:
+                    
+                    Label:
+                        text:"C"
+                    SpinBox:
+                        id:buttonC
+                        
+
+
+
+
         BoxLayout:
             id: curveBoxLayout
             #text:'[color=000000]courbe'

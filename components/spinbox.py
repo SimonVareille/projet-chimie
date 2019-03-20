@@ -35,7 +35,6 @@ class SpinBox(BoxLayout):
         else:
             value = float(self.value)
         self.value = str(round(value + self.steps, 2))
-
     def substract_one(self):
         #Decrease the value by 0.1
         if not self.value or self.value == "None":
