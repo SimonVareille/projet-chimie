@@ -1,0 +1,29 @@
+<SpinBox>:
+    
+    buttonMinus_id: buttonMinus
+    buttonPlus_id: buttonPlus
+    buttonMid_id: buttonMid
+    
+    id:InputFieldArea1
+    
+    orientation:"horizontal"
+
+    Button:
+        id: buttonMinus
+        text:"-"
+        on_release: root.substract_one()
+        font_size: .7*self.height
+
+    Button:
+        id: buttonMid
+        multiline: False
+        font_size: .5*self.height
+        text: root.value
+        background_color : 0,0,0.5,1
+        on_release : root.TheFunction()
+        
+    Button:
+        id: buttonPlus
+        text:"+"
+        on_release: root.add_one()
+        font_size: .7*self.height

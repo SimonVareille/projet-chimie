@@ -118,6 +118,12 @@ class AppApp(App):
     
     def on_pause(self):
         return True
+    
+    def key_input(self, window, key, scancode, codepoint, modifier):
+      if key == 27:
+         return True  # override the default behaviour
+      else:           # the key now does nothing
+         return False
 
 
 if __name__ in ('__main__', '__android__'):
