@@ -28,11 +28,8 @@ source.include_exts = py,png,jpg,kv,atlas,csv
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-<<<<<<< Updated upstream
-version = 0.2
-=======
+
 version = 0.3
->>>>>>> Stashed changes
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
