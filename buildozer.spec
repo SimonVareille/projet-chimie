@@ -28,7 +28,11 @@ source.include_exts = py,png,jpg,kv,atlas,csv
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.1.2
+<<<<<<< Updated upstream
+version = 0.2
+=======
+version = 0.3
+>>>>>>> Stashed changes
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
@@ -82,7 +86,7 @@ fullscreen = 0
 # red, blue, green, black, white, gray, cyan, magenta, yellow, lightgray,
 # darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
 # olive, purple, silver, teal.
-#android.presplash_color = #FFFFFF
+#android.presplash_color = fuchsia
 
 # (list) Permissions
 #android.permissions = INTERNET
@@ -103,14 +107,14 @@ android.ndk = 17c
 #android.private_storage = True
 
 # (str) Android NDK directory (if empty, it will be automatically downloaded.)
-#android.ndk_path = /home/simon/.buildozer/android/platform/android-ndk-r9c/
-#android.ndk_path = /home/simon/crystax-ndk-10.3.2/
+#android.ndk_path = ~/.buildozer/android/platform/android-ndk-r9c/
+#android.ndk_path = ~/crystax-ndk-10.3.2/
 
 # (str) Android SDK directory (if empty, it will be automatically downloaded.)
-#android.sdk_path = /home/simon/.buildozer/android/platform/android-sdk-20/
+#android.sdk_path = ~/.buildozer/android/platform/android-sdk-20/
 
 # (str) ANT directory (if empty, it will be automatically downloaded.)
-android.ant_path = /home/simon/.buildozer/android/platform/apache-ant-1.9.4/
+android.ant_path = ~/.buildozer/android/platform/apache-ant-1.9.4/
 
 # (bool) If True, then skip trying to update the Android sdk
 # This can be useful to avoid excess Internet downloads or save time
@@ -197,7 +201,7 @@ android.arch = armeabi-v7a
 #
 
 # (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
-#p4a.source_dir =
+p4a.source_dir = ~/android/python-for-android/
 
 # (str) The directory in which python-for-android should look for your own build recipes (if any)
 #p4a.local_recipes =

@@ -7,7 +7,7 @@
     curveBoxLayout: curveBoxLayout
     choixCourbe: choixCourbe
     
-    expCurveCheckBox: expCurveCheckBox
+    expCurveSwitch: expCurveSwitch
     
     BoxLayout:
         size: root.width, root.height
@@ -31,35 +31,35 @@
                         text: root.expCurveText
                         #text:'[color=ff3399]Courbe\n experimentale[/color]'
                         markup:True
-                    CheckBox:
-                        id: expCurveCheckBox
+                    Switch:
+                        id: expCurveSwitch
                         active: True
-                        on_active: root.on_expCurveCheckBox_active(self.active)
+                        on_active: root.on_expCurveSwitch_active(self.active)
                 BoxLayout:
                     Label:
                         id: thCurve
                         size_hint:(0.85,1)
                         text:'[color=0066ff]Courbe\n théorique[/color]'
                         markup:True
-                    CheckBox:
-                        id: thCurveCheckBox
+                    Switch:
+                        id: thCurveSwitch
                         active: root.thCurveCheckBoxActive
-                        on_active: root.on_thCurveCheckBox_active(self.active)
+                        on_active: root.on_thCurveSwitch_active(self.active)
                 BoxLayout:
                     Label:
                         id: intervalSelectionLabel
                         size_hint:(0.85,1)
                         text:'[color=00ff00]Selectionner\n un intervalle\''
                         markup:True
-                    CheckBox:
-                        id: intervalSelectionCheckBox
+                    Switch:
+                        id: intervalSelectionSwitch
                 BoxLayout:
                     Label:
                         id: dCurveLabel 
                         size_hint:(0.85,1)
                         text:'[color=ffff00]Courbe D[/color]'
                         markup:True
-                    CheckBox:
+                    Switch:
                         id: dCurveCheckBox
             StackLayout:                            
                 Label:
