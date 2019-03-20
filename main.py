@@ -161,7 +161,7 @@ class AppApp(App):
             buttons.add_widget(button_cancel)
             
             content.add_widget(buttons)
-            popup = Popup(title = "Fermer ?", content=content, auto_dismiss=True, size_hint=(None, None), size=(400, 200))
+            popup = Popup(title = "Fermer ?", content=content, auto_dismiss=True, size_hint=(0.3, 0.2))
             
             # bind the on_press event of the button to the dismiss function
             button_cancel.bind(on_press=popup.dismiss)
