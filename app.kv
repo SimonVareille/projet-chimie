@@ -4,7 +4,7 @@
     curveBoxLayout: curveBoxLayout
     choixCourbe: choixCourbe
     
-    expCurveCheckBox: expCurveCheckBox
+    expCurveSwitch: expCurveSwitch
     
     BoxLayout:
         size: root.width, root.height
@@ -29,9 +29,9 @@
                         #text:'[color=ff3399]Courbe\n experimentale[/color]'
                         markup:True
                     Switch:
-                        id: expCurveCheckBox
+                        id: expCurveSwitch
                         active: True
-                        on_active: root.on_expCurveCheckBox_active(self.active)
+                        on_active: root.on_expCurveSwitch_active(self.active)
                 BoxLayout:
                     Label:
                         id: thCurve
@@ -39,9 +39,9 @@
                         text:'[color=0066ff]Courbe\n théorique[/color]'
                         markup:True
                     Switch:
-                        id: thCurveCheckBox
+                        id: thCurveSwitch
                         active: root.thCurveCheckBoxActive
-                        on_active: root.on_thCurveCheckBox_active(self.active)
+                        on_active: root.on_thCurveSwitch_active(self.active)
                 BoxLayout:
                     Label:
                         id: intervalSelectionLabel
@@ -49,7 +49,7 @@
                         text:'[color=00ff00]Selectionner\n un intervalle\''
                         markup:True
                     Switch:
-                        id: intervalSelectionCheckBox
+                        id: intervalSelectionSwitch
                 BoxLayout:
                     Label:
                         id: dCurveLabel 
