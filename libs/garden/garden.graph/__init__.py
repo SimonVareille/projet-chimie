@@ -838,6 +838,9 @@ class Graph(Widget):
         else:
             conv_y = norm_y * (self.ymax - self.ymin) + self.ymin
         return [conv_x, conv_y]
+    
+    def get_plot_area_size(self):
+        return tuple(self._plot_area.size)
         
 
     xmin = NumericProperty(0.)
