@@ -60,6 +60,11 @@ class MainWindow(Widget):
     buttonS = ObjectProperty(None)
     buttonC = ObjectProperty(None)
     
+    valDthInit=10**(-5)
+    valNInit=1
+    valSInit=1
+    valCInit=10**(-3)
+    
     valDth=NumericProperty(None)
     valN=NumericProperty(None)
     valS=NumericProperty(None)
@@ -72,6 +77,15 @@ class MainWindow(Widget):
     def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
         
+        self.valDth=self.valDthInit
+        self.buttonDth.value=str(self.valDthInit)
+        self.valN=self.valNInit
+        self.buttonN.value=str(self.valNInit)
+        self.valC=self.valCInit
+        self.buttonC.value=str(self.valCInit)
+        self.valS=self.valSInit
+        self.buttonS.value=str(self.valSInit)
+        
         reader = DataReader("experimental.csv")
         
         self.expt = reader.get_t()
@@ -81,7 +95,7 @@ class MainWindow(Widget):
             self.t = cottrel.create_t(0, max(self.expt), 1000)
         else:
             self.t = cottrel.create_t(0, 20, 1000)
-        self.I = cottrel.courbe_cottrel_th(1, 1, 10**-3, 10**(-5), self.t)
+        self.I = cottrel.courbe_cottrel_th(self.valNInit, self.valSInit, self.valCInit, self.valDth, self.t)
         
         self.mainGraph = cottrel_graph.CottrelGraph(self.t, self.I)
         
@@ -102,6 +116,8 @@ class MainWindow(Widget):
         self.mainGraph.update()
         
         self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
+        
+
     
     def on_expCurveSwitch_active(self, active):
         if active:
