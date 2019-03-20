@@ -43,7 +43,7 @@ from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
-from kivy.properties import ObjectProperty, StringProperty, BooleanProperty
+from kivy.properties import ObjectProperty, StringProperty, BooleanProperty, NumericProperty
 from kivy.clock import Clock
 
 
@@ -55,7 +55,20 @@ class MainWindow(Widget):
     expCurveSwitch = ObjectProperty(None)
     expCurveText = StringProperty("[color=ff3399]Courbe\n experimentale[/color]")
     
+    buttonDth = ObjectProperty(None)
+    buttonN = ObjectProperty(None)
+    buttonS = ObjectProperty(None)
+    buttonC = ObjectProperty(None)
+    
+    valDth=NumericProperty(None)
+    valN=NumericProperty(None)
+    valS=NumericProperty(None)
+    valC=NumericProperty(None)
+
+
+    
     thCurveSwitchActive = BooleanProperty(True)
+
     def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
         
@@ -107,7 +120,15 @@ class MainWindow(Widget):
             self.mainGraph.display_theoric(False)
             self.mainGraph.set_limit_interval()
         self.mainGraph.update()
-
+        
+    def on_buttonparametre_active(self,instance):
+        self.valDth=self.buttonDth.value
+        self.valN=self.buttonN.value
+        self.valC=self.buttonC.value
+        self.valS=self.buttonS.value
+        self.I = cottrel.courbe_cottrel_th(self.valN,self.valS, self.valC, self.valDth, self.t)
+        self.mainGraph.I=self.I
+        self.mainGraph.update()
 
 class AppApp(App):
     '''L'application en elle même.
