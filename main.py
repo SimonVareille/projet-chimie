@@ -37,14 +37,17 @@ import kivy
 kivy.require('1.10.1')
 
 from kivy.config import Config
-Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
+#Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 
 from kivy.app import App
+from kivy.core.window import Window
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty, StringProperty, BooleanProperty, NumericProperty
 from kivy.clock import Clock
+from kivy.uix.popup import Popup
+from kivy.uix.button import Button
 
 
 class MainWindow(Widget):
@@ -129,22 +132,51 @@ class MainWindow(Widget):
         self.I = cottrel.courbe_cottrel_th(self.valN,self.valS, self.valC, self.valDth, self.t)
         self.mainGraph.I=self.I
         self.mainGraph.update()
+    
+    
 
 class AppApp(App):
     '''L'application en elle même.
     '''
     title = "Cottrel"
     def build(self):
+        Window.bind(on_keyboard=self.key_input)
         return MainWindow()
     
     def on_pause(self):
         return True
     
+    def on_resume(self):
+        return True
+    
     def key_input(self, window, key, scancode, codepoint, modifier):
-      if key == 27:
-         return True  # override the default behaviour
-      else:           # the key now does nothing
-         return False
+        if key == 27:
+            content = BoxLayout(orientation = 'vertical')
+            content.add_widget(Label(text = "Voulez vous vraiment fermer l'application ?"))
+            
+            buttons = BoxLayout(orientation = 'horizontal')
+            button_close = Button(text='Fermer')
+            button_cancel = Button(text='Annuler')
+            buttons.add_widget(button_close)
+            buttons.add_widget(button_cancel)
+            
+            content.add_widget(buttons)
+            popup = Popup(title = "Fermer ?", content=content, auto_dismiss=True, size_hint=(None, None), size=(400, 200))
+            
+            # bind the on_press event of the button to the dismiss function
+            button_cancel.bind(on_press=popup.dismiss)
+            button_close.bind(on_press=popup.dismiss)
+            button_close.bind(on_press = self.close)
+            
+            # open the popup
+            popup.open()
+            return True  
+        else:           # the key now does nothing
+            return False
+    
+    def close(self, *args, **kwargs):
+        Window.close()
+        App.get_running_app().stop()
 
 
 if __name__ in ('__main__', '__android__'):
