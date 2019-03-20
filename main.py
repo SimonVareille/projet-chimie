@@ -52,7 +52,7 @@ class MainWindow(Widget):
     Elle a le même nom que dans app.kv.
     '''
     curveBoxLayout = ObjectProperty(None)
-    expCurveCheckBox = ObjectProperty(None)
+    expCurveSwitch = ObjectProperty(None)
     expCurveText = StringProperty("[color=ff3399]Courbe\n experimentale[/color]")
     
     buttonDth = ObjectProperty(None)
@@ -67,7 +67,8 @@ class MainWindow(Widget):
 
 
     
-    thCurveCheckBoxActive = BooleanProperty(True)
+    thCurveSwitchActive = BooleanProperty(True)
+
     def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
         
@@ -102,7 +103,7 @@ class MainWindow(Widget):
         
         self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
     
-    def on_expCurveCheckBox_active(self, active):
+    def on_expCurveSwitch_active(self, active):
         if active:
             self.mainGraph.display_experimental()
             self.mainGraph.set_limit_interval()
@@ -111,7 +112,7 @@ class MainWindow(Widget):
             self.mainGraph.set_limit_interval()
         self.mainGraph.update()
     
-    def on_thCurveCheckBox_active(self, active):
+    def on_thCurveSwitch_active(self, active):
         if active:
             self.mainGraph.display_theoric()
             self.mainGraph.set_limit_interval()
