@@ -1,4 +1,7 @@
 #kivy 1.0
+
+#:import SpinBox components.spinbox.SpinBox
+
 <MainWindow>:
     # import curveBoxLayout
     curveBoxLayout: curveBoxLayout
@@ -40,7 +43,7 @@
                         markup:True
                     Switch:
                         id: thCurveSwitch
-                        active: root.thCurveCheckBoxActive
+                        active: root.thCurveSwitchActive
                         on_active: root.on_thCurveSwitch_active(self.active)
                 BoxLayout:
                     Label:
@@ -62,9 +65,8 @@
                 Label:
                     text : '[color=000000]Un truc'
                     markup:True
-            Label :
-                text : '[color=000000]selection'
-                markup:True
+            BoxLayout:
+                SpinBox:
         BoxLayout:
             id: curveBoxLayout
             #text:'[color=000000]courbe'
