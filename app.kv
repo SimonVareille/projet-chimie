@@ -68,46 +68,53 @@
                 Label:
                     text : '[color=000000]Un truc'
                     markup:True
-            BoxLayout:  #parametres
+                    
+            #Paramètres
+            
+            BoxLayout:
                 orientation:"vertical"
                 Button:
                     text:"mettre à jour"
                     on_release:root.on_buttonparametre_active(self)
                 Label:
                     text:"Parametres"
+                    color: 0,0,0,1
                 BoxLayout:
-                    
                     Label:
-                        text:"Dth"
+                        text:"D[sub]th[/sub]"
+                        color: 0,0,0,1
+                        size_hint: 0.25, 1
+                        markup: True
                     BoxLayout:
                         orientation:"vertical"
                         SpinBox:
                             id:buttonDth                        
-                              
                         Slider:
                             orientation:"horizontal"
                 BoxLayout:
-                    
                     Label:
                         text:"n"
+                        color: 0,0,0,1
+                        size_hint: 0.25, 1
                     SpinBox:
                         id:buttonN
+                        steps: 1
                         
                 BoxLayout:
                     Label:
-                        text:"s"
+                        text:"S"
+                        color: 0,0,0,1
+                        size_hint: 0.25, 1
                     SpinBox:
                         id:buttonS
 
                 BoxLayout:
-                    
                     Label:
                         text:"C"
+                        color: 0,0,0,1
+                        size_hint: 0.25, 1
                     SpinBox:
                         id:buttonC
-                        
-
-
 
 
         BoxLayout:

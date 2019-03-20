@@ -44,7 +44,8 @@ from kivy.core.window import Window
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
-from kivy.properties import ObjectProperty, StringProperty, BooleanProperty, NumericProperty
+from kivy.properties import ObjectProperty, StringProperty, BooleanProperty, \
+    NumericProperty
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
 from kivy.uix.button import Button
