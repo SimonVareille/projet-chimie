@@ -36,6 +36,8 @@ from data_reader import DataReader
 import kivy
 kivy.require('1.10.1')
 
+import os
+
 from kivy.config import Config
 #Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 
@@ -49,6 +51,7 @@ from kivy.properties import ObjectProperty, StringProperty, BooleanProperty, \
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
 from kivy.uix.button import Button
+from components.file_chooser import OpenDialog
 
 
 class MainWindow(Widget):
@@ -57,7 +60,6 @@ class MainWindow(Widget):
     '''
     curveBoxLayout = ObjectProperty(None)
     expCurveSwitch = ObjectProperty(None)
-    expCurveText = StringProperty("[color=ff3399]Courbe\n experimentale[/color]")
     
     buttonDth = ObjectProperty(None)
     buttonN = ObjectProperty(None)
@@ -69,53 +71,38 @@ class MainWindow(Widget):
     valSInit=1
     valCInit=10**(-3)
     
-    valDth=NumericProperty(None)
-    valN=NumericProperty(None)
-    valS=NumericProperty(None)
-    valC=NumericProperty(None)
-
-
+    valDth=NumericProperty(valDthInit)
+    valN=NumericProperty(valNInit)
+    valS=NumericProperty(valSInit)
+    valC=NumericProperty(valCInit)
     
     thCurveSwitchActive = BooleanProperty(True)
 
     def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
-        
-        self.valDth=self.valDthInit
+    
         self.buttonDth.value=str(self.valDthInit)
-        self.valN=self.valNInit
         self.buttonN.value=str(self.valNInit)
-        self.valC=self.valCInit
         self.buttonC.value=str(self.valCInit)
-        self.valS=self.valSInit
         self.buttonS.value=str(self.valSInit)
         
-        reader = DataReader("experimental.csv")
+        self.mainGraph = cottrel_graph.CottrelGraph()
         
-        self.expt = reader.get_t()
-        self.expI = reader.get_I()
+        self.load_exp_data("", "experimental.csv")
         
         if self.expt:
             self.t = cottrel.create_t(0, max(self.expt), 1000)
         else:
             self.t = cottrel.create_t(0, 20, 1000)
-        self.I = cottrel.courbe_cottrel_th(self.valNInit, self.valSInit, self.valCInit, self.valDth, self.t)
+        self.I = cottrel.courbe_cottrel_th(self.valNInit, self.valSInit, self.valCInit, self.valDthInit, self.t)
         
-        self.mainGraph = cottrel_graph.CottrelGraph(self.t, self.I)
         
         self.mainGraph.set_experimental_data(self.expt, self.expI)
         self.mainGraph.display_experimental()
         
         self.mainGraph.set_limit_interval()
         
-        if config.USE_NUMPY:
-            linreg = LinearRegression(self.expt, self.expI)
-            
-            linreg.set_t_interval(1, 50)
-            
-            expD, coeff = linreg.regression(1, 1, 10**-3)
-            
-            self.mainGraph.set_expD(expD)
+        self.linear_regression()
         
         self.mainGraph.update()
         
@@ -150,10 +137,60 @@ class MainWindow(Widget):
         self.mainGraph.I=self.I
         self.mainGraph.update()
     
+    def show_openDialog(self):
+        '''Show a dialog in order to select the data file to open.
+        '''
+        content = OpenDialog()
+        self._openPopup = Popup(title="Sélectionnez le fichier de données :", content=content,
+                            size_hint=(0.9, 0.9))
+        content.cancel = self._openPopup.dismiss
+        content.load = self.load_data_from_dialog
+        self._openPopup.open()
     
+    def load_data_from_dialog(self, path, filename):
+        if self.load_exp_data(path, filename):
+            self._openPopup.dismiss()
+    
+    def load_exp_data(self, path, filename):
+        '''Load the experimental data from file named `filename` located in 
+        `path`. If `filename` is a list or a tuple, only the first cell is
+        considered.
+        '''
+        if isinstance(filename, (list, tuple)):
+            filename = filename[0]
+        reader = DataReader(os.path.join(path, filename))
+        
+        self.expt = reader.get_t()
+        self.expI = reader.get_I()
+        
+        self.mainGraph.set_experimental_data(self.expt, self.expI)
+        
+        #Recalculate the theoric value so that it fit the experimental range.
+        self.t = cottrel.create_t(0, max(self.expt), 1000)
+        self.I = cottrel.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
+        self.mainGraph.set_theoric_data (self.t, self.I)
+        
+        self.linear_regression()
+        
+        self.mainGraph.update()
+        
+        return True
+    
+    def linear_regression(self):
+        '''Do the linear regression on the current experimental data and notify
+        the mainGraph that the value has to be updated.
+        '''
+        if config.USE_NUMPY:
+            linreg = LinearRegression(self.expt, self.expI)
+            
+            linreg.set_t_interval(1, 50)
+            
+            expD, coeff = linreg.regression(1, 1, 10**-3)
+            
+            self.mainGraph.set_expD(expD)
 
 class AppApp(App):
-    '''L'application en elle même.
+    '''The app itself.
     '''
     title = "Cottrel"
     def build(self):
