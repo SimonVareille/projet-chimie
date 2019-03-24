@@ -73,7 +73,6 @@ class SpinBox(BoxLayout):
         if entry:
             try:
                 toReturn=eval(self.ConvertToCalculate(entry))
-                print(toReturn)
                 return(toReturn)
             except Exception as err:
                 print(err)
