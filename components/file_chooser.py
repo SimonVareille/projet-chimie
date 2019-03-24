@@ -4,6 +4,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty
 from kivy.lang.builder import Builder
 import os
+import platform
 
 Builder.load_file(os.path.dirname(__file__) +'/file_chooser.kv')
 
@@ -17,6 +18,19 @@ class OpenDialog(FloatLayout):
                             size_hint=(0.9, 0.9))
         self._popup.open()
     """
+    
+    filechooser = ObjectProperty(None)
+    
+    def __init__(self, **kwargs):
+        super(OpenDialog, self).__init__(**kwargs)
+        
+        #Prevent user to go through system directory on Android
+        if platform.machine()=="armv8l":
+            self.filechooser.rootpath = "/sdcard"
+            self.filechooser.path = "/sdcard/Download"
+        elif platform.system() == "Linux":
+            self.filechooser.path = "~/"
+    
     load = ObjectProperty(None)
     ''' Function to call when the "Ouvrir" button is released.
     Must be defined as follow:
