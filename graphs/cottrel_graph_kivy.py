@@ -6,7 +6,7 @@ class CottrelGraph(CottrelGraphBase):
     """Cette classe crée le graphique contenant les courbes de Cottrel en 
     utilisant kivy.garden.graph.
     """
-    def __init__(self, t, I):
+    def __init__(self, t=[], I=[]):
         """
         """
         super(CottrelGraph, self).__init__(t, I)
@@ -39,9 +39,8 @@ class CottrelGraph(CottrelGraphBase):
         self.thplot = SmoothLinePlot(color=[0, 0, 1, 1])
         self.thplot.label = "Theoric"
         
-        self.expplot = DotPlot(color=[1, 0, 0, 1])
+        self.expplot = SmoothLinePlot(color=[1, 0, 0, 1])
         self.expplot.label = "Experimental"
-        self.expplot.point_size = 3
         
 #        self.testplot = SmoothLinePlot(color=[0, 1, 0, 1])
 #        self.testplot.points = [(5,0), (5,1.2)]
