@@ -84,7 +84,7 @@ class CottrelGraph(CottrelGraphBase):
     def set_limit_interval(self, tleft=None, tright=None, Ibottom=None, Itop=None):
         super(CottrelGraph, self).set_limit_interval(tleft, tright, Ibottom, Itop)
         
-        width,height = Graph.get_plot_area_size(self)
+        width,height = self.graph.get_plot_area_size()
         self.graph.x_ticks_major = (tright-tleft)/(width/10)
         self.graph.x_ticks_minor = 5
         self.graph.y_ticks_major = (Itop-Ibottom)/(height/5)
