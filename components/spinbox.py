@@ -20,6 +20,12 @@ class SpinBox(BoxLayout):
     
     def __init__(self, **kwargs):
         super(SpinBox, self).__init__(**kwargs)
+        
+    def convert_to_scientific_notation(self,number):
+        value_to_return=str(number)
+        if len(value_to_return)>10:
+            value_to_return="{:.4e}".format(number)
+        return value_to_return
 
     def TheFunction2(self, popup):
         value = self.evaluation(popup.entry.text)
@@ -27,7 +33,7 @@ class SpinBox(BoxLayout):
         #Ce n'est peut-être pas le comportement attendu.
         self.value = value if value is not None else self.value
          
-        self._display_value = str(self.value)
+        self._display_value = self.convert_to_scientific_notation(self.value)
         #Si value est None, on ne ferme pas le popup. (On retourne True)
         return value is None
 
@@ -48,7 +54,7 @@ class SpinBox(BoxLayout):
         if value > self.max_value:
             value = self.max_value
         self.value = value
-        self._display_value = str(self.value)
+        self._display_value = self.convert_to_scientific_notation(self.value)
     def substract_one(self):
         #Decrease the value by 0.1
         if not self.value:
@@ -60,7 +66,7 @@ class SpinBox(BoxLayout):
         if value < self.min_value:
             value = self.min_value
         self.value = value
-        self._display_value = str(value)
+        self._display_value = self.convert_to_scientific_notation(self.value)
 
     def ConvertToCalculate(self, string):
         return string.replace("^","**")
@@ -83,3 +89,13 @@ class SpinBox(BoxLayout):
         
     def on__display_value(self, instance, value):
         pass
+    
+
+
+
+
+
+
+
+
+
