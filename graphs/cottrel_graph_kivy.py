@@ -76,7 +76,7 @@ class CottrelGraph(CottrelGraphBase):
         self.graph.xmax = float(self.tright)
         
         self.graph.ymin = float(self.Ibottom)
-        self.graph.ymax = float(self.Itop)
+        self.graph.ymax = float(self.Itop) if self.Ibottom!=self.Itop else 1.0
             
     def get_canvas(self):
         return self.graph
