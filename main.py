@@ -69,8 +69,7 @@ class MainWindow(Widget):
     valN=NumericProperty(None)
     valS=NumericProperty(None)
     valC=NumericProperty(None)
-
-
+    
     
     thCurveSwitchActive = BooleanProperty(True)
 
@@ -85,6 +84,7 @@ class MainWindow(Widget):
         self.buttonC.value=str(self.valCInit)
         self.valS=self.valSInit
         self.buttonS.value=str(self.valSInit)
+        
         
         reader = DataReader("experimental.csv")
         
@@ -117,6 +117,11 @@ class MainWindow(Widget):
         
         self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
         
+        self.bind_on_buttonparametre_active(self.buttonDth)
+        self.bind_on_buttonparametre_active(self.buttonN)
+        self.bind_on_buttonparametre_active(self.buttonS)
+        self.bind_on_buttonparametre_active(self.buttonC)
+
 
     
     def on_expCurveSwitch_active(self, active):
@@ -136,8 +141,8 @@ class MainWindow(Widget):
             self.mainGraph.display_theoric(False)
             self.mainGraph.set_limit_interval()
         self.mainGraph.update()
-        
-    def on_buttonparametre_active(self,instance):
+    def on_buttonparametre_active(self,instance,text):
+        '''met à jour la courbe avec les nouvelles valeurs'''
         self.valDth=self.buttonDth.value
         self.valN=self.buttonN.value
         self.valC=self.buttonC.value
@@ -145,6 +150,11 @@ class MainWindow(Widget):
         self.I = cottrel.courbe_cottrel_th(self.valN,self.valS, self.valC, self.valDth, self.t)
         self.mainGraph.I=self.I
         self.mainGraph.update()
+    
+    def bind_on_buttonparametre_active(self, spinbox):
+        spinbox.buttonMid_id.bind(text = self.on_buttonparametre_active)
+        
+        
 
 class AppApp(App):
     '''L'application en elle même.
