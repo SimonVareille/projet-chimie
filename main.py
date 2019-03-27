@@ -60,31 +60,63 @@ class MainWindow(Widget):
     '''
     curveBoxLayout = ObjectProperty(None)
     expCurveSwitch = ObjectProperty(None)
-    
-    buttonDth = ObjectProperty(None)
-    buttonN = ObjectProperty(None)
-    buttonS = ObjectProperty(None)
-    buttonC = ObjectProperty(None)
-    
-    valDthInit=10**(-5)
-    valNInit=1
-    valSInit=1
-    valCInit=10**(-3)
 
-    valDth=NumericProperty(valDthInit)
-    valN=NumericProperty(valNInit)
-    valS=NumericProperty(valSInit)
-    valC=NumericProperty(valCInit)
+    #valeurs pour Dth
+    buttonDth = ObjectProperty(None)    
+    valDth=NumericProperty(10**(-5))
+    valMinDth=NumericProperty(0)
+    valMaxDth=NumericProperty(10**(-4))
+    stepsDth=NumericProperty(10**(-6))
+    
+    #valeurs pour N
+    buttonN = ObjectProperty(None)
+    valN=NumericProperty(1)
+    valMinN=NumericProperty(1)
+    valMaxN=NumericProperty(4)
+    stepsN=NumericProperty(1)
+
+    #valeurs pour S
+    buttonS = ObjectProperty(None)
+    valS=NumericProperty(0.25)
+    valMinS=NumericProperty(0)
+    valMaxS=NumericProperty(0.5)
+    stepsS=NumericProperty(0.01)
+    
+    #valeurs pour C
+    buttonC = ObjectProperty(None)
+    valC=NumericProperty(10**(-5))
+    valMinC=NumericProperty(0)
+    valMaxC=NumericProperty(1)
+    stepsC=NumericProperty(10**(-6))
     
     thCurveSwitchActive = BooleanProperty(True)
 
     def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
+        
+        #Valeurs pour Dth
+        self.buttonDth.value=self.valDth
+        self.buttonDth.min_value=self.valMinDth
+        self.buttonDth.max_value=self.valMaxDth
+        self.buttonDth.steps=self.stepsDth
+        
+        #Valeurs pour N
+        self.buttonN.value=self.valN
+        self.buttonN.min_value=self.valMinN
+        self.buttonN.max_value=self.valMaxN
+        self.buttonN.steps=self.stepsN
     
-        self.buttonDth.value=str(self.valDthInit)
-        self.buttonN.value=str(self.valNInit)
-        self.buttonC.value=str(self.valCInit)
-        self.buttonS.value=str(self.valSInit)
+        #Valeurs pour S
+        self.buttonS.value=self.valS
+        self.buttonS.min_value=self.valMinS
+        self.buttonS.max_value=self.valMaxS
+        self.buttonS.steps=self.stepsS
+        
+        #Valeurs pour C
+        self.buttonC.value=self.valC
+        self.buttonC.min_value=self.valMinC
+        self.buttonC.max_value=self.valMaxC
+        self.buttonC.steps=self.stepsC
 
         self.mainGraph = cottrel_graph.CottrelGraph()
 
@@ -95,7 +127,7 @@ class MainWindow(Widget):
             self.t = cottrel.create_t(0, max(self.expt), 1000)
         else:
             self.t = cottrel.create_t(0, 20, 1000)
-        self.I = cottrel.courbe_cottrel_th(self.valNInit, self.valSInit, self.valCInit, self.valDthInit, self.t)
+        self.I = cottrel.courbe_cottrel_th(self.buttonN.value, self.buttonS.value, self.buttonC.value, self.buttonDth.value, self.t)
         
         
         self.mainGraph.set_experimental_data(self.expt, self.expI)
