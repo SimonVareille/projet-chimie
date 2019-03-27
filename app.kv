@@ -10,6 +10,7 @@
     buttonN: buttonN
     buttonS: buttonS
     buttonC: buttonC
+    sliderDth:sliderDth
 
     BoxLayout:
         size: root.width, root.height
@@ -98,7 +99,9 @@
                         SpinBox:
                             id:buttonDth                        
                         Slider:
+                            id:sliderDth
                             orientation:"horizontal"
+                            on_touch_move:root.on_slider_Dth_active()
                 BoxLayout:
                     Label:
                         text:"n"
