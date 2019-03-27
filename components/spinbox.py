@@ -85,7 +85,7 @@ class SpinBox(BoxLayout):
                 return None
             
     def on_value(self, instance, value):
-        self._display_value = str(value)
+        self._display_value = self.convert_to_scientific_notation(value)
         
     def on__display_value(self, instance, value):
         pass

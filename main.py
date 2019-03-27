@@ -89,6 +89,8 @@ class MainWindow(Widget):
     valMaxC=NumericProperty(1)
     stepsC=NumericProperty(10**(-6))
     
+    sliderDth=ObjectProperty(None)
+    
     thCurveSwitchActive = BooleanProperty(True)
 
     def __init__(self, **kwargs):
@@ -99,6 +101,7 @@ class MainWindow(Widget):
         self.buttonDth.min_value=self.valMinDth
         self.buttonDth.max_value=self.valMaxDth
         self.buttonDth.steps=self.stepsDth
+        self.init_slider_Dth()
         
         #Valeurs pour N
         self.buttonN.value=self.valN
@@ -168,6 +171,7 @@ class MainWindow(Widget):
     def on_buttonparametre_active(self,instance,text):
         '''met à jour la courbe avec les nouvelles valeurs'''
         self.valDth=self.buttonDth.value
+        self.sliderDth.value=self.buttonDth.value
         self.valN=self.buttonN.value
         self.valC=self.buttonC.value
         self.valS=self.buttonS.value
@@ -177,7 +181,14 @@ class MainWindow(Widget):
 
     def bind_on_buttonparametre_active(self, spinbox):
         spinbox.buttonMid_id.bind(text = self.on_buttonparametre_active)
-        
+    
+    def init_slider_Dth(self):
+        self.sliderDth.min=self.buttonDth.min_value
+        self.sliderDth.max=self.buttonDth.max_value
+        self.sliderDth.value=self.buttonDth.value
+        self.sliderDth.step=self.buttonDth.steps
+    def on_slider_Dth_active(self):
+        self.buttonDth.value=self.sliderDth.value
         
 
     def show_openDialog(self):
