@@ -70,7 +70,7 @@ class MainWindow(Widget):
     valNInit=1
     valSInit=1
     valCInit=10**(-3)
-    
+
     valDth=NumericProperty(valDthInit)
     valN=NumericProperty(valNInit)
     valS=NumericProperty(valSInit)
@@ -85,8 +85,9 @@ class MainWindow(Widget):
         self.buttonN.value=str(self.valNInit)
         self.buttonC.value=str(self.valCInit)
         self.buttonS.value=str(self.valSInit)
-        
+
         self.mainGraph = cottrel_graph.CottrelGraph()
+
         
         self.load_exp_data("", "experimental.csv")
         
@@ -108,6 +109,11 @@ class MainWindow(Widget):
         
         self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
         
+        self.bind_on_buttonparametre_active(self.buttonDth)
+        self.bind_on_buttonparametre_active(self.buttonN)
+        self.bind_on_buttonparametre_active(self.buttonS)
+        self.bind_on_buttonparametre_active(self.buttonC)
+
 
     
     def on_expCurveSwitch_active(self, active):
@@ -127,8 +133,8 @@ class MainWindow(Widget):
             self.mainGraph.display_theoric(False)
             self.mainGraph.set_limit_interval()
         self.mainGraph.update()
-        
-    def on_buttonparametre_active(self,instance):
+    def on_buttonparametre_active(self,instance,text):
+        '''met à jour la courbe avec les nouvelles valeurs'''
         self.valDth=self.buttonDth.value
         self.valN=self.buttonN.value
         self.valC=self.buttonC.value
@@ -136,7 +142,12 @@ class MainWindow(Widget):
         self.I = cottrel.courbe_cottrel_th(self.valN,self.valS, self.valC, self.valDth, self.t)
         self.mainGraph.I=self.I
         self.mainGraph.update()
-    
+
+    def bind_on_buttonparametre_active(self, spinbox):
+        spinbox.buttonMid_id.bind(text = self.on_buttonparametre_active)
+        
+        
+
     def show_openDialog(self):
         '''Show a dialog in order to select the data file to open.
         '''
@@ -188,6 +199,7 @@ class MainWindow(Widget):
             expD, coeff = linreg.regression(1, 1, 10**-3)
             
             self.mainGraph.set_expD(expD)
+
 
 class AppApp(App):
     '''The app itself.
