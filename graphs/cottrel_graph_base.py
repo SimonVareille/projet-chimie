@@ -7,7 +7,7 @@ class CottrelGraphBase:
     Les variables `n`, `S`, `C` et `D` ne sont peut-être pas utiles dans cette
     classe... À voir...
     """
-    def __init__(self, t, I):
+    def __init__(self, t=[], I=[]):
         self.t=t
         self.I=I
         self.n=1
@@ -24,9 +24,9 @@ class CottrelGraphBase:
         self._display_experimental=False
 
         self.tleft=0
-        self.tright=max(t)
+        self.tright = max(t) if t else 5
         self.Ibottom=0
-        self.Itop=max(I)
+        self.Itop = max(I) if I else 2
         
     def set_n (self, n):
         self.n=n

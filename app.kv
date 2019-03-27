@@ -1,11 +1,10 @@
-#kivy 1.0
+#:kivy 1.1.0
 
 #:import SpinBox components.spinbox.SpinBox
 
 <MainWindow>:
     # import curveBoxLayout
     curveBoxLayout: curveBoxLayout
-    choixCourbe: choixCourbe
     expCurveSwitch: expCurveSwitch
     buttonDth: buttonDth
     buttonN: buttonN
@@ -16,105 +15,121 @@
         size: root.width, root.height
         canvas.before:
             Color:
-                rgba:0.85,0.85,1,1
+                rgba: 0.85, 0.85, 1, 1
             Rectangle:
                 pos:self.pos
                 size:self.size
         BoxLayout:
-            id: choixCourbe
             orientation:'vertical'
-            size_hint:(0.2, 1) 
-            pos:(0, 0)
+            size_hint: 0.2, 1
+            pos: 0, 0
             BoxLayout:
                 orientation:'vertical'
                 BoxLayout:
-                    Label:
-                        id: expCurveLabel
-                        size_hint:(0.85,1)
-                        text: root.expCurveText
-                        #text:'[color=ff3399]Courbe\n experimentale[/color]'
+                    Button:
+                        id: importDataButton
+                        size_hint: 0.60, 1
+                        text: 'Importer les données\nexpérimentales'
+                        halign: 'center'
+                        valign: 'center'
+                        color: 1, 1, 1, 1
                         markup:True
+                        on_release: root.show_openDialog()
                     Switch:
                         id: expCurveSwitch
+                        size_hint: 0.40, 1
                         active: True
                         on_active: root.on_expCurveSwitch_active(self.active)
                 BoxLayout:
                     Label:
                         id: thCurve
-                        size_hint:(0.85,1)
-                        text:'[color=0066ff]Courbe\n théorique[/color]'
+                        size_hint: 0.60, 1
+                        text:'[color=0066ff]Courbe théorique[/color]'
                         markup:True
                     Switch:
                         id: thCurveSwitch
+                        size_hint: 0.40, 1
                         active: root.thCurveSwitchActive
                         on_active: root.on_thCurveSwitch_active(self.active)
                 BoxLayout:
                     Label:
                         id: intervalSelectionLabel
-                        size_hint:(0.85,1)
-                        text:'[color=00ff00]Selectionner\n un intervalle\''
+                        size_hint: 0.60, 1
+                        text:'[color=00ff00]Selectionner un intervalle\''
                         markup:True
                     Switch:
                         id: intervalSelectionSwitch
+                        size_hint: 0.40, 1
                 BoxLayout:
                     Label:
                         id: dCurveLabel 
-                        size_hint:(0.85,1)
+                        size_hint: 0.60, 1
                         text:'[color=ffff00]Courbe D[/color]'
                         markup:True
                     Switch:
                         id: dCurveCheckBox
+                        size_hint: 0.40, 1
             StackLayout:                            
                 Label:
                     text : '[color=000000]Un truc'
                     markup:True
-            BoxLayout:  #parametres
+                    
+            #Paramètres
+            
+            BoxLayout:
                 orientation:"vertical"
+
                 #Button:
                 #    text:"mettre à jour"
                 #    on_release:root.on_buttonparametre_active(self)
+
                 Label:
                     text:"Parametres"
+                    color: 0, 0, 0, 1
                 BoxLayout:
-                    
+                    size_hint: 1, 2
                     Label:
-                        text:"Dth"
+                        text:"D[sub]th[/sub]"
+                        color: 0, 0, 0, 1
+                        size_hint: 0.25, 1
+                        markup: True
                     BoxLayout:
                         orientation:"vertical"
                         SpinBox:
                             id:buttonDth                        
-                              
                         Slider:
                             orientation:"horizontal"
                 BoxLayout:
-                    
                     Label:
                         text:"n"
+                        color: 0, 0, 0, 1
+                        size_hint: 0.25, 1
                     SpinBox:
                         id:buttonN
+                        steps: 1
                         
                 BoxLayout:
                     Label:
-                        text:"s"
+                        text:"S"
+                        color: 0, 0, 0, 1
+                        size_hint: 0.25, 1
                     SpinBox:
                         id:buttonS
 
                 BoxLayout:
-                    
                     Label:
                         text:"C"
+                        color: 0, 0, 0, 1
+                        size_hint: 0.25, 1
                     SpinBox:
                         id:buttonC
-                        
-
-
 
 
         BoxLayout:
             id: curveBoxLayout
             #text:'[color=000000]courbe'
             #markup:True
-            size_hint:(0.8,1)
+            size_hint: 0.8, 1
 
 
 

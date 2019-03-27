@@ -1,0 +1,20 @@
+#:kivy 1.1.0
+<OpenDialog>:
+    filechooser: filechooser
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserIconView:
+            id: filechooser
+            filters: ['*.csv']
+
+        BoxLayout:
+            size_hint_y: 0.10
+            Button:
+                text: "Annuler"
+                on_release: root.cancel()
+
+            Button:
+                text: "Ouvrir"
+                on_release: root.load(filechooser.path, filechooser.selection)

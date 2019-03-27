@@ -86,7 +86,7 @@ fullscreen = 0
 #android.presplash_color = fuchsia
 
 # (list) Permissions
-#android.permissions = INTERNET
+android.permissions = READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE
 
 # (int) Android API to use
 android.api = 26
