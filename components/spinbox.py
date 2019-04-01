@@ -27,7 +27,7 @@ class SpinBox(BoxLayout):
             value_to_return="{:.4e}".format(number)
         return value_to_return
 
-    def TheFunction2(self, popup):
+    def change_value_button(self, popup):
         value = self.evaluation(popup.entry.text)
         #Si value == "", self.value ne change pas de valeur.
         #Ce n'est peut-être pas le comportement attendu.
@@ -37,10 +37,10 @@ class SpinBox(BoxLayout):
         #Si value est None, on ne ferme pas le popup. (On retourne True)
         return value is None
 
-    def TheFunction(self):
+    def opening_popup(self):
         entry_popup=EntryPopup()
         entry_popup.entry.text = str(self.value)
-        entry_popup.bind(on_dismiss=self.TheFunction2)
+        entry_popup.bind(on_dismiss=self.change_value_button)
         entry_popup.open()
 
     def add_one(self):
