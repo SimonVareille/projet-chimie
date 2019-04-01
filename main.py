@@ -53,6 +53,12 @@ from kivy.uix.popup import Popup
 from kivy.uix.button import Button
 from components.file_chooser import OpenDialog
 
+from components.cox_popup import CoxPopup
+
+
+
+
+
 
 class MainWindow(Widget):
     '''Classe représentant la fenêtre principale
@@ -148,6 +154,10 @@ class MainWindow(Widget):
         self.bind_on_buttonparametre_active(self.buttonN)
         self.bind_on_buttonparametre_active(self.buttonS)
         self.bind_on_buttonparametre_active(self.buttonC)
+                
+        
+        
+        
 
 
     
@@ -242,6 +252,18 @@ class MainWindow(Widget):
             expD, coeff = linreg.regression(1, 1, 10**-3)
             
             self.mainGraph.set_expD(expD)
+            
+            
+    def on_cox_button_active(self,instance):
+        
+        cox_popup=CoxPopup()
+        cox_popup.CoxvalDth=self.valDth
+        cox_popup.CoxvalS=self.valS
+        cox_popup.CoxvalC=self.valC
+        cox_popup.CoxvalN=self.valN
+        
+        cox_popup.open()
+        
 
 
 class AppApp(App):
