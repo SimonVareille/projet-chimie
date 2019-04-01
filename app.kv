@@ -70,6 +70,13 @@
                     Switch:
                         id: dCurveCheckBox
                         size_hint: 0.40, 1
+                        
+                BoxLayout:
+                    Button:
+                        id: CoxCurveButton
+                        text:'COX'
+                        on_release:root.on_cox_button_active(self)
+
             StackLayout:                            
                 Label:
                     text : '[color=000000]Un truc'

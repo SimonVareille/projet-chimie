@@ -1,0 +1,38 @@
+<CoxPopup@Popup>:
+    id : coxpopup
+    title:""
+    separator_height:0    
+    auto_dismiss: False
+    size_hint: (.9,.9)
+    BoxLayout:
+        orientation:"horizontal"
+        
+        BoxLayout:   
+            orientation:"vertical"         
+            size_hint: (.2,1)
+            Label:
+                text:"t"
+                size_hint:(1,.2)
+            Slider:
+                size_hint:(1,.8)
+                orientation:"vertical"
+        BoxLayout:
+            size_hint: (.8,1)
+            orientation:"vertical"
+                
+            Label:
+                size_hint:(1,.9)
+                text:"graph cox"
+            BoxLayout:
+                size_hint:(1,.1)
+                orientation:"horizontal"
+                Label:
+                    size_hint:(.8,1)
+                Button:
+                    size_hint:(.2,1)           
+                    text: "OK"
+                    on_press: root.dismiss()
+
+
+<CustButton@Button>:
+    font_size:.3*self.height    
