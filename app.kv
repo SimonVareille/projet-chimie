@@ -24,6 +24,7 @@
             orientation:'vertical'
             size_hint: 0.2, 1
             pos: 0, 0
+
             BoxLayout:
                 orientation:'vertical'
                 BoxLayout:
@@ -36,6 +37,12 @@
                         color: 1, 1, 1, 1
                         markup:True
                         on_release: root.show_openDialog()
+                BoxLayout:
+                    Label:
+                        id: expCurve
+                        size_hint: 0.60, 1
+                        text:'[color=000000]Courbe expérimentale[/color]'
+                        markup:True
                     Switch:
                         id: expCurveSwitch
                         size_hint: 0.40, 1
@@ -45,7 +52,7 @@
                     Label:
                         id: thCurve
                         size_hint: 0.60, 1
-                        text:'[color=0066ff]Courbe théorique[/color]'
+                        text:'[color=000000]Courbe théorique[/color]'
                         markup:True
                     Switch:
                         id: thCurveSwitch
@@ -56,7 +63,7 @@
                     Label:
                         id: intervalSelectionLabel
                         size_hint: 0.60, 1
-                        text:'[color=00ff00]Selectionner un intervalle\''
+                        text:'[color=000000]Selectionner un intervalle\''
                         markup:True
                     Switch:
                         id: intervalSelectionSwitch
@@ -65,7 +72,7 @@
                     Label:
                         id: dCurveLabel 
                         size_hint: 0.60, 1
-                        text:'[color=ffff00]Courbe D[/color]'
+                        text:'[color=000000]Courbe D[/color]'
                         markup:True
                     Switch:
                         id: dCurveCheckBox
@@ -76,6 +83,7 @@
                         id: CoxCurveButton
                         text:'COX'
                         on_release:root.on_cox_button_active(self)
+
 
             StackLayout:                            
                 Label:
