@@ -10,3 +10,7 @@ class CoxPopup(Popup):
     CoxvalN=NumericProperty(1)
     CoxvalS=NumericProperty(0.25)
     CoxvalC=NumericProperty(10**(-5))
+    coxvalt=NumericProperty(1)
+    
+    def on_slider_T_active(self):
+        self.coxvalt=self.sliderCoxT.value
