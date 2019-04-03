@@ -1,6 +1,7 @@
 <CoxPopup@Popup>:
     id : coxpopup
     sliderCoxT:SliderCoxT
+    grahCoxLayout:grahCoxLayout
     title:""
     separator_height:0    
     auto_dismiss: False
@@ -16,6 +17,8 @@
                 size_hint:(1,.2)
             Slider:
                 id:SliderCoxT
+                max:root.maxt
+                min:root.mint
                 size_hint:(1,.8)
                 orientation:"vertical"
                 on_touch_move:root.on_slider_T_active()
@@ -23,9 +26,9 @@
             size_hint: (.8,1)
             orientation:"vertical"
                 
-            Label:
+            BoxLayout:
                 size_hint:(1,.9)
-                text:"graph cox"
+                id:grahCoxLayout
             BoxLayout:
                 size_hint:(1,.1)
                 orientation:"horizontal"
