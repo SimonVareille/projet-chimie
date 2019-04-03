@@ -59,15 +59,12 @@
                         size_hint: 0.40, 1
                         active: root.thCurveSwitchActive
                         on_active: root.on_thCurveSwitch_active(self.active)
-                BoxLayout:
-                    Label:
-                        id: intervalSelectionLabel
-                        size_hint: 0.60, 1
-                        text:'[color=000000]Selectionner un intervalle\''
-                        markup:True
-                    Switch:
-                        id: intervalSelectionSwitch
-                        size_hint: 0.40, 1
+
+                Button:
+                    text:'Selectionner un intervalle'
+                    color: 1, 1, 1, 1
+                    on_release:root.on_interval_define_button_active(self)
+
                 BoxLayout:
                     Label:
                         id: dCurveLabel 
@@ -100,7 +97,7 @@
                 #    on_release:root.on_buttonparametre_active(self)
 
                 Label:
-                    text:"Parametres"
+                    text:"Paramètres"
                     color: 0, 0, 0, 1
                 BoxLayout:
                     size_hint: 1, 2
