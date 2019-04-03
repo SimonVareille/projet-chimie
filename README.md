@@ -1,4 +1,4 @@
-# Projet-Chimie
+﻿# Projet-Chimie
 Le repo du projet, le nom pourra être changé ulterieurement.
 
 ------
@@ -24,3 +24,4 @@ Pour utiliser `kivy.garden.graph`, il suffit de changer la valeur de `USE_MATPLO
 Pour ne pas utiliser `numpy`, il suffit de changer la valeur de `USE_NUMPY` du fichier `config.py` à `False`.  
       
 
+Il faudrait rajouter la façon dont on crée le .apk dans ce fichier texte.
