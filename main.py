@@ -3,33 +3,15 @@
 """Pour la compatibilité avec python2"""
 from __future__ import division
 
-import config
-
 """On gère ici les modules que l'on veut importer (en fonction de ce qui est
  disponible).
 """
-if config.USE_MATPLOTLIB:
-    """Ces deux prochaines lignes servent à dire à matplotlib d'utiliser le backend
-    interactif de kivy.
-    Le backend est l'environnement de dessin (pour plus d'infos : 
-    https://matplotlib.org/tutorials/introductory/usage.html#what-is-a-backend
-    Il faut mettre ces deux lignes avant toute autre importation et déclaration de
-    matplotlib.
-    """
-    import matplotlib
-    matplotlib.use('module://kivy.garden.matplotlib.backend_kivy')
-    
-    import graphs.cottrel_graph_matplot as cottrel_graph
-    import graphs.graphCox_matplot as coxgraph
-else:
-    import graphs.cottrel_graph_kivy as cottrel_graph
-    import graphs.graphCox_kivy as coxgraph
 
-if config.USE_NUMPY:
-    import cottrel.cottrel_numpy as cottrel
-    from linear_regression import LinearRegression
-else:
-    import cottrel.cottrel_math as cottrel
+import graphs.cottrel_graph_kivy as cottrel_graph
+import graphs.graphCox_kivy as coxgraph
+
+from linear_regression import LinearRegression
+import cottrel.cottrel_math as cottrel
 
 from data_reader import DataReader
 
@@ -57,10 +39,6 @@ from components.file_chooser import OpenDialog
 from components.cox_popup import CoxPopup
 
 from components.interval_popup import IntervalPopup
-
-
-
-
 
 
 class MainWindow(Widget):
@@ -154,8 +132,6 @@ class MainWindow(Widget):
         self.mainGraph.display_experimental(False)
         
         self.mainGraph.set_limit_interval()
-        
-        self.linear_regression()
         
         self.mainGraph.update()
         
@@ -257,14 +233,11 @@ class MainWindow(Widget):
         '''Do the linear regression on the current experimental data and notify
         the mainGraph that the value has to be updated.
         '''
-        if config.USE_NUMPY:
-            linreg = LinearRegression(self.expt, self.expI)
-            
-            linreg.set_t_interval(1, 50)
-            
-            expD, coeff = linreg.regression(1, 1, 10**-3)
-            
-            self.mainGraph.set_expD(expD)
+        linreg = LinearRegression(self.expt, self.expI)
+        
+        expD, coeff = linreg.regression(1, 1, 10**-3)
+        
+        self.mainGraph.set_expD(expD)
     
     def on_cox_button_active(self,instance):
         
@@ -314,7 +287,7 @@ class MainWindow(Widget):
 class AppApp(App):
     '''The app itself.
     '''
-    title = "Cottrel"
+    title = "ReDoxLab"
     def build(self):
         Window.bind(on_keyboard=self.key_input)
         return MainWindow()

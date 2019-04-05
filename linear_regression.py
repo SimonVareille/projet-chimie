@@ -102,7 +102,7 @@ class LinearRegression:
             Coefficient directeur de la droite.
         """
     
-        linearcoefficient, intercept = self.linregress(self.t[self.indicetMin : self.indicetMax],self.I[self.indicetMin:self.indicetMax])
+        linearcoefficient, intercept = self.linregress()#self.t[self.indicetMin : self.indicetMax],self.I[self.indicetMin:self.indicetMax])
 
         D = self.calculate_D (intercept, self.n , self.C , self.S)   
 
