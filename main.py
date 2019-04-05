@@ -43,6 +43,7 @@ from kivy.config import Config
 
 from kivy.app import App
 from kivy.core.window import Window
+from kivy.base import EventLoop
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
@@ -126,11 +127,14 @@ class MainWindow(Widget):
         self.buttonC.min_value=self.valMinC
         self.buttonC.max_value=self.valMaxC
         self.buttonC.steps=self.stepsC
-
+        
+        self.expt = None
+        self.expI = None
+        
         self.mainGraph = cottrel_graph.CottrelGraph()
 
         
-        self.load_exp_data("", "experimental.csv")
+        #self.load_exp_data("", "experimental.csv")
         
         if self.expt:
             self.t = cottrel.create_t(0, max(self.expt), 1000)
@@ -138,9 +142,10 @@ class MainWindow(Widget):
             self.t = cottrel.create_t(0, 20, 1000)
         self.I = cottrel.courbe_cottrel_th(self.buttonN.value, self.buttonS.value, self.buttonC.value, self.buttonDth.value, self.t)
         
+        self.mainGraph.set_theoric_data(self.t, self.I)
         
         self.mainGraph.set_experimental_data(self.expt, self.expI)
-        self.mainGraph.display_experimental()
+        self.mainGraph.display_experimental(False)
         
         self.mainGraph.set_limit_interval()
         
@@ -154,17 +159,14 @@ class MainWindow(Widget):
         self.bind_on_buttonparametre_active(self.buttonN)
         self.bind_on_buttonparametre_active(self.buttonS)
         self.bind_on_buttonparametre_active(self.buttonC)
-                
-        
-        
-        
-
-
     
     def on_expCurveSwitch_active(self, active):
         if active:
-            self.mainGraph.display_experimental()
-            self.mainGraph.set_limit_interval()
+            if self.expt:
+                self.mainGraph.display_experimental()
+                self.mainGraph.set_limit_interval()
+            else:
+                self.expCurveSwitch.active = False
         else:
             self.mainGraph.display_experimental(False)
             self.mainGraph.set_limit_interval()
@@ -222,10 +224,14 @@ class MainWindow(Widget):
         '''
         if isinstance(filename, (list, tuple)):
             filename = filename[0]
-        reader = DataReader(os.path.join(path, filename))
-        
-        self.expt = reader.get_t()
-        self.expI = reader.get_I()
+        try:
+            reader = DataReader(os.path.join(path, filename))
+        except ValueError as err:
+            print("ValueError: ",err)
+            return False
+        else:
+            self.expt = reader.get_t()
+            self.expI = reader.get_I()
         
         self.mainGraph.set_experimental_data(self.expt, self.expI)
         
@@ -252,8 +258,7 @@ class MainWindow(Widget):
             expD, coeff = linreg.regression(1, 1, 10**-3)
             
             self.mainGraph.set_expD(expD)
-            
-            
+    
     def on_cox_button_active(self,instance):
         
         cox_popup=CoxPopup()
@@ -263,7 +268,32 @@ class MainWindow(Widget):
         cox_popup.CoxvalN=self.valN
         
         cox_popup.open()
+    
+    def on_touch_down(self, touch):
+        if self.mainGraph.graph.collide_plot(*self.mainGraph.to_widget(*touch.pos, relative=True)):
+            if touch.is_mouse_scrolling:
+                if touch.button == 'scrolldown':
+                    #Zoom out
+                    self.mainGraph.zoom(0.95, 0.95, *self.mainGraph.to_widget(*touch.pos, relative=True))
+                elif touch.button == 'scrollup':
+                    #Zoom in
+                    self.mainGraph.zoom(1.05, 1.05, *self.mainGraph.to_widget(*touch.pos, relative=True))
+                return True
+        return super(MainWindow, self).on_touch_down(touch)            
         
+    def on_touch_move(self, touch):
+        if len(EventLoop.touches)==2:
+            for other_touch in EventLoop.touches:
+                if other_touch.pos != touch.pos:
+                    center = ((touch.x+other_touch.x)/2, (touch.y+other_touch.y)/2)
+                    if self.mainGraph.graph.collide_plot(*center):
+                        dx = touch.dx + other_touch.dx
+                        dy = touch.dy + other_touch.dy
+                    
+                    self.mainGraph.zoom(dx, dy, *self.mainGraph.to_widget(*center, relative=True))
+                    return True
+        
+        return super(MainWindow, self).on_touch_move(touch)
 
 
 class AppApp(App):

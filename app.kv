@@ -26,20 +26,25 @@
             pos: 0, 0
             BoxLayout:
                 orientation:'vertical'
+                Button:
+                    id: importDataButton
+                    text: 'Importer les données expérimentales'
+                    halign: 'center'
+                    valign: 'center'
+                    color: 1, 1, 1, 1
+                    markup:True
+                    on_release: root.show_openDialog()
                 BoxLayout:
-                    Button:
-                        id: importDataButton
+                    Label:
+                        id: expCurve
                         size_hint: 0.60, 1
-                        text: 'Importer les données\nexpérimentales'
-                        halign: 'center'
-                        valign: 'center'
-                        color: 1, 1, 1, 1
+                        text:'Courbe Experimentale'
+                        color: 1, 0, 0, 1
                         markup:True
-                        on_release: root.show_openDialog()
                     Switch:
                         id: expCurveSwitch
                         size_hint: 0.40, 1
-                        active: True
+                        active: False
                         on_active: root.on_expCurveSwitch_active(self.active)
                 BoxLayout:
                     Label:
