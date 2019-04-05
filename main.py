@@ -56,6 +56,8 @@ from components.file_chooser import OpenDialog
 
 from components.cox_popup import CoxPopup
 
+from components.interval_popup import IntervalPopup
+
 
 
 
@@ -99,6 +101,10 @@ class MainWindow(Widget):
     sliderDth=ObjectProperty(None)
     
     thCurveSwitchActive = BooleanProperty(True)
+    
+    valIntervalMin=NumericProperty(0)
+    valIntervalMax=NumericProperty(100)
+    
 
     def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
@@ -199,6 +205,7 @@ class MainWindow(Widget):
         self.sliderDth.max=self.buttonDth.max_value
         self.sliderDth.value=self.buttonDth.value
         self.sliderDth.step=self.buttonDth.steps
+    
     def on_slider_Dth_active(self):
         self.buttonDth.value=self.sliderDth.value
         
@@ -266,7 +273,6 @@ class MainWindow(Widget):
         cox_popup.CoxvalS=self.valS
         cox_popup.CoxvalC=self.valC
         cox_popup.CoxvalN=self.valN
-        
         cox_popup.open()
     
     def on_touch_down(self, touch):
@@ -292,8 +298,17 @@ class MainWindow(Widget):
                     
                     self.mainGraph.zoom(dx, dy, *self.mainGraph.to_widget(*center, relative=True))
                     return True
-        
         return super(MainWindow, self).on_touch_move(touch)
+    
+    def on_interval_define_button_active(self,instance):        
+        interval_popup=IntervalPopup() 
+        
+        interval_popup.bind(on_dismiss=self.on_interval_popup_closed)
+        interval_popup.open()
+    
+    def on_interval_popup_closed(self, popup):
+        self.valIntervalMin=popup.intervalbox.val_min
+        self.valIntervalMax=popup.intervalbox.val_max
 
 
 class AppApp(App):

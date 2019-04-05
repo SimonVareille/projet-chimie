@@ -1,0 +1,11 @@
+<IntervalBox>:
+    orientation:"horizontal"
+        
+    CustButton:   
+        size_hint:(.4,1)  
+        text:"valeur min : " + root._display_value_min + "s"
+        on_release:root.opening_popup_min()
+    CustButton:   
+        size_hint:(.4,1)  
+        text:"valeur max : "+ root._display_value_max + "s"
+        on_release:root.opening_popup_max()

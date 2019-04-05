@@ -103,8 +103,9 @@ class CottrelGraph(CottrelGraphBase):
             Convert from window coordinates with:
                 `x, y = self.to_widget(x, y, relative=True)`
         """
+        if dx == 0 or dy == 0:
+            return
         cx, cy = self.graph.to_data(cx, cy)
-        range
         (cx - self.tleft)/(self.tright - self.tleft)
         (self.tright - cx)/(self.tright - self.tleft)
         tleft = cx - 0.5*(self.tright - self.tleft)/dx
@@ -117,3 +118,13 @@ class CottrelGraph(CottrelGraphBase):
         
         self.set_limit_interval(tleft, tright, Ibottom, Itop)
         self.update()
+        
+    def set_limit_interval(self, tleft=None, tright=None, Ibottom=None, Itop=None):
+        super(CottrelGraph, self).set_limit_interval(tleft, tright, Ibottom, Itop)
+        
+        width, height = self.graph.get_plot_area_size()
+        self.graph.x_ticks_major = (self.tright-self.tleft)/(width/100)
+        self.graph.x_ticks_minor = 10
+        self.graph.y_ticks_major = (self.Itop-self.Ibottom)/(height/50)
+        print((self.tright-self.tleft)/(width/50))
+        self.graph.y_ticks_minor = 5
