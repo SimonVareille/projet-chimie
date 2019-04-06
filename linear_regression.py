@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 
-"""Pour la compatibilité avec python2"""
-
-from __future__ import division
-
 import math as m
 
-def liste_transformation_log (liste):
+def list_transformation_log (values):
     loglist=list()
-    for i in range (len(liste)):
-        loglist.append(m.log(liste[i]))   
+    for val in values:
+        print(val)
+        loglist.append(m.log(val))
     return (loglist)
 
-class LinearRegression:
+def mean (self, liste):
+    summ=m.fsum(liste)
+    mean = summ/(len(liste))
+    return (mean)
 
+class LinearRegression:
     """Cette classe permet d'effectuer la régression linéaire sur les valeurs 
     expérimentales.
     """
@@ -27,18 +28,17 @@ class LinearRegression:
         self.indicetMax=len(t)-1
 
     def set_t_interval(self, tMin=None, tMax=None):
-
         """Sélectionne l'intervalle dans lequel on veut effectuer la régression
-        linéaire.
+        linéaire, si différent des valeurs du tableau.
 
         Paramètres
         ----------
-        tMin : réel
+        tMin : float
             Valeur minimale de `t`. La valeur effectivement prise en compte est
             la plus proche valeur supèrieure ou égale à `tMin` présente dans le
             tableau `t`.
             Si `tMin` est None, `tMin` prend la plus petite valeur de `t`.
-        tMax : réel
+        tMax : float
             Valeur maximale de `t`. La valeur effectivement prise en compte est
             la plus proche valeur infèrieure ou égale à `tMax` présente dans le
             tableau `t`.
@@ -62,48 +62,66 @@ class LinearRegression:
      
     F = 96485.3329
     
-    def meanlog (self, liste):
-        summ=m.fsum(liste)
-        mean = summ/(len(liste))
-        return (mean)
-    
-    def linregress (self):
-        moyt = self.meanlog (liste_transformation_log(self.t))
-        moyI = self.meanlog (liste_transformation_log(self.I))
+    def _linregress (self):
+        meant = mean(list_transformation_log(self.t))
+        meanI = mean(list_transformation_log(self.I))
         #linearcoefficient=coefficient devant ln(t)
         #intercept=ln(nFCS*sqrt(D/pi))
-        linearcoefficient = (m.fsum((m.log(t)-moyt)*(m.log(I)-moyI) for t,I in zip(self.t,self.I))/(m.fsum((m.log(t)-moyt)**2 for t in self.t))) 
-        intercept = moyI-linearcoefficient*moyt
+        linearcoefficient = m.fsum((m.log(t)-meant)*(m.log(I)-meanI) for t,I in zip(self.t,self.I))/(m.fsum((m.log(t)-meant)**2 for t in self.t)) 
+        intercept = meanI-linearcoefficient*meant
         return(linearcoefficient,intercept)
         
-    def calculate_D (self, intercept, n, C, S):
+    def calculate_D (self, intercept, n, S, C):
+        """Calcule le coefficient de diffusion D à l'aide des valeurs `n`, `S`
+        et `C`.
+        
+        Paramètres
+        ----------
+        intercept : float
+            Ordonnée à l'origine
+        n : int
+            Nombre d'électrons échangés au cours de la réaction.
+        S : float
+            Surface d'échange.
+        C : float
+            Concentration de l'espèce.
+        
+        Retour
+        ------
+        D : float
+            
+        """
         expintercept = m.exp (intercept)
         D = (expintercept**2*m.pi)/(n**2*self.F**2*S**2*C**2)
         return (D)                 
 
     def regression(self, n, S, C):
-
-        """Effectue la régression linéaire et renvoie les valeurs de D et le
-        coefficient directeur de la droite.
- 
-       Paramètres
+        """Effectue la régression linéaire pour obtenir le coefficient de 
+        diffusion, le coefficinet directeur de la droite obtenue et son
+        ordonnée à l'origine.
+        
+        Paramètres
         ----------
-        n : entier
+        n : int
             Nombre d'électrons échangés au cours de la réaction.
-        S : réel
-            Surface d'échange (en cm²).
-        C : réel
+        S : float
+            Surface d'échange.
+        C : float
             Concentration de l'espèce.    
         Retour
         ------
-        D : réel
-            Valeur de D.
-        coeffdirecteur : réel
+        `tuple(D, linearcoefficient, intercept)`
+        
+        D : float
+            Coefficient de diffusion.
+        linearcoefficient : float
             Coefficient directeur de la droite.
+        intercept : réel
+            Ordonnée à l'origine de la droite.
         """
     
-        linearcoefficient, intercept = self.linregress()#self.t[self.indicetMin : self.indicetMax],self.I[self.indicetMin:self.indicetMax])
+        linearcoefficient, intercept = self._linregress()#self.t[self.indicetMin : self.indicetMax],self.I[self.indicetMin:self.indicetMax])
 
-        D = self.calculate_D (intercept, self.n , self.C , self.S)   
+        D = self.calculate_D (intercept, n, S, C)   
 
         return D, linearcoefficient, intercept
