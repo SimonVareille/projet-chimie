@@ -160,11 +160,53 @@ class MainWindow(Widget):
             self.mainGraph.display_theoric(False)
             self.mainGraph.set_limit_interval()
         self.mainGraph.update()
+    
+    def on_interval_define_button_active(self,instance):        
+        interval_popup=IntervalPopup() 
+        
+        interval_popup.bind(on_dismiss=self.on_interval_popup_closed)
+        interval_popup.open()
+    
+    def on_interval_popup_closed(self, popup):
+        self.valIntervalMin=popup.intervalbox.val_min
+        self.valIntervalMax=popup.intervalbox.val_max
+    
+    def on_cox_button_active(self,instance):
+        cox_popup=CoxPopup()
+        cox_popup.CoxvalDth=self.valDth
+        cox_popup.CoxvalS=self.valS
+        cox_popup.CoxvalC=self.valC
+        cox_popup.CoxvalN=self.valN
+        cox_popup.open()
+    
+    def on_touch_down(self, touch):
+        if self.mainGraph.graph.collide_plot(*self.mainGraph.to_widget(*touch.pos, relative=True)):
+            if touch.is_mouse_scrolling:
+                if touch.button == 'scrolldown':
+                    #Zoom out
+                    self.mainGraph.zoom(0.95, 0.95, *self.mainGraph.to_widget(*touch.pos, relative=True))
+                elif touch.button == 'scrollup':
+                    #Zoom in
+                    self.mainGraph.zoom(1.05, 1.05, *self.mainGraph.to_widget(*touch.pos, relative=True))
+                return True
+        return super(MainWindow, self).on_touch_down(touch)            
+        
+    def on_touch_move(self, touch):
+        if len(EventLoop.touches)==2:
+            for other_touch in EventLoop.touches:
+                if touch.distance(other_touch):
+                    center = ((touch.x+other_touch.x)/2, (touch.y+other_touch.y)/2)
+                    if self.mainGraph.graph.collide_plot(*self.mainGraph.to_widget(*center, relative=True)):
+                        dx = abs(touch.x - other_touch.x) - abs(touch.px - other_touch.px)
+                        dy = abs(touch.y - other_touch.y) - abs(touch.py - other_touch.py)
+                        self.mainGraph.zoom(1 + 0.05*dx/20, 1 + 0.05*dy/20, *self.mainGraph.to_widget(*center, relative=True))
+                        return True
+        return super(MainWindow, self).on_touch_move(touch)
+    
     def update_maingraph_values(self,instance,text):
         '''Met à jour la courbe principale avec les nouvelles valeurs.
         '''
         self.valDth=self.buttonDth.value
-        self.sliderDth.value=self.buttonDth.value
         self.valN=self.buttonN.value
         self.valC=self.buttonC.value
         self.valS=self.buttonS.value
@@ -180,10 +222,6 @@ class MainWindow(Widget):
         self.sliderDth.max=self.buttonDth.max_value
         self.sliderDth.value=self.buttonDth.value
         self.sliderDth.step=self.buttonDth.steps
-    
-    def on_slider_Dth_active(self):
-        self.buttonDth.value=self.sliderDth.value
-        
 
     def show_openDialog(self):
         '''Affiche la boite de dialogue d'ouverture de fichier.
@@ -246,49 +284,6 @@ class MainWindow(Widget):
         expD, coeff = linreg.regression(self.valN, self.valS, self.valC)
         
         self.mainGraph.set_expD(expD)
-    
-    def on_cox_button_active(self,instance):
-        
-        cox_popup=CoxPopup()
-        cox_popup.CoxvalDth=self.valDth
-        cox_popup.CoxvalS=self.valS
-        cox_popup.CoxvalC=self.valC
-        cox_popup.CoxvalN=self.valN
-        cox_popup.open()
-    
-    def on_touch_down(self, touch):
-        if self.mainGraph.graph.collide_plot(*self.mainGraph.to_widget(*touch.pos, relative=True)):
-            if touch.is_mouse_scrolling:
-                if touch.button == 'scrolldown':
-                    #Zoom out
-                    self.mainGraph.zoom(0.95, 0.95, *self.mainGraph.to_widget(*touch.pos, relative=True))
-                elif touch.button == 'scrollup':
-                    #Zoom in
-                    self.mainGraph.zoom(1.05, 1.05, *self.mainGraph.to_widget(*touch.pos, relative=True))
-                return True
-        return super(MainWindow, self).on_touch_down(touch)            
-        
-    def on_touch_move(self, touch):
-        if len(EventLoop.touches)==2:
-            for other_touch in EventLoop.touches:
-                if touch.distance(other_touch):
-                    center = ((touch.x+other_touch.x)/2, (touch.y+other_touch.y)/2)
-                    if self.mainGraph.graph.collide_plot(*self.mainGraph.to_widget(*center, relative=True)):
-                        dx = abs(touch.x - other_touch.x) - abs(touch.px - other_touch.px)
-                        dy = abs(touch.y - other_touch.y) - abs(touch.py - other_touch.py)
-                        self.mainGraph.zoom(1 + 0.05*dx/20, 1 + 0.05*dy/20, *self.mainGraph.to_widget(*center, relative=True))
-                        return True
-        return super(MainWindow, self).on_touch_move(touch)
-    
-    def on_interval_define_button_active(self,instance):        
-        interval_popup=IntervalPopup() 
-        
-        interval_popup.bind(on_dismiss=self.on_interval_popup_closed)
-        interval_popup.open()
-    
-    def on_interval_popup_closed(self, popup):
-        self.valIntervalMin=popup.intervalbox.val_min
-        self.valIntervalMax=popup.intervalbox.val_max
 
 
 class AppApp(App):
