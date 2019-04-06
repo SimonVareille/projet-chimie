@@ -40,6 +40,13 @@ from components.cox_popup import CoxPopup
 
 from components.interval_popup import IntervalPopup
 
+from graphs.graphCox_kivy import CoxGraph
+
+from cottrel.cox_math import cox_curve
+
+from cottrel.cottrel_math import linspace
+
+
 
 class MainWindow(Widget):
     '''Classe représentant la fenêtre principale
@@ -271,6 +278,7 @@ class MainWindow(Widget):
         Indique au graph que la valeur de D a changée.
         '''
         linreg = LinearRegression(self.expt, self.expI)
+
         
         expD, coeff = linreg.regression(self.valN, self.valS, self.valC)
         
