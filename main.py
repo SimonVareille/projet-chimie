@@ -116,15 +116,13 @@ class MainWindow(Widget):
         self.expI = None
         
         self.mainGraph = cottrel_graph.CottrelGraph()
-
-        
-        #self.load_exp_data("", "experimental.csv")
         
         if self.expt:
             self.t = cottrel.create_t(0, max(self.expt), 1000)
         else:
             self.t = cottrel.create_t(0, 20, 1000)
-        self.I = cottrel.courbe_cottrel_th(self.buttonN.value, self.buttonS.value, self.buttonC.value, self.buttonDth.value, self.t)
+        self.I = cottrel.courbe_cottrel_th(self.buttonN.value, self.buttonS.value, 
+                                           self.buttonC.value, self.buttonDth.value, self.t)
         
         self.mainGraph.set_theoric_data(self.t, self.I)
         
@@ -137,10 +135,10 @@ class MainWindow(Widget):
         
         self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
         
-        self.bind_on_buttonparametre_active(self.buttonDth)
-        self.bind_on_buttonparametre_active(self.buttonN)
-        self.bind_on_buttonparametre_active(self.buttonS)
-        self.bind_on_buttonparametre_active(self.buttonC)
+        self.bind_update_maingraph_values(self.buttonDth)
+        self.bind_update_maingraph_values(self.buttonN)
+        self.bind_update_maingraph_values(self.buttonS)
+        self.bind_update_maingraph_values(self.buttonC)
     
     def on_expCurveSwitch_active(self, active):
         if active:
@@ -162,8 +160,9 @@ class MainWindow(Widget):
             self.mainGraph.display_theoric(False)
             self.mainGraph.set_limit_interval()
         self.mainGraph.update()
-    def on_buttonparametre_active(self,instance,text):
-        '''met à jour la courbe avec les nouvelles valeurs'''
+    def update_maingraph_values(self,instance,text):
+        '''Met à jour la courbe principale avec les nouvelles valeurs.
+        '''
         self.valDth=self.buttonDth.value
         self.sliderDth.value=self.buttonDth.value
         self.valN=self.buttonN.value
@@ -173,8 +172,8 @@ class MainWindow(Widget):
         self.mainGraph.I=self.I
         self.mainGraph.update()
 
-    def bind_on_buttonparametre_active(self, spinbox):
-        spinbox.buttonMid_id.bind(text = self.on_buttonparametre_active)
+    def bind_update_maingraph_values(self, spinbox):
+        spinbox.buttonMid_id.bind(text = self.update_maingraph_values)
     
     def init_slider_Dth(self):
         self.sliderDth.min=self.buttonDth.min_value
@@ -187,7 +186,7 @@ class MainWindow(Widget):
         
 
     def show_openDialog(self):
-        '''Show a dialog in order to select the data file to open.
+        '''Affiche la boite de dialogue d'ouverture de fichier.
         '''
         content = OpenDialog()
         self._openPopup = Popup(title="Sélectionnez le fichier de données :", content=content,
@@ -201,14 +200,24 @@ class MainWindow(Widget):
             self._openPopup.dismiss()
     
     def load_exp_data(self, path, filename):
-        '''Load the experimental data from file named `filename` located in 
-        `path`. If `filename` is a list or a tuple, only the first cell is
-        considered.
+        '''Charge les valeurs expérimentales depuis le fichier `filename` situé
+        dans le dossier `path`. Si `filename` est une liste ou un tuple, seule
+        la première case est considérée.
+        
+        Paramètres
+        ----------
+        path : str
+            Chemin du fichier à charger.
+        filename : str or list-like of str
+            Nom du fichier à charger.
         '''
         if isinstance(filename, (list, tuple)):
             filename = filename[0]
         try:
             reader = DataReader(os.path.join(path, filename))
+        except FileNotFoundError as err:
+            print(err)
+            return False
         except ValueError as err:
             print("ValueError: ",err)
             return False
@@ -223,19 +232,18 @@ class MainWindow(Widget):
         self.I = cottrel.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
         self.mainGraph.set_theoric_data (self.t, self.I)
         
-        self.linear_regression()
-        
         self.mainGraph.update()
         
         return True
     
     def linear_regression(self):
-        '''Do the linear regression on the current experimental data and notify
-        the mainGraph that the value has to be updated.
+        '''Effectue la régression linéaire sur les données expérimentales 
+        "de travail", c'est à dire sur celles affichées à l'écran.
+        Indique au graph que la valeur de D a changée.
         '''
         linreg = LinearRegression(self.expt, self.expI)
         
-        expD, coeff = linreg.regression(1, 1, 10**-3)
+        expD, coeff = linreg.regression(self.valN, self.valS, self.valC)
         
         self.mainGraph.set_expD(expD)
     
@@ -285,7 +293,7 @@ class MainWindow(Widget):
 
 
 class AppApp(App):
-    '''The app itself.
+    '''Point d'entrée de l'application.
     '''
     title = "ReDoxLab"
     def build(self):
