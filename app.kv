@@ -81,7 +81,7 @@
                         on_release:root.on_cox_button_active(self)
 
 
-            BoxLayout:                            
+            BoxLayout:
                 
             #Paramètres
             
@@ -101,11 +101,14 @@
                         orientation:"vertical"
                         SpinBox:
                             id:buttonDth  
-                            value: sliderDth.value                 
+                            value: sliderDth.value
                         Slider:
                             id:sliderDth
                             orientation:"horizontal"
                             value: buttonDth.value
+                            min: buttonDth.min_value
+                            max: buttonDth.max_value
+                            step: buttonDth.steps
                 BoxLayout:
                     Label:
                         text:"n"

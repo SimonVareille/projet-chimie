@@ -76,8 +76,6 @@ class MainWindow(Widget):
     valMaxC=NumericProperty(1)
     stepsC=NumericProperty(10**(-6))
     
-    sliderDth=ObjectProperty(None)
-    
     thCurveSwitchActive = BooleanProperty(True)
     
     valIntervalMin=NumericProperty(0)
@@ -92,7 +90,6 @@ class MainWindow(Widget):
         self.buttonDth.min_value=self.valMinDth
         self.buttonDth.max_value=self.valMaxDth
         self.buttonDth.steps=self.stepsDth
-        self.init_slider_Dth()
         
         #Valeurs pour N
         self.buttonN.value=self.valN
@@ -216,12 +213,6 @@ class MainWindow(Widget):
 
     def bind_update_maingraph_values(self, spinbox):
         spinbox.buttonMid_id.bind(text = self.update_maingraph_values)
-    
-    def init_slider_Dth(self):
-        self.sliderDth.min=self.buttonDth.min_value
-        self.sliderDth.max=self.buttonDth.max_value
-        self.sliderDth.value=self.buttonDth.value
-        self.sliderDth.step=self.buttonDth.steps
 
     def show_openDialog(self):
         '''Affiche la boite de dialogue d'ouverture de fichier.
