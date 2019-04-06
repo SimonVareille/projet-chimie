@@ -3,7 +3,6 @@
 #:import SpinBox components.spinbox.SpinBox
 
 <MainWindow>:
-    # import curveBoxLayout
     curveBoxLayout: curveBoxLayout
     expCurveSwitch: expCurveSwitch
     buttonDth: buttonDth
@@ -27,49 +26,48 @@
 
             BoxLayout:
                 orientation:'vertical'
-                BoxLayout:
-                    Button:
-                        id: importDataButton
-                        size_hint: 0.60, 1
-                        text: 'Importer les données\nexpérimentales'
-                        halign: 'center'
-                        valign: 'center'
-                        color: 1, 1, 1, 1
-                        markup:True
-                        on_release: root.show_openDialog()
+                Button:
+                    id: importDataButton
+                    text: 'Importer les données expérimentales'
+                    halign: 'center'
+                    valign: 'center'
+                    color: 1, 1, 1, 1
+                    markup:True
+                    on_release: root.show_openDialog()
+                Button:
+                    text:"Selectionner l'intervalle de travail"
+                    color: 1, 1, 1, 1
+                    on_release:root.on_interval_define_button_active(self)
                 BoxLayout:
                     Label:
                         id: expCurve
                         size_hint: 0.60, 1
-                        text:'[color=000000]Courbe expérimentale[/color]'
+                        text:'Courbe Experimentale'
+                        color: 0, 0, 0, 1
                         markup:True
                     Switch:
                         id: expCurveSwitch
                         size_hint: 0.40, 1
-                        active: True
+                        active: False
                         on_active: root.on_expCurveSwitch_active(self.active)
                 BoxLayout:
                     Label:
                         id: thCurve
                         size_hint: 0.60, 1
-                        text:'[color=000000]Courbe théorique[/color]'
+                        text:'Courbe théorique'
+                        color: 0, 0, 0, 1
                         markup:True
                     Switch:
                         id: thCurveSwitch
                         size_hint: 0.40, 1
                         active: root.thCurveSwitchActive
                         on_active: root.on_thCurveSwitch_active(self.active)
-
-                Button:
-                    text:'Selectionner un intervalle'
-                    color: 1, 1, 1, 1
-                    on_release:root.on_interval_define_button_active(self)
-
                 BoxLayout:
                     Label:
                         id: dCurveLabel 
                         size_hint: 0.60, 1
-                        text:'[color=000000]Courbe D[/color]'
+                        text:'Regression linéaire'
+                        color: 0, 0, 0, 1
                         markup:True
                     Switch:
                         id: dCurveCheckBox
@@ -78,24 +76,17 @@
                 BoxLayout:
                     Button:
                         id: CoxCurveButton
-                        text:'COX'
+                        text:'Courbe C[sub]ox[/sub]'
+                        markup: True
                         on_release:root.on_cox_button_active(self)
 
 
-            StackLayout:                            
-                Label:
-                    text : '[color=000000]Un truc'
-                    markup:True
-                    
+            BoxLayout:
+                
             #Paramètres
             
             BoxLayout:
                 orientation:"vertical"
-
-                #Button:
-                #    text:"mettre à jour"
-                #    on_release:root.on_buttonparametre_active(self)
-
                 Label:
                     text:"Paramètres"
                     color: 0, 0, 0, 1
@@ -109,11 +100,15 @@
                     BoxLayout:
                         orientation:"vertical"
                         SpinBox:
-                            id:buttonDth                        
+                            id:buttonDth  
+                            value: sliderDth.value
                         Slider:
                             id:sliderDth
                             orientation:"horizontal"
-                            on_touch_move:root.on_slider_Dth_active()
+                            value: buttonDth.value
+                            min: buttonDth.min_value
+                            max: buttonDth.max_value
+                            step: buttonDth.steps
                 BoxLayout:
                     Label:
                         text:"n"
@@ -142,8 +137,6 @@
 
         BoxLayout:
             id: curveBoxLayout
-            #text:'[color=000000]courbe'
-            #markup:True
             size_hint: 0.8, 1
 
 

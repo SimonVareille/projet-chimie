@@ -3,33 +3,15 @@
 """Pour la compatibilité avec python2"""
 from __future__ import division
 
-import config
-
 """On gère ici les modules que l'on veut importer (en fonction de ce qui est
  disponible).
 """
-if config.USE_MATPLOTLIB:
-    """Ces deux prochaines lignes servent à dire à matplotlib d'utiliser le backend
-    interactif de kivy.
-    Le backend est l'environnement de dessin (pour plus d'infos : 
-    https://matplotlib.org/tutorials/introductory/usage.html#what-is-a-backend
-    Il faut mettre ces deux lignes avant toute autre importation et déclaration de
-    matplotlib.
-    """
-    import matplotlib
-    matplotlib.use('module://kivy.garden.matplotlib.backend_kivy')
-    
-    import graphs.cottrel_graph_matplot as cottrel_graph
-    import graphs.graphCox_matplot as coxgraph
-else:
-    import graphs.cottrel_graph_kivy as cottrel_graph
-    import graphs.graphCox_kivy as coxgraph
 
-if config.USE_NUMPY:
-    import cottrel.cottrel_numpy as cottrel
-    from linear_regression import LinearRegression
-else:
-    import cottrel.cottrel_math as cottrel
+import graphs.cottrel_graph_kivy as cottrel_graph
+import graphs.graphCox_kivy as coxgraph
+
+from linear_regression import LinearRegression
+import cottrel.cottrel_math as cottrel
 
 from data_reader import DataReader
 
@@ -43,6 +25,7 @@ from kivy.config import Config
 
 from kivy.app import App
 from kivy.core.window import Window
+from kivy.base import EventLoop
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
@@ -100,8 +83,6 @@ class MainWindow(Widget):
     valMaxC=NumericProperty(1)
     stepsC=NumericProperty(10**(-6))
     
-    sliderDth=ObjectProperty(None)
-    
     thCurveSwitchActive = BooleanProperty(True)
     
     valIntervalMin=NumericProperty(0)
@@ -116,7 +97,6 @@ class MainWindow(Widget):
         self.buttonDth.min_value=self.valMinDth
         self.buttonDth.max_value=self.valMaxDth
         self.buttonDth.steps=self.stepsDth
-        self.init_slider_Dth()
         
         #Valeurs pour N
         self.buttonN.value=self.valN
@@ -135,45 +115,42 @@ class MainWindow(Widget):
         self.buttonC.min_value=self.valMinC
         self.buttonC.max_value=self.valMaxC
         self.buttonC.steps=self.stepsC
-
-        self.mainGraph = cottrel_graph.CottrelGraph()
-
         
-        self.load_exp_data("", "experimental.csv")
+        self.expt = None
+        self.expI = None
+        
+        self.mainGraph = cottrel_graph.CottrelGraph()
         
         if self.expt:
             self.t = cottrel.create_t(0, max(self.expt), 1000)
         else:
             self.t = cottrel.create_t(0, 20, 1000)
-        self.I = cottrel.courbe_cottrel_th(self.buttonN.value, self.buttonS.value, self.buttonC.value, self.buttonDth.value, self.t)
+        self.I = cottrel.courbe_cottrel_th(self.buttonN.value, self.buttonS.value, 
+                                           self.buttonC.value, self.buttonDth.value, self.t)
         
+        self.mainGraph.set_theoric_data(self.t, self.I)
         
         self.mainGraph.set_experimental_data(self.expt, self.expI)
-        self.mainGraph.display_experimental()
+        self.mainGraph.display_experimental(False)
         
         self.mainGraph.set_limit_interval()
-        
-        self.linear_regression()
         
         self.mainGraph.update()
         
         self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
         
-        self.bind_on_buttonparametre_active(self.buttonDth)
-        self.bind_on_buttonparametre_active(self.buttonN)
-        self.bind_on_buttonparametre_active(self.buttonS)
-        self.bind_on_buttonparametre_active(self.buttonC)
-                
-        
-        
-        
-
-
+        self.bind_update_maingraph_values(self.buttonDth)
+        self.bind_update_maingraph_values(self.buttonN)
+        self.bind_update_maingraph_values(self.buttonS)
+        self.bind_update_maingraph_values(self.buttonC)
     
     def on_expCurveSwitch_active(self, active):
         if active:
-            self.mainGraph.display_experimental()
-            self.mainGraph.set_limit_interval()
+            if self.expt:
+                self.mainGraph.display_experimental()
+                self.mainGraph.set_limit_interval()
+            else:
+                self.expCurveSwitch.active = False
         else:
             self.mainGraph.display_experimental(False)
             self.mainGraph.set_limit_interval()
@@ -187,10 +164,53 @@ class MainWindow(Widget):
             self.mainGraph.display_theoric(False)
             self.mainGraph.set_limit_interval()
         self.mainGraph.update()
-    def on_buttonparametre_active(self,instance,text):
-        '''met à jour la courbe avec les nouvelles valeurs'''
+    
+    def on_interval_define_button_active(self,instance):        
+        interval_popup=IntervalPopup() 
+        
+        interval_popup.bind(on_dismiss=self.on_interval_popup_closed)
+        interval_popup.open()
+    
+    def on_interval_popup_closed(self, popup):
+        self.valIntervalMin=popup.intervalbox.val_min
+        self.valIntervalMax=popup.intervalbox.val_max
+    
+    def on_cox_button_active(self,instance):
+        cox_popup=CoxPopup()
+        cox_popup.CoxvalDth=self.valDth
+        cox_popup.CoxvalS=self.valS
+        cox_popup.CoxvalC=self.valC
+        cox_popup.CoxvalN=self.valN
+        cox_popup.open()
+    
+    def on_touch_down(self, touch):
+        if self.mainGraph.graph.collide_plot(*self.mainGraph.to_widget(*touch.pos, relative=True)):
+            if touch.is_mouse_scrolling:
+                if touch.button == 'scrolldown':
+                    #Zoom out
+                    self.mainGraph.zoom(0.95, 0.95, *self.mainGraph.to_widget(*touch.pos, relative=True))
+                elif touch.button == 'scrollup':
+                    #Zoom in
+                    self.mainGraph.zoom(1.05, 1.05, *self.mainGraph.to_widget(*touch.pos, relative=True))
+                return True
+        return super(MainWindow, self).on_touch_down(touch)            
+        
+    def on_touch_move(self, touch):
+        if len(EventLoop.touches)==2:
+            for other_touch in EventLoop.touches:
+                if touch.distance(other_touch):
+                    center = ((touch.x+other_touch.x)/2, (touch.y+other_touch.y)/2)
+                    if self.mainGraph.graph.collide_plot(*self.mainGraph.to_widget(*center, relative=True)):
+                        dx = abs(touch.x - other_touch.x) - abs(touch.px - other_touch.px)
+                        dy = abs(touch.y - other_touch.y) - abs(touch.py - other_touch.py)
+                        self.mainGraph.zoom(1 + 0.05*dx/20, 1 + 0.05*dy/20, *self.mainGraph.to_widget(*center, relative=True))
+                        return True
+        return super(MainWindow, self).on_touch_move(touch)
+    
+    def update_maingraph_values(self,instance,text):
+        '''Met à jour la courbe principale avec les nouvelles valeurs.
+        '''
         self.valDth=self.buttonDth.value
-        self.sliderDth.value=self.buttonDth.value
         self.valN=self.buttonN.value
         self.valC=self.buttonC.value
         self.valS=self.buttonS.value
@@ -198,21 +218,11 @@ class MainWindow(Widget):
         self.mainGraph.I=self.I
         self.mainGraph.update()
 
-    def bind_on_buttonparametre_active(self, spinbox):
-        spinbox.buttonMid_id.bind(text = self.on_buttonparametre_active)
-    
-    def init_slider_Dth(self):
-        self.sliderDth.min=self.buttonDth.min_value
-        self.sliderDth.max=self.buttonDth.max_value
-        self.sliderDth.value=self.buttonDth.value
-        self.sliderDth.step=self.buttonDth.steps
-    
-    def on_slider_Dth_active(self):
-        self.buttonDth.value=self.sliderDth.value
-        
+    def bind_update_maingraph_values(self, spinbox):
+        spinbox.buttonMid_id.bind(text = self.update_maingraph_values)
 
     def show_openDialog(self):
-        '''Show a dialog in order to select the data file to open.
+        '''Affiche la boite de dialogue d'ouverture de fichier.
         '''
         content = OpenDialog()
         self._openPopup = Popup(title="Sélectionnez le fichier de données :", content=content,
@@ -226,16 +236,30 @@ class MainWindow(Widget):
             self._openPopup.dismiss()
     
     def load_exp_data(self, path, filename):
-        '''Load the experimental data from file named `filename` located in 
-        `path`. If `filename` is a list or a tuple, only the first cell is
-        considered.
+        '''Charge les valeurs expérimentales depuis le fichier `filename` situé
+        dans le dossier `path`. Si `filename` est une liste ou un tuple, seule
+        la première case est considérée.
+        
+        Paramètres
+        ----------
+        path : str
+            Chemin du fichier à charger.
+        filename : str or list-like of str
+            Nom du fichier à charger.
         '''
         if isinstance(filename, (list, tuple)):
             filename = filename[0]
-        reader = DataReader(os.path.join(path, filename))
-        
-        self.expt = reader.get_t()
-        self.expI = reader.get_I()
+        try:
+            reader = DataReader(os.path.join(path, filename))
+        except FileNotFoundError as err:
+            print(err)
+            return False
+        except ValueError as err:
+            print("ValueError: ",err)
+            return False
+        else:
+            self.expt = reader.get_t()
+            self.expI = reader.get_I()
         
         self.mainGraph.set_experimental_data(self.expt, self.expI)
         
@@ -244,58 +268,27 @@ class MainWindow(Widget):
         self.I = cottrel.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
         self.mainGraph.set_theoric_data (self.t, self.I)
         
-        self.linear_regression()
-        
         self.mainGraph.update()
         
         return True
     
     def linear_regression(self):
-        '''Do the linear regression on the current experimental data and notify
-        the mainGraph that the value has to be updated.
+        '''Effectue la régression linéaire sur les données expérimentales 
+        "de travail", c'est à dire sur celles affichées à l'écran.
+        Indique au graph que la valeur de D a changée.
         '''
-        if config.USE_NUMPY:
-            linreg = LinearRegression(self.expt, self.expI)
-            
-            linreg.set_t_interval(1, 50)
-            
-            expD, coeff = linreg.regression(1, 1, 10**-3)
-            
-            self.mainGraph.set_expD(expD)
-            
-            
-    def on_cox_button_active(self,instance):
+        linreg = LinearRegression(self.expt, self.expI)
+
         
-        cox_popup=CoxPopup(CoxGraph(),cox_curve,linspace)
-        cox_popup.CoxvalDth=self.valDth
-        cox_popup.CoxvalS=self.valS
-        cox_popup.CoxvalC=self.valC
-        cox_popup.CoxvalN=self.valN
-        cox_popup.open()
+        expD, coeff = linreg.regression(self.valN, self.valS, self.valC)
         
-    def on_interval_define_button_active(self,instance):        
-        interval_popup=IntervalPopup() 
-        
-        interval_popup.bind(on_dismiss=self.on_interval_popup_closed)
-        interval_popup.open()
-    
-    def on_interval_popup_closed(self, popup):
-        self.valIntervalMin=popup.intervalbox.val_min
-        self.valIntervalMax=popup.intervalbox.val_max
-        
-
-    
-
-
-
-
-
+        self.mainGraph.set_expD(expD)
 
 
 class AppApp(App):
-    '''The app itself.
+    '''Point d'entrée de l'application.
     '''
-    title = "Cottrel"
+    title = "ReDoxLab"
     def build(self):
         Window.bind(on_keyboard=self.key_input)
         return MainWindow()

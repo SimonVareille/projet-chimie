@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = Projet Chimie
+title = ReDoxLab
 
 # (str) Package name
-package.name = projetchimie
+package.name = redoxlab
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.projetchimie
+package.domain = org.redoxlab
 
 # (str) Source code where the main.py live
 source.dir = .

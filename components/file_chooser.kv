@@ -5,9 +5,12 @@
         size: root.size
         pos: root.pos
         orientation: "vertical"
+        Label:
+            size_hint_y: 0.10
+            text: "Emplacement actuel: " + filechooser.path
         FileChooserIconView:
             id: filechooser
-            filters: ['*.csv']
+            filters: ['*.csv', '*.CSV', '*.crv', '*.CRV']
 
         BoxLayout:
             size_hint_y: 0.10
