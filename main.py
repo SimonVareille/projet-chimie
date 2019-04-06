@@ -271,14 +271,13 @@ class MainWindow(Widget):
     def on_touch_move(self, touch):
         if len(EventLoop.touches)==2:
             for other_touch in EventLoop.touches:
-                if other_touch.pos != touch.pos:
+                if touch.distance(other_touch):
                     center = ((touch.x+other_touch.x)/2, (touch.y+other_touch.y)/2)
-                    if self.mainGraph.graph.collide_plot(*center):
-                        dx = touch.dx + other_touch.dx
-                        dy = touch.dy + other_touch.dy
-                    
-                    self.mainGraph.zoom(dx, dy, *self.mainGraph.to_widget(*center, relative=True))
-                    return True
+                    if self.mainGraph.graph.collide_plot(*self.mainGraph.to_widget(*center, relative=True)):
+                        dx = abs(touch.x - other_touch.x) - abs(touch.px - other_touch.px)
+                        dy = abs(touch.y - other_touch.y) - abs(touch.py - other_touch.py)
+                        self.mainGraph.zoom(1 + 0.05*dx/20, 1 + 0.05*dy/20, *self.mainGraph.to_widget(*center, relative=True))
+                        return True
         return super(MainWindow, self).on_touch_move(touch)
     
     def on_interval_define_button_active(self,instance):        

@@ -50,7 +50,7 @@ class CottrelGraph(CottrelGraphBase):
         self.graph.legend = True
             
     def update(self): 
-        """Update the graph. Redraw the widgets.
+        """Met à jour le graphique en redessinant les courbes.
         """
         if self._display_theoric:
             self.thplot.points = list(zip(self.t,self.I))
@@ -87,34 +87,45 @@ class CottrelGraph(CottrelGraphBase):
     
     def zoom(self, dx, dy, cx, cy):
         """
-        Zoom into the graph by a factor.
+        Zoom dans le graphique par un facteur.
         
-        Set dx or dy over 1 zoom into the graph and below 1 it dezoom.
-        Default is dx=1, dy=1
+        Une valeur de `dx` ou de `dy` supérieure à 1 effectue un zoom,
+        inferieure à 1 effectue un dézoom.
+        Par défaut `dx=1`, `dy=1`.
         
-        Parameters
+        Paramètres
         ----------
-        dx : real
-            horizontal zoom factor
-        dy : real
-            vertical zoom factor
-        center : tuple(x,y)
-            Center of the zoom. Must be in widget coordinates.
-            Convert from window coordinates with:
-                `x, y = self.to_widget(x, y, relative=True)`
+        dx : float
+            Facteur de zoom horizontal.
+        dy : float
+            Facteur de zoom vertical.
+        cx : float
+            Abscisse du point sur lequel on zoom. Doit être exprimé dans les coordonnées
+            du widget.
+        cy : float
+            Ordonnée du point sur lequel on zoom. Doit être exprimé dans les coordonnées
+            du widget.
+            
+        Pour convertir le point depuis les coordonées de la fenêtre dans les
+        coordonnées du widget:
+            `cx, cy = self.graph.to_widget(cx, cy, relative=True)`
         """
-        if dx == 0 or dy == 0:
+        if dx <= 0 or dy <= 0:
             return
-        cx, cy = self.graph.to_data(cx, cy)
-        (cx - self.tleft)/(self.tright - self.tleft)
-        (self.tright - cx)/(self.tright - self.tleft)
-        tleft = cx - 0.5*(self.tright - self.tleft)/dx
-        tright = tleft + (self.tright - self.tleft)/dx
+        if self.Itop==self.Ibottom or self.tleft==self.tright:
+            return
+        dcx, dcy = self.graph.to_data(cx, cy)
+        xratio = (dcx - self.tleft)/(self.tright - self.tleft)
+        yratio = (dcy - self.Ibottom)/(self.Itop - self.Ibottom)
         
-        Ibottom = cy - 0.5*(self.Itop - self.Ibottom)/dy
-        Itop = Ibottom + (self.Itop - self.Ibottom)/dy
+        xrange = (self.tright - self.tleft)/dx
+        yrange = (self.Itop - self.Ibottom)/dy
         
-        print(cx, cy)
+        tleft = dcx - xratio*xrange
+        tright = tleft + xrange
+        
+        Ibottom = dcy - yratio*yrange
+        Itop = Ibottom + yrange
         
         self.set_limit_interval(tleft, tright, Ibottom, Itop)
         self.update()
@@ -126,5 +137,4 @@ class CottrelGraph(CottrelGraphBase):
         self.graph.x_ticks_major = (self.tright-self.tleft)/(width/100)
         self.graph.x_ticks_minor = 10
         self.graph.y_ticks_major = (self.Itop-self.Ibottom)/(height/50)
-        print((self.tright-self.tleft)/(width/50))
         self.graph.y_ticks_minor = 5
