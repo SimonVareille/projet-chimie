@@ -68,12 +68,14 @@ class DataReader:
                         line = file.readline().rstrip('\n\r').split("\t")
                         self.tData.values.append(float(line[0]))
                         self.IData.values.append(float(line[1]))
-            except (OSError, ValueError):
+            except FileNotFoundError as err:
+                raise err
+            except (OSError, ValueError) as err:
                 pass
             else:
                 leave = True
         if not leave:
-            raise
+            raise OSError()
     
     def get_t(self):
         """
