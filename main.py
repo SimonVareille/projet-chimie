@@ -54,6 +54,7 @@ class MainWindow(Widget):
     '''
     curveBoxLayout = ObjectProperty(None)
     expCurveSwitch = ObjectProperty(None)
+    smallCurveBoxLayout = ObjectProperty(None)
 
     #valeurs pour Dth
     buttonDth = ObjectProperty(None)    
