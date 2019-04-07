@@ -16,6 +16,9 @@ def cox_curve(D, t, x):
     Retour
     ------
         Renvoie la liste de valeurs prises par `Cox`
+    Renvoie arbitrairement la fonction nulle si constant = 0
     """
     constant = 2*sqrt(D*t)
+    if constant == 0 : 
+        return [ (0) for pos in x ]
     return [ (erf(pos/constant)) for pos in x ]

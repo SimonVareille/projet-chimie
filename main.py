@@ -45,6 +45,8 @@ from graphs.graphCox_kivy import CoxGraph
 from cottrel.cox_math import cox_curve
 from cottrel.cottrel_math import linspace
 
+from tab_operations import TabOperations
+
 
 
 class MainWindow(Widget):
@@ -117,6 +119,9 @@ class MainWindow(Widget):
         self.buttonC.max_value=self.valMaxC
         self.buttonC.steps=self.stepsC
         
+        self.exptRaw=None
+        self.expIRaw=None
+        self.areRawExpTabStored=0
         self.expt = None
         self.expI = None
         
@@ -177,6 +182,11 @@ class MainWindow(Widget):
     def on_interval_popup_closed(self, popup):
         self.valIntervalMin=popup.intervalbox.val_min
         self.valIntervalMax=popup.intervalbox.val_max
+        self.tab_exp_intervall_set()
+        self.mainGraph.set_experimental_data(self.expt, self.expI)
+        self.mainGraph.update()
+
+        
     
     def on_cox_button_active(self,instance):
         cox_popup=CoxPopup(CoxGraph, cox_curve, linspace)
@@ -186,7 +196,19 @@ class MainWindow(Widget):
         cox_popup.CoxvalN=self.valN
         cox_popup.coxGraph.update()
         cox_popup.open()
-    
+        
+    def tab_exp_intervall_set(self):
+        """change les tableau expt et expI pour qu'ils correspondent à l'intervalle actuel.
+        """
+        if not self.areRawExpTabStored:
+            self.exptRaw = self.expt
+            self.expIRaw = self.expI
+            self.areRawExpTabStored = 1
+        T=TabOperations()
+        self.expt, self.expI = T.del_values_not_between_tmin_tmax(self.exptRaw, self.expIRaw, 
+                                                                  self.valIntervalMin, self.valIntervalMax)
+        
+        
     def on_touch_down(self, touch):
         if self.mainGraph.graph.collide_plot(*self.mainGraph.to_widget(*touch.pos, relative=True)):
             if touch.is_mouse_scrolling:
@@ -264,6 +286,10 @@ class MainWindow(Widget):
         else:
             self.expt = reader.get_t()
             self.expI = reader.get_I()
+        #gère avec la modification d'intervalle
+        self.areRawExpTabStored=0
+        self.valIntervalMin = (min(self.expt))
+        self.valIntervalMax = (max(self.expt))
         
         self.mainGraph.set_experimental_data(self.expt, self.expI)
         
