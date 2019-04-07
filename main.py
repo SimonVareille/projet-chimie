@@ -47,6 +47,7 @@ from cottrel.cottrel_math import linspace
 
 from tab_operations import TabOperations
 
+from graphs.linearRegress_graph_kivy import GraphLinearRegression
 
 
 class MainWindow(Widget):
@@ -55,6 +56,7 @@ class MainWindow(Widget):
     '''
     curveBoxLayout = ObjectProperty(None)
     expCurveSwitch = ObjectProperty(None)
+
 
     smallCurveBoxLayout = ObjectProperty(None)
 
@@ -171,14 +173,17 @@ class MainWindow(Widget):
             self.mainGraph.set_limit_interval()
         self.mainGraph.update()
     
-    def on_interval_define_button_active(self,instance):        
-        interval_popup=IntervalPopup() 
-        interval_popup.intervalbox.val_min=self.valIntervalMin
-        interval_popup.intervalbox.val_max=self.valIntervalMax
-        interval_popup.intervalbox.update_display_val()
-        interval_popup.bind(on_dismiss=self.on_interval_popup_closed)
-        interval_popup.open()
-    
+    def on_interval_define_button_active(self,instance):  
+        if self.expt :
+            interval_popup=IntervalPopup() 
+            interval_popup.intervalbox.val_min=self.valIntervalMin
+            interval_popup.intervalbox.val_max=self.valIntervalMax
+            interval_popup.intervalbox.update_display_val()
+            interval_popup.bind(on_dismiss=self.on_interval_popup_closed)
+            interval_popup.open()
+        else:
+            pass #afficher besoin tableau exp pour changer intervalle
+        
     def on_interval_popup_closed(self, popup):
         self.valIntervalMin=popup.intervalbox.val_min
         self.valIntervalMax=popup.intervalbox.val_max
@@ -206,7 +211,26 @@ class MainWindow(Widget):
         T=TabOperations()
         self.expt, self.expI = T.del_values_not_between_tmin_tmax(self.exptRaw, self.expIRaw, 
                                                                   self.valIntervalMin, self.valIntervalMax)
+
+
+    
+    def on_dCurveCheckBox_active(self, active):
+        if active:
+            if self.expt and min(self.expI)>0:
+                self.GraphLinearRegression = GraphLinearRegression(self.valN, self.valS, self.valC, self.expt, self.expI)
+                self.curveBoxLayout.clear_widgets()
+                self.curveBoxLayout.add_widget(self.GraphLinearRegression.get_canvas())
+                self.smallCurveBoxLayout.add_widget(self.mainGraph.get_canvas())
+            else:
+                #afficher besoin tableau exp pour la regression :il faut enlever les valeurs nulles (pour l'instant)
+                self.curveBoxLayout.clear_widgets()
+                self.smallCurveBoxLayout.add_widget(self.mainGraph.get_canvas())
+        else:
+            self.smallCurveBoxLayout.clear_widgets()
+            self.curveBoxLayout.clear_widgets()
+            self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
         
+            
         
     def on_touch_down(self, touch):
         if self.mainGraph.graph.collide_plot(*self.mainGraph.to_widget(*touch.pos, relative=True)):

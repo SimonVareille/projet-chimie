@@ -17,43 +17,11 @@ class TabOperations():
 #            self.are_all_the_val_ok=0 
         
     
-    def rank_first_tmin(self, expt, tmin):
-        """Permet de savoir jusqu'à quel indice du tableau de `expt` et `expI` 
-        on va supprimer les valeurs.
-        
-        Paramètres
-        ----------
-        expt : list
-            Tableau de valeurs à analyser.
-        tmin : float
-            Valeur minimum du tableau final.
-        
-        Retour
-        ------
-        Retourne l'indice de la première valeur de `expt` supérieure à `tmin`.
-        """
+    def rank_first_t(self, expt, t):
+        """permet de savoir jusqu'à quel indice du tableau de expt et expI on va supprimer les valeurs"""
         value_to_return = 0
-        while (value_to_return<len(expt) and expt[value_to_return] < tmin):
-            value_to_return +=1
-        return value_to_return
-        
-    def rank_last_tmax(self, expt, tmax):
-        """Permet de savoir à partir de quel indice du tableau de `expt` et
-        `expI` on va supprimer les valeurs.
-        
-        Paramètres
-        ----------
-        expt : list
-            Tableau de valeurs à analyser.
-        tmax : float
-            Valeur maximum du tableau final.
-        
-        Retour
-        ------
-        Retourne l'indice de la première valeur de `expt` supèrieure à `tmin`.
-        """
-        value_to_return = 0
-        while (value_to_return<len(expt) and expt[value_to_return] < tmax):
+        while (value_to_return<len(expt) and expt[value_to_return] < t):
+
             value_to_return +=1
         return value_to_return
     
@@ -63,9 +31,10 @@ class TabOperations():
         """
         tab_expt_to_return=[]
         tab_expI_to_return=[]
-        rank_first=self.rank_first_tmin(expt,tmin)
-        rank_last=self.rank_last_tmax(expt,tmax)
         
+        rank_first=self.rank_first_t(expt,tmin)
+        rank_last=self.rank_last_t(expt,tmax)
+
         for i in range(rank_first,rank_last):
             tab_expt_to_return.append(expt[i]-expt[rank_first]) #On commence à t=0
             
