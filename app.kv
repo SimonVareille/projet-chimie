@@ -71,14 +71,11 @@
                         text:'Régression linéaire'
                         color: 0, 0, 0, 1
                         markup:True
-                        
                     Switch:
                         id: dCurveCheckBox
                         size_hint: 0.40, 1
-
                         on_active:root.on_dCurveCheckBox_active(self.active)
                         disabled: not root.expDataLoaded
-
                 BoxLayout:
                     Button:
                         id: CoxCurveButton

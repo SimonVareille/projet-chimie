@@ -39,14 +39,13 @@ from components.file_chooser import OpenDialog
 from components.cox_popup import CoxPopup
 
 from components.interval_popup import IntervalPopup
-
+'''Pour le popup coxGraph
+'''
 from graphs.graphCox_kivy import CoxGraph
-
 from cottrel.cox_math import cox_curve
-
 from cottrel.cottrel_math import linspace
 
-from graphs.linearRegress_graph_kivy import GraphLinearRegression
+from tab_operations import TabOperations
 
 from graphs.linearRegress_graph_kivy import GraphLinearRegression
 
@@ -57,6 +56,7 @@ class MainWindow(Widget):
     '''
     curveBoxLayout = ObjectProperty(None)
     expCurveSwitch = ObjectProperty(None)
+
 
     smallCurveBoxLayout = ObjectProperty(None)
 
@@ -123,11 +123,9 @@ class MainWindow(Widget):
         self.buttonC.max_value=self.valMaxC
         self.buttonC.steps=self.stepsC
         
-
         self.exptRaw=None
         self.expIRaw=None
         self.areRawExpTabStored = False
-
         self.expt = None
         self.expI = None
         
@@ -153,9 +151,6 @@ class MainWindow(Widget):
         self.bind_update_maingraph_values(self.buttonS)
         self.bind_update_maingraph_values(self.buttonC)
     
- 
-        
-        
     def on_expCurveSwitch_active(self, active):
         if active:
             if self.expt:
@@ -177,7 +172,6 @@ class MainWindow(Widget):
             self.mainGraph.set_limit_interval()
         self.mainGraph.update()
     
-
     def on_interval_define_button_active(self,instance):  
         if self.expt :
             interval_popup=IntervalPopup() 
@@ -201,17 +195,15 @@ class MainWindow(Widget):
         
         self.mainGraph.set_limit_interval()
         self.mainGraph.update()
-
-
     
     def on_cox_button_active(self,instance):
-        cox_popup=CoxPopup()
+        cox_popup=CoxPopup(CoxGraph, cox_curve, linspace)
         cox_popup.CoxvalDth=self.valDth
         cox_popup.CoxvalS=self.valS
         cox_popup.CoxvalC=self.valC
         cox_popup.CoxvalN=self.valN
+        cox_popup.coxGraph.update()
         cox_popup.open()
-
         
     def set_exp_tab_interval(self):
         """Change les tableau expt et expI pour qu'ils correspondent à 
@@ -251,7 +243,6 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         
             
         
-
     def on_touch_down(self, touch):
         if self.mainGraph.collide_plot(*self.mainGraph.to_widget(*touch.pos, relative=True)):
             if touch.is_mouse_scrolling:
@@ -326,7 +317,6 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         except ValueError as err:
             print("ValueError: ",err)
             return False
-
         
         self.exptRaw = reader.get_t()
         self.expIRaw = reader.get_I()
@@ -336,7 +326,6 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         #Gère avec la modification d'intervalle
         self.valIntervalMin = (min(self.expt))
         self.valIntervalMax = (max(self.expt))
-
         
         self.mainGraph.set_experimental_data(self.expt, self.expI)
         

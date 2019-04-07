@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 """
 Created on Sat Apr  6 19:25:47 2019
@@ -84,9 +83,8 @@ class GraphLinearRegression(LinearRegression):
 #        self.graph.ymax=float(log(max(self.I)))
         
     def get_canvas(self):
-
         return self.graph
-    
+
     def set_limit_interval(self, logtleft=None, logtright=None, logIbottom=None, logItop=None):
     
     
