@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 """
 Created on Sat Apr  6 19:25:47 2019
@@ -94,4 +95,6 @@ class GraphLinearRegression(LinearRegression):
 #        self.graph.x_ticks_major = (self.tright-self.tleft)/(width/100)
 ##        self.graph.x_ticks_minor = 10
 #        self.graph.y_ticks_major = (self.Itop-self.Ibottom)/(height/50)
+
+
 #        self.graph.y_ticks_minor = 5
