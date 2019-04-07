@@ -140,9 +140,6 @@ class MainWindow(Widget):
         
         self.mainGraph.set_theoric_data(self.t, self.I)
         
-        self.mainGraph.set_experimental_data(self.expt, self.expI)
-        self.mainGraph.display_experimental(False)
-        
         self.mainGraph.set_limit_interval()
         
         self.mainGraph.update()
@@ -183,14 +180,13 @@ class MainWindow(Widget):
             interval_popup.intervalbox.update_display_val()
             interval_popup.bind(on_dismiss=self.on_interval_popup_closed)
             interval_popup.open()
-        else:
-            pass #afficher besoin tableau exp pour changer intervalle
         
     def on_interval_popup_closed(self, popup):
         self.valIntervalMin=popup.intervalbox.val_min
         self.valIntervalMax=popup.intervalbox.val_max
         self.set_exp_tab_interval()
         self.mainGraph.set_experimental_data(self.expt, self.expI)
+        self.mainGraph.set_limit_interval()
         self.mainGraph.update()
     
     def on_cox_button_active(self,instance):
@@ -212,26 +208,29 @@ class MainWindow(Widget):
 
     def on_dCurveCheckBox_active(self, active):
         if active:
+            self.curveBoxLayout.clear_widgets()
             if self.expt and min(self.expI)>0:
                 self.graphLinearRegression = GraphLinearRegression(self.valN, self.valS, self.valC, self.expt, self.expI)
-                self.curveBoxLayout.clear_widgets()
                 self.curveBoxLayout.add_widget(self.graphLinearRegression.get_canvas())
-                self.mainGraph.legend = False
-                self.mainGraph.ticks_labels = False
-                self.mainGraph.update()
-                self.smallCurveBoxLayout.add_widget(self.mainGraph.get_canvas())
             else:
-                #afficher besoin tableau exp pour la regression :il faut enlever les valeurs nulles (pour l'instant)
-                self.curveBoxLayout.clear_widgets()
-                self.mainGraph.legend = False
-                self.mainGraph.ticks_labels = False
-                self.mainGraph.update()
-                self.smallCurveBoxLayout.add_widget(self.mainGraph.get_canvas())
+                self.curveBoxLayout.add_widget(Label(text="""[color=FF0000]Attention !
+Les données expérimentales contiennent des valeurs négatives ou nulles.
+Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'intervalle de travail»[/color]""",
+                    markup=True, halign='center', valign='center', font_size=20))
+                #Afficher besoin tableau exp pour la regression : il faut enlever les valeurs nulles (pour l'instant)
+                pass
+            self.mainGraph.legend = False
+            self.mainGraph.ticks_labels = False
+            
+            self.smallCurveBoxLayout.add_widget(self.mainGraph.get_canvas())
+            self.mainGraph.set_limit_interval()
+            self.mainGraph.update()
         else:
             self.smallCurveBoxLayout.clear_widgets()
             self.curveBoxLayout.clear_widgets()
             self.mainGraph.legend = True
             self.mainGraph.ticks_labels = True
+            self.mainGraph.set_limit_interval()
             self.mainGraph.update()
             self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
         
@@ -329,6 +328,7 @@ class MainWindow(Widget):
         self.I = cottrel.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
         self.mainGraph.set_theoric_data (self.t, self.I)
         
+        self.mainGraph.set_limit_interval()
         self.mainGraph.update()
         
         self.expDataLoaded=True
