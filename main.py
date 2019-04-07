@@ -47,6 +47,7 @@ from cottrel.cottrel_math import linspace
 
 from tab_operations import TabOperations
 
+from graphs.linearRegress_graph_kivy import GraphLinearRegression
 
 
 class MainWindow(Widget):
@@ -55,6 +56,7 @@ class MainWindow(Widget):
     '''
     curveBoxLayout = ObjectProperty(None)
     expCurveSwitch = ObjectProperty(None)
+
 
     smallCurveBoxLayout = ObjectProperty(None)
 
@@ -207,7 +209,26 @@ class MainWindow(Widget):
         T=TabOperations()
         self.expt, self.expI = T.del_values_not_between_tmin_tmax(self.exptRaw, self.expIRaw, 
                                                                   self.valIntervalMin, self.valIntervalMax)
+
+
+    
+    def on_dCurveCheckBox_active(self, active):
+        if active:
+            if self.expt and min(self.expI)>0:
+                self.GraphLinearRegression = GraphLinearRegression(self.valN, self.valS, self.valC, self.expt, self.expI)
+                self.curveBoxLayout.clear_widgets()
+                self.curveBoxLayout.add_widget(self.GraphLinearRegression.get_canvas())
+                self.smallCurveBoxLayout.add_widget(self.mainGraph.get_canvas())
+            else:
+                
+                self.curveBoxLayout.clear_widgets()
+                self.smallCurveBoxLayout.add_widget(self.mainGraph.get_canvas())
+        else:
+            self.smallCurveBoxLayout.clear_widgets()
+            self.curveBoxLayout.clear_widgets()
+            self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
         
+            
         
     def on_touch_down(self, touch):
         if self.mainGraph.graph.collide_plot(*self.mainGraph.to_widget(*touch.pos, relative=True)):
