@@ -186,6 +186,13 @@ class MainWindow(Widget):
         self.valIntervalMax=popup.intervalbox.val_max
         self.set_exp_tab_interval()
         self.mainGraph.set_experimental_data(self.expt, self.expI)
+        
+        #Recalcule les valeurs théoriques pour coller avec l'étendue des valeurs
+        #expériementales
+        self.t = cottrel.create_t(0, max(self.expt), 1000)
+        self.I = cottrel.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
+        self.mainGraph.set_theoric_data (self.t, self.I)
+        
         self.mainGraph.set_limit_interval()
         self.mainGraph.update()
     
