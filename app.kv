@@ -39,6 +39,7 @@
                     text:"Selectionner l'intervalle de travail"
                     color: 1, 1, 1, 1
                     on_release:root.on_interval_define_button_active(self)
+                    disabled: not root.expDataLoaded
                 BoxLayout:
                     Label:
                         id: expCurve

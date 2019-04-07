@@ -93,6 +93,8 @@ class MainWindow(Widget):
     valIntervalMin=NumericProperty(0)
     valIntervalMax=NumericProperty(100)
     
+    expDataLoaded=BooleanProperty(False)
+    
 
     def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
@@ -187,7 +189,7 @@ class MainWindow(Widget):
     def on_interval_popup_closed(self, popup):
         self.valIntervalMin=popup.intervalbox.val_min
         self.valIntervalMax=popup.intervalbox.val_max
-        self.tab_exp_intervall_set()
+        self.set_exp_tab_interval()
         self.mainGraph.set_experimental_data(self.expt, self.expI)
         self.mainGraph.update()
     
@@ -200,20 +202,14 @@ class MainWindow(Widget):
         cox_popup.coxGraph.update()
         cox_popup.open()
         
-    def tab_exp_intervall_set(self):
+    def set_exp_tab_interval(self):
         """Change les tableau expt et expI pour qu'ils correspondent à 
         l'intervalle actuel.
         """
-        if not self.areRawExpTabStored:
-            self.exptRaw = self.expt
-            self.expIRaw = self.expI
-            self.areRawExpTabStored = True
         T=TabOperations()
         self.expt, self.expI = T.del_values_not_between_tmin_tmax(self.exptRaw, self.expIRaw, 
                                                                   self.valIntervalMin, self.valIntervalMax)
 
-
-    
     def on_dCurveCheckBox_active(self, active):
         if active:
             if self.expt and min(self.expI)>0:
@@ -306,22 +302,27 @@ class MainWindow(Widget):
         except ValueError as err:
             print("ValueError: ",err)
             return False
-        else:
-            self.expt = reader.get_t()
-            self.expI = reader.get_I()
-        #gère avec la modification d'intervalle
-        self.areRawExpTabStored = False
+        
+        self.exptRaw = reader.get_t()
+        self.expIRaw = reader.get_I()
+        self.expt = self.exptRaw
+        self.expI = self.expIRaw
+            
+        #Gère avec la modification d'intervalle
         self.valIntervalMin = (min(self.expt))
         self.valIntervalMax = (max(self.expt))
         
         self.mainGraph.set_experimental_data(self.expt, self.expI)
         
-        #Recalculate the theoric value so that it fit the experimental range.
+        #Recalcule les valeurs théoriques pour coller avec l'étendue des valeurs
+        #expériementales
         self.t = cottrel.create_t(0, max(self.expt), 1000)
         self.I = cottrel.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
         self.mainGraph.set_theoric_data (self.t, self.I)
         
         self.mainGraph.update()
+        
+        self.expDataLoaded=True
         
         return True
     
