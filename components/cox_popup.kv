@@ -13,15 +13,17 @@
             orientation:"vertical"         
             size_hint: (.2,1)
             Label:
-                text:"t"
+                text:"t = " + str(root._coxvaltToDisplay)
                 size_hint:(1,.2)
             Slider:
                 id:SliderCoxT
                 max:root.maxt
                 min:root.mint
+                step:root.step
                 size_hint:(1,.8)
                 orientation:"vertical"
                 on_touch_move:root.on_slider_T_active()
+                #on_touch_down:root.on_slider_T_active()
         BoxLayout:
             size_hint: (.8,1)
             orientation:"vertical"
