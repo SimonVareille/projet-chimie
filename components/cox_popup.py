@@ -31,9 +31,7 @@ class CoxPopup(Popup):
         
         self.xtab=self.linspace(0,0.1,200)
         
-        
         self.grahCoxLayout.add_widget(self.coxGraph.get_canvas())
-        
         
         self.on_slider_T_active()
         
