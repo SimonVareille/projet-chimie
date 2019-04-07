@@ -63,7 +63,8 @@ class GraphLinearRegression(LinearRegression):
         self.graph.legend = True
         
         self.set_graph ( self.logexpt, self.logexpI, self.linlogexpI)
-
+        
+        self.set_limit_interval(self.logtleft, self.logtright, self.logIbottom, self.logItop)
     
     def set_graph (self, logexpt, logexpI, linlogexpI):
         self.logexpplot.points = list(zip(logexpt, logexpI))
@@ -85,16 +86,16 @@ class GraphLinearRegression(LinearRegression):
     def get_canvas(self):
 
         return self.graph
-
-#faut-il definir un tleft tright...? 
-        #fonction a renomer
-#    def set_limit_interval(self, tleft=None, tright=None, Ibottom=None, Itop=None):
-
-        
-#        width, height = self.graph.get_plot_area_size()
-#        self.graph.x_ticks_major = (self.tright-self.tleft)/(width/100)
-##        self.graph.x_ticks_minor = 10
-#        self.graph.y_ticks_major = (self.Itop-self.Ibottom)/(height/50)
-
-
-#        self.graph.y_ticks_minor = 5
+    
+    def set_limit_interval(self, logtleft=None, logtright=None, logIbottom=None, logItop=None):
+    
+    
+            width, height = self.graph.get_plot_area_size()
+    
+            self.graph.x_ticks_major = (self.logtright-self.logtleft)/(width/100)
+    
+            self.graph.x_ticks_minor = 10
+    
+            self.graph.y_ticks_major = (self.logItop-self.logIbottom)/(height/50)
+    
+            self.graph.y_ticks_minor = 5
