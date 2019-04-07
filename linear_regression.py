@@ -5,11 +5,14 @@ import math as m
 def list_transformation_log (values):
     loglist=list()
 
-    for val in values:
+
+    for val in values[1:]:
+
         loglist.append(m.log(val))
 
     return (loglist)
 def mean (liste):
+
 
     summ=m.fsum(liste)
     mean = summ/(len(liste))
@@ -64,13 +67,16 @@ class LinearRegression:
 #        self.indicetMax=i
      
     F = 96485.3329
+    def logexp_curves_tab(self, expt, expI):
+        self.logexpt= list_transformation_log(expt)
+        self.logexpI=list_transformation_log(expI)
     
     def linregress (self):
         meant = mean(list_transformation_log(self.t))
         meanI = mean(list_transformation_log(self.I))
         #linearcoefficient=coefficient devant ln(t)
         #intercept=ln(nFCS*sqrt(D/pi))
-        linearcoefficient = m.fsum((m.log(t)-meant)*(m.log(I)-meanI) for t,I in zip(self.t,self.I))/(m.fsum((m.log(t)-meant)**2 for t in self.t)) 
+        linearcoefficient = m.fsum(((t)-meant)*((I)-meanI) for t,I in zip(self.logexpt,self.logexpI))/(m.fsum(((t)-meant)**2 for t in self.logexpt)) 
         intercept = meanI-linearcoefficient*meant
         return(linearcoefficient,intercept)
         
@@ -83,8 +89,6 @@ class LinearRegression:
         for i in range (len(self.logexpt)) :
             self.linlogexpI.append(linearcoefficient*self.logexpt[i]+intercept)
 
-
-    
         return (self.logexpt, self.logexpI, self.linlogexpI)
         
     def calculate_D (self, intercept, n, S, C):

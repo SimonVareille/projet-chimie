@@ -48,6 +48,7 @@ from cottrel.cottrel_math import linspace
 
 from graphs.linearRegress_graph_kivy import GraphLinearRegression
 
+from graphs.linearRegress_graph_kivy import GraphLinearRegression
 
 
 class MainWindow(Widget):
@@ -56,6 +57,7 @@ class MainWindow(Widget):
     '''
     curveBoxLayout = ObjectProperty(None)
     expCurveSwitch = ObjectProperty(None)
+
     smallCurveBoxLayout = ObjectProperty(None)
 
     #valeurs pour Dth
@@ -91,6 +93,8 @@ class MainWindow(Widget):
     valIntervalMin=NumericProperty(0)
     valIntervalMax=NumericProperty(100)
     
+    expDataLoaded=BooleanProperty(False)
+    
 
     def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
@@ -119,6 +123,11 @@ class MainWindow(Widget):
         self.buttonC.max_value=self.valMaxC
         self.buttonC.steps=self.stepsC
         
+
+        self.exptRaw=None
+        self.expIRaw=None
+        self.areRawExpTabStored = False
+
         self.expt = None
         self.expI = None
         
@@ -132,9 +141,6 @@ class MainWindow(Widget):
                                            self.buttonC.value, self.buttonDth.value, self.t)
         
         self.mainGraph.set_theoric_data(self.t, self.I)
-        
-        self.mainGraph.set_experimental_data(self.expt, self.expI)
-        self.mainGraph.display_experimental(False)
         
         self.mainGraph.set_limit_interval()
         
@@ -171,32 +177,32 @@ class MainWindow(Widget):
             self.mainGraph.set_limit_interval()
         self.mainGraph.update()
     
-    def on_dCurveCheckBox_active(self, active):
-        if active:
-            if self.expt and min(self.expI)>0:
-                self.GraphLinearRegression = GraphLinearRegression(self.valN, self.valS, self.valC, self.expt, self.expI)
-                self.curveBoxLayout.clear_widgets()
-                self.curveBoxLayout.add_widget(self.GraphLinearRegression.get_canvas())
-                self.smallCurveBoxLayout.add_widget(self.mainGraph.get_canvas())
-            else:
-                
-                self.curveBoxLayout.clear_widgets()
-                self.smallCurveBoxLayout.add_widget(self.mainGraph.get_canvas())
-        else:
-            self.smallCurveBoxLayout.clear_widgets()
-            self.curveBoxLayout.clear_widgets()
-            self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
+
+    def on_interval_define_button_active(self,instance):  
+        if self.expt :
+            interval_popup=IntervalPopup() 
+            interval_popup.intervalbox.val_min=self.valIntervalMin
+            interval_popup.intervalbox.val_max=self.valIntervalMax
+            interval_popup.intervalbox.update_display_val()
+            interval_popup.bind(on_dismiss=self.on_interval_popup_closed)
+            interval_popup.open()
         
-            
-    def on_interval_define_button_active(self,instance):        
-        interval_popup=IntervalPopup() 
-        
-        interval_popup.bind(on_dismiss=self.on_interval_popup_closed)
-        interval_popup.open()
-    
     def on_interval_popup_closed(self, popup):
         self.valIntervalMin=popup.intervalbox.val_min
         self.valIntervalMax=popup.intervalbox.val_max
+        self.set_exp_tab_interval()
+        self.mainGraph.set_experimental_data(self.expt, self.expI)
+        
+        #Recalcule les valeurs théoriques pour coller avec l'étendue des valeurs
+        #expériementales
+        self.t = cottrel.create_t(0, max(self.expt), 1000)
+        self.I = cottrel.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
+        self.mainGraph.set_theoric_data (self.t, self.I)
+        
+        self.mainGraph.set_limit_interval()
+        self.mainGraph.update()
+
+
     
     def on_cox_button_active(self,instance):
         cox_popup=CoxPopup()
@@ -205,9 +211,49 @@ class MainWindow(Widget):
         cox_popup.CoxvalC=self.valC
         cox_popup.CoxvalN=self.valN
         cox_popup.open()
-    
+
+        
+    def set_exp_tab_interval(self):
+        """Change les tableau expt et expI pour qu'ils correspondent à 
+        l'intervalle actuel.
+        """
+        T=TabOperations()
+        self.expt, self.expI = T.del_values_not_between_tmin_tmax(self.exptRaw, self.expIRaw, 
+                                                                  self.valIntervalMin, self.valIntervalMax)
+
+    def on_dCurveCheckBox_active(self, active):
+        if active:
+            self.curveBoxLayout.clear_widgets()
+            if self.expt and min(self.expI)>0:
+                self.graphLinearRegression = GraphLinearRegression(self.valN, self.valS, self.valC, self.expt, self.expI)
+                self.curveBoxLayout.add_widget(self.graphLinearRegression.get_canvas())
+            else:
+                self.curveBoxLayout.add_widget(Label(text="""[color=FF0000]Attention !
+Les données expérimentales contiennent des valeurs négatives ou nulles.
+Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'intervalle de travail»[/color]""",
+                    markup=True, halign='center', valign='center', font_size=20))
+                #Afficher besoin tableau exp pour la regression : il faut enlever les valeurs nulles (pour l'instant)
+                pass
+            self.mainGraph.legend = False
+            self.mainGraph.ticks_labels = False
+            
+            self.smallCurveBoxLayout.add_widget(self.mainGraph.get_canvas())
+            self.mainGraph.set_limit_interval()
+            self.mainGraph.update()
+        else:
+            self.smallCurveBoxLayout.clear_widgets()
+            self.curveBoxLayout.clear_widgets()
+            self.mainGraph.legend = True
+            self.mainGraph.ticks_labels = True
+            self.mainGraph.set_limit_interval()
+            self.mainGraph.update()
+            self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
+        
+            
+        
+
     def on_touch_down(self, touch):
-        if self.mainGraph.graph.collide_plot(*self.mainGraph.to_widget(*touch.pos, relative=True)):
+        if self.mainGraph.collide_plot(*self.mainGraph.to_widget(*touch.pos, relative=True)):
             if touch.is_mouse_scrolling:
                 if touch.button == 'scrolldown':
                     #Zoom out
@@ -223,7 +269,7 @@ class MainWindow(Widget):
             for other_touch in EventLoop.touches:
                 if touch.distance(other_touch):
                     center = ((touch.x+other_touch.x)/2, (touch.y+other_touch.y)/2)
-                    if self.mainGraph.graph.collide_plot(*self.mainGraph.to_widget(*center, relative=True)):
+                    if self.mainGraph.collide_plot(*self.mainGraph.to_widget(*center, relative=True)):
                         dx = abs(touch.x - other_touch.x) - abs(touch.px - other_touch.px)
                         dy = abs(touch.y - other_touch.y) - abs(touch.py - other_touch.py)
                         self.mainGraph.zoom(1 + 0.05*dx/20, 1 + 0.05*dy/20, *self.mainGraph.to_widget(*center, relative=True))
@@ -280,18 +326,30 @@ class MainWindow(Widget):
         except ValueError as err:
             print("ValueError: ",err)
             return False
-        else:
-            self.expt = reader.get_t()
-            self.expI = reader.get_I()
+
+        
+        self.exptRaw = reader.get_t()
+        self.expIRaw = reader.get_I()
+        self.expt = self.exptRaw
+        self.expI = self.expIRaw
+            
+        #Gère avec la modification d'intervalle
+        self.valIntervalMin = (min(self.expt))
+        self.valIntervalMax = (max(self.expt))
+
         
         self.mainGraph.set_experimental_data(self.expt, self.expI)
         
-        #Recalculate the theoric value so that it fit the experimental range.
+        #Recalcule les valeurs théoriques pour coller avec l'étendue des valeurs
+        #expériementales
         self.t = cottrel.create_t(0, max(self.expt), 1000)
         self.I = cottrel.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
         self.mainGraph.set_theoric_data (self.t, self.I)
         
+        self.mainGraph.set_limit_interval()
         self.mainGraph.update()
+        
+        self.expDataLoaded=True
         
         return True
     

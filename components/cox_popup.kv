@@ -4,7 +4,7 @@
     grahCoxLayout:grahCoxLayout
     title:""
     separator_height:0    
-    auto_dismiss: False
+    auto_dismiss: True
     size_hint: (.9,.9)
     BoxLayout:
         orientation:"horizontal"
@@ -13,8 +13,8 @@
             orientation:"vertical"         
             size_hint: (.2,1)
             Label:
-                text:"t = " + str(root._coxvaltToDisplay)
-                size_hint:(1,.2)
+                text:"t = " + str(root._coxvaltToDisplay) + "s"
+                size_hint:(1,.1)
             Slider:
                 id:SliderCoxT
                 max:root.maxt
@@ -22,24 +22,14 @@
                 step:root.step
                 size_hint:(1,.8)
                 orientation:"vertical"
-                on_touch_move:root.on_slider_T_active()
+                on_value: root.on_slider_T_active()
                 #on_touch_down:root.on_slider_T_active()
         BoxLayout:
             size_hint: (.8,1)
             orientation:"vertical"
                 
             BoxLayout:
-                size_hint:(1,.9)
                 id:grahCoxLayout
-            BoxLayout:
-                size_hint:(1,.1)
-                orientation:"horizontal"
-                Label:
-                    size_hint:(.8,1)
-                Button:
-                    size_hint:(.2,1)           
-                    text: "OK"
-                    on_press: root.dismiss()
 
 
 <CustButton@Button>:

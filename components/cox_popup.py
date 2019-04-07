@@ -25,24 +25,18 @@ class CoxPopup(Popup):
     def __init__(self, coxGraph, cox_curve, linspace):
         super(CoxPopup, self).__init__()
         
-        
-        
         self.coxGraph = coxGraph()
         self.cox_curve = cox_curve
         self.linspace=linspace
         
         self.xtab=self.linspace(0,0.1,200)
         
-        
         self.grahCoxLayout.add_widget(self.coxGraph.get_canvas())
-        
         
         self.on_slider_T_active()
         
         
     def on_slider_T_active(self):
-        
-        
         self.coxvalt=self.sliderCoxT.value
         self.coxGraph.x=self.xtab
         self.coxGraph.cox=self.cox_curve(self.CoxvalDth,self.coxvalt, self.xtab)

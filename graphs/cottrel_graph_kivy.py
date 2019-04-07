@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
-from kivy.garden.graph import Graph, SmoothLinePlot, DotPlot
+from kivy.garden.graph import Graph, SmoothLinePlot
+from kivy.event import EventDispatcher
+from kivy.properties import BooleanProperty
 from .cottrel_graph_base import CottrelGraphBase
-import math
 
-class CottrelGraph(CottrelGraphBase):
+class CottrelGraph(CottrelGraphBase, EventDispatcher):
     """Cette classe crée le graphique contenant les courbes de Cottrel en 
     utilisant kivy.garden.graph.
     """
+    legend=BooleanProperty(True)
+    ticks_labels=BooleanProperty(True)
+    
     def __init__(self, t=[], I=[]):
         """
         """
@@ -26,8 +30,8 @@ class CottrelGraph(CottrelGraphBase):
                            x_ticks_major=5,
                            y_ticks_major=0.2,
                            y_ticks_minor=4,
-                           y_grid_label=True,
-                           x_grid_label=True,
+                           y_grid_label=self.ticks_labels,
+                           x_grid_label=self.ticks_labels,
                            padding=5,
                            x_grid=False,
                            y_grid=False, 
@@ -35,6 +39,7 @@ class CottrelGraph(CottrelGraphBase):
                            xmax=float(self.tright), 
                            ymin=float(self.Ibottom),
                            ymax=float(self.Itop),
+                           legend=self.legend,
                            **graph_theme)
         
         self.thplot = SmoothLinePlot(color=[0, 0, 1, 1])
@@ -43,11 +48,9 @@ class CottrelGraph(CottrelGraphBase):
         self.expplot = SmoothLinePlot(color=[1, 0, 0, 1])
         self.expplot.label = "Expérimentale"
         
-#        self.testplot = SmoothLinePlot(color=[0, 1, 0, 1])
-#        self.testplot.points = [(5,0), (5,1.2)]
-#        self.graph.add_plot(self.testplot)
-        
-        self.graph.legend = True
+        self.bind(legend=self.graph.setter('legend'))
+        self.bind(ticks_labels=self.graph.setter('y_grid_label'))
+        self.bind(ticks_labels=self.graph.setter('x_grid_label'))
             
     def update(self): 
         """Met à jour le graphique en redessinant les courbes.
@@ -84,6 +87,19 @@ class CottrelGraph(CottrelGraphBase):
     
     def to_widget(self, x, y, relative=False):
         return self.graph.to_widget(x, y, relative)
+    
+    def collide_plot(self, x, y):
+        """Determine si les coordonées tombent dans la zone des courbes.
+        Utilisez `x, y = self.to_widget(x, y, relative=True)` pour d'abord les
+        convertir en coordonées widget si elles sont dans les coordonées de la
+        fenêtre.
+
+        Paramètres
+        ----------
+        `x, y` : floats
+                Les coordonées à tester.
+        """
+        return self.graph.collide_plot(x, y)
     
     def zoom(self, dx, dy, cx, cy):
         """

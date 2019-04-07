@@ -36,14 +36,15 @@
                     markup:True
                     on_release: root.show_openDialog()
                 Button:
-                    text:"Selectionner l'intervalle de travail"
+                    text:"Sélectionner l'intervalle de travail"
                     color: 1, 1, 1, 1
                     on_release:root.on_interval_define_button_active(self)
+                    disabled: not root.expDataLoaded
                 BoxLayout:
                     Label:
                         id: expCurve
                         size_hint: 0.60, 1
-                        text:'Courbe Experimentale'
+                        text:'Courbe Expérimentale'
                         color: 0, 0, 0, 1
                         markup:True
                     Switch:
@@ -67,15 +68,17 @@
                     Label:
                         id: dCurveLabel 
                         size_hint: 0.60, 1
-                        text:'Regression linéaire'
+                        text:'Régression linéaire'
                         color: 0, 0, 0, 1
                         markup:True
                         
                     Switch:
                         id: dCurveCheckBox
                         size_hint: 0.40, 1
-                        #active: False
-                        on_active: root.on_dCurveCheckBox_active(self.active)
+
+                        on_active:root.on_dCurveCheckBox_active(self.active)
+                        disabled: not root.expDataLoaded
+
                 BoxLayout:
                     Button:
                         id: CoxCurveButton
