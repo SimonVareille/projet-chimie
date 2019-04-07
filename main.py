@@ -213,23 +213,32 @@ class MainWindow(Widget):
     def on_dCurveCheckBox_active(self, active):
         if active:
             if self.expt and min(self.expI)>0:
-                self.GraphLinearRegression = GraphLinearRegression(self.valN, self.valS, self.valC, self.expt, self.expI)
+                self.graphLinearRegression = GraphLinearRegression(self.valN, self.valS, self.valC, self.expt, self.expI)
                 self.curveBoxLayout.clear_widgets()
-                self.curveBoxLayout.add_widget(self.GraphLinearRegression.get_canvas())
+                self.curveBoxLayout.add_widget(self.graphLinearRegression.get_canvas())
+                self.mainGraph.legend = False
+                self.mainGraph.ticks_labels = False
+                self.mainGraph.update()
                 self.smallCurveBoxLayout.add_widget(self.mainGraph.get_canvas())
             else:
                 #afficher besoin tableau exp pour la regression :il faut enlever les valeurs nulles (pour l'instant)
                 self.curveBoxLayout.clear_widgets()
+                self.mainGraph.legend = False
+                self.mainGraph.ticks_labels = False
+                self.mainGraph.update()
                 self.smallCurveBoxLayout.add_widget(self.mainGraph.get_canvas())
         else:
             self.smallCurveBoxLayout.clear_widgets()
             self.curveBoxLayout.clear_widgets()
+            self.mainGraph.legend = True
+            self.mainGraph.ticks_labels = True
+            self.mainGraph.update()
             self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
         
             
         
     def on_touch_down(self, touch):
-        if self.mainGraph.graph.collide_plot(*self.mainGraph.to_widget(*touch.pos, relative=True)):
+        if self.mainGraph.collide_plot(*self.mainGraph.to_widget(*touch.pos, relative=True)):
             if touch.is_mouse_scrolling:
                 if touch.button == 'scrolldown':
                     #Zoom out
@@ -245,7 +254,7 @@ class MainWindow(Widget):
             for other_touch in EventLoop.touches:
                 if touch.distance(other_touch):
                     center = ((touch.x+other_touch.x)/2, (touch.y+other_touch.y)/2)
-                    if self.mainGraph.graph.collide_plot(*self.mainGraph.to_widget(*center, relative=True)):
+                    if self.mainGraph.collide_plot(*self.mainGraph.to_widget(*center, relative=True)):
                         dx = abs(touch.x - other_touch.x) - abs(touch.px - other_touch.px)
                         dy = abs(touch.y - other_touch.y) - abs(touch.py - other_touch.py)
                         self.mainGraph.zoom(1 + 0.05*dx/20, 1 + 0.05*dy/20, *self.mainGraph.to_widget(*center, relative=True))

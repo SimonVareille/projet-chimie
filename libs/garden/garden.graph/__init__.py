@@ -719,6 +719,8 @@ class Graph(Widget):
                 legend = LegendBox()
                 self.add_widget(legend)
                 self._legend = legend
+            if legend not in self.children:
+                self.add_widget(legend)
             
             legend.font_size = font_size
             legend.label_options = self.label_options
@@ -730,7 +732,6 @@ class Graph(Widget):
             legend = self._legend
             if legend:
                 self.remove_widget(legend)
-                self._legend = None
     
     def _update_legend(self, size):
         if self.legend:
