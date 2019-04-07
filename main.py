@@ -39,11 +39,10 @@ from components.file_chooser import OpenDialog
 from components.cox_popup import CoxPopup
 
 from components.interval_popup import IntervalPopup
-
+'''Pour le popup coxGraph
+'''
 from graphs.graphCox_kivy import CoxGraph
-
 from cottrel.cox_math import cox_curve
-
 from cottrel.cottrel_math import linspace
 
 
@@ -54,6 +53,7 @@ class MainWindow(Widget):
     '''
     curveBoxLayout = ObjectProperty(None)
     expCurveSwitch = ObjectProperty(None)
+    
 
     #valeurs pour Dth
     buttonDth = ObjectProperty(None)    
@@ -167,7 +167,9 @@ class MainWindow(Widget):
     
     def on_interval_define_button_active(self,instance):        
         interval_popup=IntervalPopup() 
-        
+        interval_popup.intervalbox.val_min=self.valIntervalMin
+        interval_popup.intervalbox.val_max=self.valIntervalMax
+        interval_popup.intervalbox.update_display_val()
         interval_popup.bind(on_dismiss=self.on_interval_popup_closed)
         interval_popup.open()
     
@@ -176,11 +178,12 @@ class MainWindow(Widget):
         self.valIntervalMax=popup.intervalbox.val_max
     
     def on_cox_button_active(self,instance):
-        cox_popup=CoxPopup()
+        cox_popup=CoxPopup(CoxGraph, cox_curve, linspace)
         cox_popup.CoxvalDth=self.valDth
         cox_popup.CoxvalS=self.valS
         cox_popup.CoxvalC=self.valC
         cox_popup.CoxvalN=self.valN
+        cox_popup.coxGraph.update()
         cox_popup.open()
     
     def on_touch_down(self, touch):

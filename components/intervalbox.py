@@ -14,7 +14,11 @@ class IntervalBox(BoxLayout):
     _display_value_min=StringProperty("0")
     val_max=NumericProperty(100)
     _display_value_max=StringProperty("100")
-    
+
+    def update_display_val(self):
+         self._display_value_min = self.convert_to_scientific_notation(self.val_min)
+         self._display_value_max = self.convert_to_scientific_notation(self.val_max)
+        
     def change_value_button_min(self, popup):
         value = self.evaluation(popup.entry.text)
         #Si value == "", self.value ne change pas de valeur.

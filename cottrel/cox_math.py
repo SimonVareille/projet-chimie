@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Pour la compatibilité avec python2"""
 from __future__ import division
-from math import sqrt, erfc
+from math import sqrt, erfc, erf
 
 def cox_curve(D, t, x):
     """Crée les valeurs de la courbe Cox pour `t` et `D` donnés.
@@ -18,4 +18,4 @@ def cox_curve(D, t, x):
         Renvoie la liste de valeurs prises par `Cox`
     """
     constant = 2*sqrt(D*t)
-    return [ erfc(pos/constant) for pos in x ]
+    return [ (erf(pos/constant)) for pos in x ]
