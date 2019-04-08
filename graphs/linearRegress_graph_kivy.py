@@ -6,8 +6,8 @@ Created on Sat Apr  6 19:25:47 2019
 """
 
 from linear_regression import LinearRegression
-from kivy.garden.graph import Graph, SmoothLinePlot, DotPlot
-from math import log
+from kivy.graphics import Callback
+from kivy.garden.graph import Graph, SmoothLinePlot
 
 class GraphLinearRegression(LinearRegression):
     
@@ -63,7 +63,10 @@ class GraphLinearRegression(LinearRegression):
         
         self.set_graph ( self.logexpt, self.logexpI, self.linlogexpI)
         
-        self.set_limit_interval(self.logtleft, self.logtright, self.logIbottom, self.logItop)
+        #self.set_limit_interval(self.logtleft, self.logtright, self.logIbottom, self.logItop)
+        
+        with self.graph.canvas:
+            Callback(self.update)
     
     def set_graph (self, logexpt, logexpI, linlogexpI):
         self.logexpplot.points = list(zip(logexpt, logexpI))
@@ -81,19 +84,20 @@ class GraphLinearRegression(LinearRegression):
 #        self.graph.ymin=float(log(min(self.I)))
 
 #        self.graph.ymax=float(log(max(self.I)))
+    
+    def update(self, *args):
+        width, height = self.graph.get_plot_area_size()
+        self.graph.x_ticks_major = (self.graph.xmax-self.graph.xmin)/(width/100)
+        self.graph.x_ticks_minor = 10
+        self.graph.y_ticks_major = (self.graph.ymax-self.graph.ymin)/(height/50)
+        self.graph.y_ticks_minor = 5
         
     def get_canvas(self):
         return self.graph
 
     def set_limit_interval(self, logtleft=None, logtright=None, logIbottom=None, logItop=None):
-    
-    
             width, height = self.graph.get_plot_area_size()
-    
             self.graph.x_ticks_major = (self.logtright-self.logtleft)/(width/100)
-    
             self.graph.x_ticks_minor = 10
-    
             self.graph.y_ticks_major = (self.logItop-self.logIbottom)/(height/50)
-    
             self.graph.y_ticks_minor = 5
