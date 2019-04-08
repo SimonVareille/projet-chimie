@@ -49,6 +49,7 @@ from tab_operations import TabOperations
 
 from graphs.linearRegress_graph_kivy import GraphLinearRegression
 
+from components.errorpopup import ErrorPopup
 
 class MainWindow(Widget):
     '''Classe représentant la fenêtre principale
@@ -199,7 +200,8 @@ class MainWindow(Widget):
             self.mainGraph.set_limit_interval()
             self.mainGraph.update()
         else :
-            pass #erreur de valeur intervalle pas dans les valeurs exp
+            ErrorPopup("""L'intervalle doit contenir des points dans le fichier expérimental.
+Les valeurs sont inchangées.""" ).open()                                                                                                                                           
     def on_cox_button_active(self,instance):
         cox_popup=CoxPopup(CoxGraph, cox_curve, linspace)
         cox_popup.CoxvalDth=self.valDth
