@@ -267,7 +267,8 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
                     if self.mainGraph.collide_plot(*self.mainGraph.to_widget(*center, relative=True)):
                         dx = abs(touch.x - other_touch.x) - abs(touch.px - other_touch.px)
                         dy = abs(touch.y - other_touch.y) - abs(touch.py - other_touch.py)
-                        self.mainGraph.zoom(1 + 0.05*dx/20, 1 + 0.05*dy/20, *self.mainGraph.to_widget(*center, relative=True))
+                        factor = dx if abs(dx)>=abs(dy) else dy
+                        self.mainGraph.zoom(1 + 0.05*factor/20, 1 + 0.05*factor/20, *self.mainGraph.to_widget(*center, relative=True))
                         return True
         return super(MainWindow, self).on_touch_move(touch)
     
