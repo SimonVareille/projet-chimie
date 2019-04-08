@@ -24,7 +24,7 @@ class TabOperations():
         Paramètres
         ----------
         expt : list
-            Tableau de valeurs à analyser.
+            Tableau de valeurs ordonné à analyser.
         t : float
             Valeur à chercher.
         

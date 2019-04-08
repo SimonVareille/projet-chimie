@@ -2,7 +2,7 @@
 from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 
 from kivy.uix.boxlayout import BoxLayout
-from .popup import EntryPopup
+from .entrypopup import EntryPopup
 from kivy.lang.builder import Builder
 import os
 
@@ -24,11 +24,11 @@ class SpinBox(BoxLayout):
     def convert_to_scientific_notation(self,number):
         value_to_return=str(number)
         if len(value_to_return)>10:
-            value_to_return="{:.4e}".format(number)
+            value_to_return="{:.3e}".format(number)
         return value_to_return
 
     def change_value_button(self, popup):
-        value = self.evaluation(popup.entry.text)
+        value = self.evaluation(popup.returnValue)
         #Si value == "", self.value ne change pas de valeur.
         #Ce n'est peut-être pas le comportement attendu.
         self.value = value if value is not None else self.value
@@ -39,7 +39,7 @@ class SpinBox(BoxLayout):
 
     def opening_popup(self):
         entry_popup=EntryPopup()
-        entry_popup.entry.text = str(self.value)
+        entry_popup.initValue = str(self.value)
         entry_popup.bind(on_dismiss=self.change_value_button)
         entry_popup.open()
 
