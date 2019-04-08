@@ -125,7 +125,6 @@ class MainWindow(Widget):
         
         self.exptRaw=None
         self.expIRaw=None
-        self.areRawExpTabStored = False
         self.expt = None
         self.expI = None
         
@@ -182,20 +181,25 @@ class MainWindow(Widget):
             interval_popup.open()
         
     def on_interval_popup_closed(self, popup):
-        self.valIntervalMin=popup.intervalbox.val_min
-        self.valIntervalMax=popup.intervalbox.val_max
-        self.set_exp_tab_interval()
-        self.mainGraph.set_experimental_data(self.expt, self.expI)
-        
-        #Recalcule les valeurs théoriques pour coller avec l'étendue des valeurs
-        #expériementales
-        self.t = cottrel.create_t(0, max(self.expt), 1000)
-        self.I = cottrel.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
-        self.mainGraph.set_theoric_data (self.t, self.I)
-        
-        self.mainGraph.set_limit_interval()
-        self.mainGraph.update()
-    
+        maxtexp = max(self.exptRaw)
+        mintexp = min(self.exptRaw)
+        if (mintexp<=popup.intervalbox.val_min<popup.intervalbox.val_max<=maxtexp and 
+                                                        popup.intervalbox.val_max-popup.intervalbox.val_min > 0.2) :
+            self.valIntervalMin=popup.intervalbox.val_min
+            self.valIntervalMax=popup.intervalbox.val_max
+            self.set_exp_tab_interval()
+            self.mainGraph.set_experimental_data(self.expt, self.expI)
+            
+            #Recalcule les valeurs théoriques pour coller avec l'étendue des valeurs
+            #expériementales
+            self.t = cottrel.create_t(0, max(self.expt), 1000)
+            self.I = cottrel.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
+            self.mainGraph.set_theoric_data (self.t, self.I)
+            
+            self.mainGraph.set_limit_interval()
+            self.mainGraph.update()
+        else :
+            pass #erreur de valeur intervalle pas dans les valeurs exp
     def on_cox_button_active(self,instance):
         cox_popup=CoxPopup(CoxGraph, cox_curve, linspace)
         cox_popup.CoxvalDth=self.valDth
