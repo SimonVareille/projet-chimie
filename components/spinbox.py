@@ -37,7 +37,6 @@ class SpinBox(BoxLayout):
         self._display_value = self.convert_to_scientific_notation(self.value)
         #Si value est None, on ne ferme pas le popup. (On retourne True)
 
-
     def opening_popup(self):
         entry_popup=EntryPopup()
         entry_popup.initValue = str(self.value)

@@ -304,7 +304,10 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         self._openPopup.open()
     
     def load_data_from_dialog(self, path, filename):
-        if self.load_exp_data(path, filename):
+        if isinstance(filename, (list, tuple)):
+            if filename:
+                filename = filename[0]
+        if filename and self.load_exp_data(path, filename):
             self._openPopup.dismiss()
     
     def load_exp_data(self, path, filename):
@@ -319,8 +322,6 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         filename : str or list-like of str
             Nom du fichier à charger.
         '''
-        if isinstance(filename, (list, tuple)):
-            filename = filename[0]
         try:
             reader = DataReader(os.path.join(path, filename))
         except FileNotFoundError as err:
@@ -328,6 +329,9 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
             return False
         except ValueError as err:
             print("ValueError: ",err)
+            return False
+        except Exception as err:
+            print(err)
             return False
         
         self.exptRaw = reader.get_t()
