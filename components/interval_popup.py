@@ -1,7 +1,6 @@
 from kivy.uix.popup import Popup
-from kivy.properties import  NumericProperty, ObjectProperty
+from kivy.properties import ObjectProperty
 from kivy.lang.builder import Builder
-from .intervalbox import IntervalBox
 
 
 

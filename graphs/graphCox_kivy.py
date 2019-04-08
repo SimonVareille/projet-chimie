@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-from kivy.garden.graph import Graph, MeshLinePlot,SmoothLinePlot
-import cottrel.cox_math as Cox
+from kivy.garden.graph import Graph ,SmoothLinePlot
 from kivy.graphics import Callback
 
 class CoxGraph():
