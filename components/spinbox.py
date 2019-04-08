@@ -4,6 +4,7 @@ from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.uix.boxlayout import BoxLayout
 from .entrypopup import EntryPopup
 from kivy.lang.builder import Builder
+from .errorpopup import ErrorPopup
 import os
 
 Builder.load_file(os.path.dirname(__file__) +'/spinbox.kv')
@@ -35,7 +36,7 @@ class SpinBox(BoxLayout):
          
         self._display_value = self.convert_to_scientific_notation(self.value)
         #Si value est None, on ne ferme pas le popup. (On retourne True)
-        return value is None
+
 
     def opening_popup(self):
         entry_popup=EntryPopup()
@@ -81,7 +82,7 @@ class SpinBox(BoxLayout):
                 toReturn=eval(self.ConvertToCalculate(entry))
                 return(toReturn)
             except Exception as err:
-                print(err)
+                ErrorPopup("Erreur dans l'expression saisie.\nPar exemple : \n05 n'est pas reconnu comme 5\n++ n'est pas reconnu").open()
                 return None
             
     def on_value(self, instance, value):
