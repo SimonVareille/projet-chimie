@@ -52,6 +52,7 @@
                         size_hint: 0.40, 1
                         active: False
                         on_active: root.on_expCurveSwitch_active(self.active)
+                        disabled: not root.expDataLoaded
                 BoxLayout:
                     Label:
                         id: thCurve
