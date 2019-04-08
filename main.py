@@ -145,10 +145,10 @@ class MainWindow(Widget):
         
         self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
         
-        self.bind_update_maingraph_values(self.buttonDth)
-        self.bind_update_maingraph_values(self.buttonN)
-        self.bind_update_maingraph_values(self.buttonS)
-        self.bind_update_maingraph_values(self.buttonC)
+        self.bind_update_values(self.buttonDth)
+        self.bind_update_values(self.buttonN)
+        self.bind_update_values(self.buttonS)
+        self.bind_update_values(self.buttonC)
     
     def on_expCurveSwitch_active(self, active):
         if active:
@@ -228,15 +228,14 @@ class MainWindow(Widget):
 Les données expérimentales contiennent des valeurs négatives ou nulles.
 Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'intervalle de travail»[/color]""",
                     markup=True, halign='center', valign='center', font_size=20))
-                #Afficher besoin tableau exp pour la regression : il faut enlever les valeurs nulles (pour l'instant)
-                pass
             self.mainGraph.legend = False
             self.mainGraph.ticks_labels = False
-            
+            self.smallCurveBoxLayout.clear_widgets()
             self.smallCurveBoxLayout.add_widget(self.mainGraph.get_canvas())
             self.mainGraph.set_limit_interval()
             self.mainGraph.update()
         else:
+            del self.graphLinearRegression
             self.smallCurveBoxLayout.clear_widgets()
             self.curveBoxLayout.clear_widgets()
             self.mainGraph.legend = True
@@ -244,7 +243,6 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
             self.mainGraph.set_limit_interval()
             self.mainGraph.update()
             self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
-        
             
         
     def on_touch_down(self, touch):
@@ -271,7 +269,7 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
                         return True
         return super(MainWindow, self).on_touch_move(touch)
     
-    def update_maingraph_values(self,instance,text):
+    def update_values(self,instance,text):
         '''Met à jour la courbe principale avec les nouvelles valeurs.
         '''
         self.valDth=self.buttonDth.value
@@ -279,11 +277,19 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         self.valC=self.buttonC.value
         self.valS=self.buttonS.value
         self.I = cottrel.courbe_cottrel_th(self.valN,self.valS, self.valC, self.valDth, self.t)
+        
         self.mainGraph.I=self.I
         self.mainGraph.update()
+        
+        if hasattr(self, 'graphLinearRegression'):
+#            self.graphLinearRegression.n = self.valN
+#            self.graphLinearRegression.S = self.valS
+#            self.graphLinearRegression.C = self.valC
+            self.on_dCurveCheckBox_active(True)
+            #self.graphLinearRegression.update()
 
-    def bind_update_maingraph_values(self, spinbox):
-        spinbox.buttonMid_id.bind(text = self.update_maingraph_values)
+    def bind_update_values(self, spinbox):
+        spinbox.buttonMid_id.bind(text = self.update_values)
 
     def show_openDialog(self):
         '''Affiche la boite de dialogue d'ouverture de fichier.

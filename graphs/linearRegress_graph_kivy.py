@@ -16,13 +16,6 @@ class GraphLinearRegression(LinearRegression):
         self.n=n 
         self.S=S
         self.C=C
-      
-        self.logexp_and_linear_curves_tab(self.t, self.I)
-        
-        self.logtleft=float(min(self.logexpt)) #len(self.logexpt)-2
-        self.logtright=float(max(self.logexpt))
-        self.logIbottom=float(min(self.logexpI))
-        self.logItop=float(max(self.logexpI))
 
         graph_theme = {
             'label_options': {
@@ -43,49 +36,37 @@ class GraphLinearRegression(LinearRegression):
            x_grid_label=True,
            padding=5,
            x_grid=False,
-           y_grid=False, 
-           xmin=self.logtleft,
-           xmax=self.logtright, 
-           ymin=self.logIbottom,
-           ymax=self.logItop,
+           y_grid=False,
            **graph_theme)
     
         self.logexpplot = SmoothLinePlot(color=[0, 0, 1, 1])
         self.logexpplot.label = "Expérimentale"
         
         self.linlogexpplot = SmoothLinePlot(color=[1, 0, 0, 1])
-        linearcoefficient, intercept= self.linregress()
-        self.Dexp=self.calculate_D ( intercept, self.n, self.S, self.C)
-        
-        self.linlogexpplot.label = "Régression lineaire\nD="+str(self.Dexp)
 
         self.graph.legend = True
-        
-        self.set_graph ( self.logexpt, self.logexpI, self.linlogexpI)
-        
-        #self.set_limit_interval(self.logtleft, self.logtright, self.logIbottom, self.logItop)
+    
+        self.graph.add_plot(self.logexpplot) 
+        self.graph.add_plot(self.linlogexpplot)
         
         with self.graph.canvas:
-            Callback(self.update)
-    
-    def set_graph (self, logexpt, logexpI, linlogexpI):
-        self.logexpplot.points = list(zip(logexpt, logexpI))
-        self.linlogexpplot.points = list (zip(logexpt, linlogexpI))
-        
-        self.graph.add_plot(self.logexpplot) 
-        self.graph.add_plot(self.linlogexpplot)     
-
-        #les 4 suivants sont-ils utilent? a quoi servent-ils?
-        
-#        self.graph.xmin=float(log(self.t[self.indicetMin]))
-    
-#        self.graph.xmax=float(log(self.t[self.indicetMax]))
-
-#        self.graph.ymin=float(log(min(self.I)))
-
-#        self.graph.ymax=float(log(max(self.I)))
+            self.cb_update = Callback(self.update)
     
     def update(self, *args):
+        self.logexp_and_linear_curves_tab(self.t, self.I)
+        _, intercept= self.linregress()
+        self.Dexp=self.calculate_D ( intercept, self.n, self.S, self.C)
+        
+        self.linlogexpplot.label = "Régression linéaire\nD="+str(self.Dexp)
+        
+        self.logexpplot.points = list(zip(self.logexpt, self.logexpI))
+        self.linlogexpplot.points = list (zip(self.logexpt, self.linlogexpI))
+        
+        self.graph.xmin=float(min(self.logexpt))
+        self.graph.xmax=float(max(self.logexpt))
+        self.graph.ymin=float(min(self.logexpI))
+        self.graph.ymax=float(max(self.logexpI))
+        
         width, height = self.graph.get_plot_area_size()
         self.graph.x_ticks_major = (self.graph.xmax-self.graph.xmin)/(width/100)
         self.graph.x_ticks_minor = 10
@@ -94,10 +75,3 @@ class GraphLinearRegression(LinearRegression):
         
     def get_canvas(self):
         return self.graph
-
-    def set_limit_interval(self, logtleft=None, logtright=None, logIbottom=None, logItop=None):
-            width, height = self.graph.get_plot_area_size()
-            self.graph.x_ticks_major = (self.logtright-self.logtleft)/(width/100)
-            self.graph.x_ticks_minor = 10
-            self.graph.y_ticks_major = (self.logItop-self.logIbottom)/(height/50)
-            self.graph.y_ticks_minor = 5
