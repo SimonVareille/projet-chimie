@@ -42,7 +42,8 @@ class LinearRegression:
     F = 96485.3329  #Constante de Faraday
     
     def logexp_curves_tab(self, expt, expI):
-        """Cette fonction calcule les liste des valeurs logarithmique des liste du temps et de l'intensité.
+        """Cette fonction calcule les listes des valeurs logarithmique des liste 
+        du temps et de l'intensité.
         
         Paramètres
         ----------

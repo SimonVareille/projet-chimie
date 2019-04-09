@@ -41,9 +41,6 @@ from components.cox_popup import CoxPopup
 from components.interval_popup import IntervalPopup
 '''Pour le popup coxGraph
 '''
-from graphs.graphCox_kivy import CoxGraph
-from cottrel.cox_math import cox_curve
-from cottrel.cottrel_math import linspace
 
 from tab_operations import TabOperations
 
@@ -205,7 +202,7 @@ class MainWindow(Widget):
             ErrorPopup("""L'intervalle doit contenir des points dans le fichier expérimental.
 Les valeurs sont inchangées.""" ).open()                                                                                                                                           
     def on_cox_button_active(self,instance):
-        cox_popup=CoxPopup(CoxGraph, cox_curve, linspace)
+        cox_popup=CoxPopup()
         cox_popup.CoxvalDth=self.valDth
         cox_popup.CoxvalS=self.valS
         cox_popup.CoxvalC=self.valC

@@ -1,7 +1,10 @@
 from kivy.uix.popup import Popup
 from kivy.properties import  NumericProperty, ObjectProperty, StringProperty
 from kivy.lang.builder import Builder
-#from ..graphs.graphCox_kivy import CoxGraph
+from cottrel.cox_math import cox_curve
+from graphs.graphCox_kivy import CoxGraph
+from cottrel.cottrel_math import linspace
+
 
 
 import os
@@ -27,10 +30,10 @@ class CoxPopup(Popup):
     
     _coxvaltToDisplay=StringProperty("20")
     
-    def __init__(self, coxGraph, cox_curve, linspace):
+    def __init__(self):
         super(CoxPopup, self).__init__()
         
-        self.coxGraph = coxGraph()
+        self.coxGraph = CoxGraph()
         self.cox_curve = cox_curve
         self.linspace=linspace
         
@@ -46,7 +49,7 @@ class CoxPopup(Popup):
         self.coxGraph.cox=self.cox_curve(self.CoxvalDth,self.Coxvalt, self.xtab)
         self.coxGraph.update()
         self._coxvaltToDisplay = str(self.Coxvalt)
-        self._coxvaltToDisplay = self.convert_to_display_notation(self.coxvalt)
+        self._coxvaltToDisplay = self.convert_to_display_notation(self.Coxvalt)
         
     def convert_to_display_notation(self,number):
         value_to_return=str(number)

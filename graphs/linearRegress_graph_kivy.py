@@ -70,8 +70,7 @@ class GraphLinearRegression(LinearRegression):
     
     def update(self, *args):
         """Cette fonction met à jour l'affichage des courbes de régression 
-        linéaires et le calcul du coefficient de diffusion expérimentale, 
-        lorsque les paramètres n, S, C ou l'intervalle de temps son modifiés.
+        linéaire et le calcul du coefficient de diffusion expérimentale. 
         """
         self.logexp_and_linear_curves_tab(self.t, self.I)
         _, intercept= self.linregress()
