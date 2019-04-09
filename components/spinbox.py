@@ -10,6 +10,14 @@ import os
 Builder.load_file(os.path.dirname(__file__) +'/spinbox.kv')
 
 class SpinBox(BoxLayout):
+    """
+    Permet à l'utilisateur de rentrer une valeur sous la forme d'un bouton qui 
+    ouvre un popup de saisie (via EntryPopup) et de bonton + et - permettant 
+    d'ajouter ou de retrancher self.steps à la valeur saisie.
+        Si l'utilisateur rentre une valeur invalide via EntryPopop, 
+    un popup d'erreur (ErrorPopup) s'affiche (cf fonction evaluation()).
+    """
+    
     value = NumericProperty(1)
     min_value = NumericProperty(0)
     max_value = NumericProperty(100)
@@ -24,7 +32,7 @@ class SpinBox(BoxLayout):
         
     def convert_to_scientific_notation(self,number):
         value_to_return=str(number)
-        if len(value_to_return)>10:
+        if len(value_to_return)>6:
             value_to_return="{:.3e}".format(number)
         return value_to_return
 
@@ -44,7 +52,7 @@ class SpinBox(BoxLayout):
         entry_popup.open()
 
     def add_one(self):
-        #Increase the value by 0.1
+        #Increase the value by self.steps
         if not self.value:
             value = 0
         else:
@@ -55,8 +63,9 @@ class SpinBox(BoxLayout):
             value = self.max_value
         self.value = value
         self._display_value = self.convert_to_scientific_notation(self.value)
+        
     def substract_one(self):
-        #Decrease the value by 0.1
+        #Decrease the value by self.steps
         if not self.value:
             value = 0
         else:
@@ -72,6 +81,11 @@ class SpinBox(BoxLayout):
         return string.replace("^","**")
 
     def evaluation(self, entry):
+        """Permet d'évaluer la valeur numérique d'une chaine de caractère et la
+        retourne.
+        Si l'evaluation via eval() aboutit à une erreur, un popup s'affiche avec
+        un court texte pour l'utilisateur et la fonction retourne None
+        """
         from math import sqrt, pow, log, log10, cos, sin, tan
         #Import local, visible uniquement dans cette méthode.
         #On importe des fonctions pour permettre un eval("sqrt(10)")
