@@ -237,7 +237,8 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
             self.mainGraph.set_limit_interval()
             self.mainGraph.update()
         else:
-            del self.graphLinearRegression
+            if hasattr(self, 'graphLinearRegression'):
+                del self.graphLinearRegression
             self.smallCurveBoxLayout.clear_widgets()
             self.curveBoxLayout.clear_widgets()
             self.mainGraph.legend = True

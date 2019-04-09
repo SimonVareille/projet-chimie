@@ -54,7 +54,7 @@ class CottrelGraph(CottrelGraphBase, EventDispatcher):
         self.bind(ticks_labels=self.graph.setter('x_grid_label'))
         
         with self.graph.canvas:
-            Callback(self.update)
+            Callback(self.update_ticks)
             
     def update(self, *args): 
         """Met à jour le graphique en redessinant les courbes.
@@ -86,6 +86,9 @@ class CottrelGraph(CottrelGraphBase, EventDispatcher):
         self.graph.ymin = float(self.Ibottom)
         self.graph.ymax = float(self.Itop) if self.Ibottom!=self.Itop else 1.0
         
+        self.update_ticks()
+    
+    def update_ticks(self, *args):
         width, height = self.graph.get_plot_area_size()
         self.graph.x_ticks_major = (self.graph.xmax-self.graph.xmin)/(width/100)
         self.graph.x_ticks_minor = 10
@@ -155,12 +158,3 @@ class CottrelGraph(CottrelGraphBase, EventDispatcher):
         
         self.set_limit_interval(tleft, tright, Ibottom, Itop)
         self.update()
-        
-    def set_limit_interval(self, tleft=None, tright=None, Ibottom=None, Itop=None):
-        super(CottrelGraph, self).set_limit_interval(tleft, tright, Ibottom, Itop)
-        
-        width, height = self.graph.get_plot_area_size()
-        self.graph.x_ticks_major = (self.tright-self.tleft)/(width/100)
-        self.graph.x_ticks_minor = 10
-        self.graph.y_ticks_major = (self.Itop-self.Ibottom)/(height/50)
-        self.graph.y_ticks_minor = 5
