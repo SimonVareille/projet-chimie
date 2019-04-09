@@ -39,17 +39,17 @@ from components.file_chooser import OpenDialog
 from components.cox_popup import CoxPopup
 
 from components.interval_popup import IntervalPopup
-
+'''Pour le popup coxGraph
+'''
 from graphs.graphCox_kivy import CoxGraph
-
 from cottrel.cox_math import cox_curve
-
 from cottrel.cottrel_math import linspace
 
-from graphs.linearRegress_graph_kivy import GraphLinearRegression
+from tab_operations import TabOperations
 
 from graphs.linearRegress_graph_kivy import GraphLinearRegression
 
+from components.errorpopup import ErrorPopup
 
 class MainWindow(Widget):
     '''Classe représentant la fenêtre principale
@@ -57,6 +57,7 @@ class MainWindow(Widget):
     '''
     curveBoxLayout = ObjectProperty(None)
     expCurveSwitch = ObjectProperty(None)
+
 
     smallCurveBoxLayout = ObjectProperty(None)
 
@@ -123,11 +124,8 @@ class MainWindow(Widget):
         self.buttonC.max_value=self.valMaxC
         self.buttonC.steps=self.stepsC
         
-
         self.exptRaw=None
         self.expIRaw=None
-        self.areRawExpTabStored = False
-
         self.expt = None
         self.expI = None
         
@@ -148,14 +146,11 @@ class MainWindow(Widget):
         
         self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
         
-        self.bind_update_maingraph_values(self.buttonDth)
-        self.bind_update_maingraph_values(self.buttonN)
-        self.bind_update_maingraph_values(self.buttonS)
-        self.bind_update_maingraph_values(self.buttonC)
+        self.bind_update_values(self.buttonDth)
+        self.bind_update_values(self.buttonN)
+        self.bind_update_values(self.buttonS)
+        self.bind_update_values(self.buttonC)
     
- 
-        
-        
     def on_expCurveSwitch_active(self, active):
         if active:
             if self.expt:
@@ -177,7 +172,6 @@ class MainWindow(Widget):
             self.mainGraph.set_limit_interval()
         self.mainGraph.update()
     
-
     def on_interval_define_button_active(self,instance):  
         if self.expt :
             interval_popup=IntervalPopup() 
@@ -188,30 +182,34 @@ class MainWindow(Widget):
             interval_popup.open()
         
     def on_interval_popup_closed(self, popup):
-        self.valIntervalMin=popup.intervalbox.val_min
-        self.valIntervalMax=popup.intervalbox.val_max
-        self.set_exp_tab_interval()
-        self.mainGraph.set_experimental_data(self.expt, self.expI)
-        
-        #Recalcule les valeurs théoriques pour coller avec l'étendue des valeurs
-        #expériementales
-        self.t = cottrel.create_t(0, max(self.expt), 1000)
-        self.I = cottrel.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
-        self.mainGraph.set_theoric_data (self.t, self.I)
-        
-        self.mainGraph.set_limit_interval()
-        self.mainGraph.update()
-
-
-    
+        maxtexp = max(self.exptRaw)
+        mintexp = min(self.exptRaw)
+        if (mintexp<=popup.intervalbox.val_min<popup.intervalbox.val_max<=maxtexp and 
+                                                        popup.intervalbox.val_max-popup.intervalbox.val_min > 0.2) :
+            self.valIntervalMin=popup.intervalbox.val_min
+            self.valIntervalMax=popup.intervalbox.val_max
+            self.set_exp_tab_interval()
+            self.mainGraph.set_experimental_data(self.expt, self.expI)
+            
+            #Recalcule les valeurs théoriques pour coller avec l'étendue des valeurs
+            #expériementales
+            self.t = cottrel.create_t(0, max(self.expt), 1000)
+            self.I = cottrel.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
+            self.mainGraph.set_theoric_data (self.t, self.I)
+            
+            self.mainGraph.set_limit_interval()
+            self.mainGraph.update()
+        else :
+            ErrorPopup("""L'intervalle doit contenir des points dans le fichier expérimental.
+Les valeurs sont inchangées.""" ).open()                                                                                                                                           
     def on_cox_button_active(self,instance):
-        cox_popup=CoxPopup()
+        cox_popup=CoxPopup(CoxGraph, cox_curve, linspace)
         cox_popup.CoxvalDth=self.valDth
         cox_popup.CoxvalS=self.valS
         cox_popup.CoxvalC=self.valC
         cox_popup.CoxvalN=self.valN
+        cox_popup.coxGraph.update()
         cox_popup.open()
-
         
     def set_exp_tab_interval(self):
         """Change les tableau expt et expI pour qu'ils correspondent à 
@@ -232,15 +230,15 @@ class MainWindow(Widget):
 Les données expérimentales contiennent des valeurs négatives ou nulles.
 Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'intervalle de travail»[/color]""",
                     markup=True, halign='center', valign='center', font_size=20))
-                #Afficher besoin tableau exp pour la regression : il faut enlever les valeurs nulles (pour l'instant)
-                pass
             self.mainGraph.legend = False
             self.mainGraph.ticks_labels = False
-            
+            self.smallCurveBoxLayout.clear_widgets()
             self.smallCurveBoxLayout.add_widget(self.mainGraph.get_canvas())
             self.mainGraph.set_limit_interval()
             self.mainGraph.update()
         else:
+            if hasattr(self, 'graphLinearRegression'):
+                del self.graphLinearRegression
             self.smallCurveBoxLayout.clear_widgets()
             self.curveBoxLayout.clear_widgets()
             self.mainGraph.legend = True
@@ -248,10 +246,8 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
             self.mainGraph.set_limit_interval()
             self.mainGraph.update()
             self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
-        
             
         
-
     def on_touch_down(self, touch):
         if self.mainGraph.collide_plot(*self.mainGraph.to_widget(*touch.pos, relative=True)):
             if touch.is_mouse_scrolling:
@@ -272,11 +268,12 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
                     if self.mainGraph.collide_plot(*self.mainGraph.to_widget(*center, relative=True)):
                         dx = abs(touch.x - other_touch.x) - abs(touch.px - other_touch.px)
                         dy = abs(touch.y - other_touch.y) - abs(touch.py - other_touch.py)
-                        self.mainGraph.zoom(1 + 0.05*dx/20, 1 + 0.05*dy/20, *self.mainGraph.to_widget(*center, relative=True))
+                        factor = dx if abs(dx)>=abs(dy) else dy
+                        self.mainGraph.zoom(1 + 0.05*factor/20, 1 + 0.05*factor/20, *self.mainGraph.to_widget(*center, relative=True))
                         return True
         return super(MainWindow, self).on_touch_move(touch)
     
-    def update_maingraph_values(self,instance,text):
+    def update_values(self,instance,text):
         '''Met à jour la courbe principale avec les nouvelles valeurs.
         '''
         self.valDth=self.buttonDth.value
@@ -284,11 +281,19 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         self.valC=self.buttonC.value
         self.valS=self.buttonS.value
         self.I = cottrel.courbe_cottrel_th(self.valN,self.valS, self.valC, self.valDth, self.t)
+        
         self.mainGraph.I=self.I
         self.mainGraph.update()
+        
+        if hasattr(self, 'graphLinearRegression'):
+#            self.graphLinearRegression.n = self.valN
+#            self.graphLinearRegression.S = self.valS
+#            self.graphLinearRegression.C = self.valC
+            self.on_dCurveCheckBox_active(True)
+            #self.graphLinearRegression.update()
 
-    def bind_update_maingraph_values(self, spinbox):
-        spinbox.buttonMid_id.bind(text = self.update_maingraph_values)
+    def bind_update_values(self, spinbox):
+        spinbox.buttonMid_id.bind(text = self.update_values)
 
     def show_openDialog(self):
         '''Affiche la boite de dialogue d'ouverture de fichier.
@@ -301,7 +306,10 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         self._openPopup.open()
     
     def load_data_from_dialog(self, path, filename):
-        if self.load_exp_data(path, filename):
+        if isinstance(filename, (list, tuple)):
+            if filename:
+                filename = filename[0]
+        if filename and self.load_exp_data(path, filename):
             self._openPopup.dismiss()
     
     def load_exp_data(self, path, filename):
@@ -316,8 +324,6 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         filename : str or list-like of str
             Nom du fichier à charger.
         '''
-        if isinstance(filename, (list, tuple)):
-            filename = filename[0]
         try:
             reader = DataReader(os.path.join(path, filename))
         except FileNotFoundError as err:
@@ -326,7 +332,9 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         except ValueError as err:
             print("ValueError: ",err)
             return False
-
+        except Exception as err:
+            print(err)
+            return False
         
         self.exptRaw = reader.get_t()
         self.expIRaw = reader.get_I()
@@ -336,7 +344,6 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         #Gère avec la modification d'intervalle
         self.valIntervalMin = (min(self.expt))
         self.valIntervalMax = (max(self.expt))
-
         
         self.mainGraph.set_experimental_data(self.expt, self.expI)
         

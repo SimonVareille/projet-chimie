@@ -1,0 +1,19 @@
+<ErrorPopup@Popup>:
+    title:"Message d'erreur"
+ #   separator_height:0
+    textid:text
+    auto_dismiss: True
+    size_hint: (.7,.3)
+    BoxLayout:
+        TextInput:
+            markup : True
+            disabled : True
+            size_hint: (.8,1)
+            id : text
+        Button:
+            text:"OK"
+            size_hint: (.2,1)
+            on_release: root.dismiss()
+
+
+

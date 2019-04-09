@@ -5,15 +5,11 @@ import math as m
 def list_transformation_log (values):
     loglist=list()
 
-
     for val in values[1:]:
-
         loglist.append(m.log(val))
-
     return (loglist)
+
 def mean (liste):
-
-
     summ=m.fsum(liste)
     mean = summ/(len(liste))
     return (mean)
@@ -83,7 +79,7 @@ class LinearRegression:
     def logexp_and_linear_curves_tab (self, expt, expI):
         self.logexpt= list_transformation_log(expt)
         self.logexpI=list_transformation_log(expI)
-
+        
         linearcoefficient, intercept= self.linregress()
         self.linlogexpI=[]
         for i in range (len(self.logexpt)) :

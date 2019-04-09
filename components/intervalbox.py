@@ -1,10 +1,10 @@
-from .spinbox import SpinBox
-from kivy.properties import ObjectProperty, StringProperty, NumericProperty
+from kivy.properties import  StringProperty, NumericProperty
 
 from kivy.uix.boxlayout import BoxLayout
-from .popup import EntryPopup
+from .entrypopup import EntryPopup
 from kivy.lang.builder import Builder
 import os
+from .errorpopup import ErrorPopup
 
 Builder.load_file(os.path.dirname(__file__) +'/intervalbox.kv')
 
@@ -20,7 +20,7 @@ class IntervalBox(BoxLayout):
          self._display_value_max = self.convert_to_scientific_notation(self.val_max)
         
     def change_value_button_min(self, popup):
-        value = self.evaluation(popup.entry.text)
+        value = self.evaluation(popup.returnValue)
         #Si value == "", self.value ne change pas de valeur.
         #Ce n'est peut-être pas le comportement attendu.
         self.val_min = value if value is not None else self.val_min
@@ -31,7 +31,7 @@ class IntervalBox(BoxLayout):
 
     def opening_popup_min(self):
         entry_popup=EntryPopup()
-        entry_popup.entry.text = str(self.val_min)
+        entry_popup.initValue = str(self.val_min)
         entry_popup.bind(on_dismiss=self.change_value_button_min)
         entry_popup.open()
         
@@ -39,18 +39,17 @@ class IntervalBox(BoxLayout):
         
         
     def change_value_button_max(self, popup):
-        value = self.evaluation(popup.entry.text)
+        value = self.evaluation(popup.returnValue)
         #Si value == "", self.value ne change pas de valeur.
         #Ce n'est peut-être pas le comportement attendu.
         self.val_max = value if value is not None else self.val_max
          
         self._display_value_max = self.convert_to_scientific_notation(self.val_max)
         #Si value est None, on ne ferme pas le popup. (On retourne True)        
-        return value is None
 
     def opening_popup_max(self):
         entry_popup=EntryPopup()
-        entry_popup.entry.text = str(self.val_max)
+        entry_popup.initValue = str(self.val_max)
         entry_popup.bind(on_dismiss=self.change_value_button_max)
         entry_popup.open()
         
@@ -69,11 +68,11 @@ class IntervalBox(BoxLayout):
                 toReturn=eval(self.ConvertToCalculate(entry))
                 return(toReturn)
             except Exception as err:
-                print(err)
+                ErrorPopup("Erreur dans l'expression saisie.\nPar exemple : \n05 n'est pas reconnu comme 5\n++ n'est pas reconnu").open()
                 return None
     def convert_to_scientific_notation(self,number):
         value_to_return=str(number)
         if len(value_to_return)>10:
-            value_to_return="{:.4e}".format(number)
+            value_to_return="{:.3e}".format(number)
         return value_to_return
 

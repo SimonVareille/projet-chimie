@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 """
 Created on Sat Apr  6 19:25:47 2019
@@ -7,8 +6,8 @@ Created on Sat Apr  6 19:25:47 2019
 """
 
 from linear_regression import LinearRegression
-from kivy.garden.graph import Graph, SmoothLinePlot, DotPlot
-from math import log
+from kivy.graphics import Callback
+from kivy.garden.graph import Graph, SmoothLinePlot
 
 class GraphLinearRegression(LinearRegression):
     
@@ -17,13 +16,6 @@ class GraphLinearRegression(LinearRegression):
         self.n=n 
         self.S=S
         self.C=C
-      
-        self.logexp_and_linear_curves_tab(self.t, self.I)
-        
-        self.logtleft=float(min(self.logexpt)) #len(self.logexpt)-2
-        self.logtright=float(max(self.logexpt))
-        self.logIbottom=float(min(self.logexpI))
-        self.logItop=float(max(self.logexpI))
 
         graph_theme = {
             'label_options': {
@@ -44,57 +36,42 @@ class GraphLinearRegression(LinearRegression):
            x_grid_label=True,
            padding=5,
            x_grid=False,
-           y_grid=False, 
-           xmin=self.logtleft,
-           xmax=self.logtright, 
-           ymin=self.logIbottom,
-           ymax=self.logItop,
+           y_grid=False,
            **graph_theme)
     
         self.logexpplot = SmoothLinePlot(color=[0, 0, 1, 1])
         self.logexpplot.label = "Expérimentale"
         
         self.linlogexpplot = SmoothLinePlot(color=[1, 0, 0, 1])
-        linearcoefficient, intercept= self.linregress()
-        self.Dexp=self.calculate_D ( intercept, self.n, self.S, self.C)
-        
-        self.linlogexpplot.label = "Régression lineaire\nD="+str(self.Dexp)
 
         self.graph.legend = True
-        
-        self.set_graph ( self.logexpt, self.logexpI, self.linlogexpI)
-
     
-    def set_graph (self, logexpt, logexpI, linlogexpI):
-        self.logexpplot.points = list(zip(logexpt, logexpI))
-        self.linlogexpplot.points = list (zip(logexpt, linlogexpI))
-        
         self.graph.add_plot(self.logexpplot) 
-        self.graph.add_plot(self.linlogexpplot)     
-
-        #les 4 suivants sont-ils utilent? a quoi servent-ils?
+        self.graph.add_plot(self.linlogexpplot)
         
-#        self.graph.xmin=float(log(self.t[self.indicetMin]))
+        with self.graph.canvas:
+            self.cb_update = Callback(self.update)
     
-#        self.graph.xmax=float(log(self.t[self.indicetMax]))
-
-#        self.graph.ymin=float(log(min(self.I)))
-
-#        self.graph.ymax=float(log(max(self.I)))
+    def update(self, *args):
+        self.logexp_and_linear_curves_tab(self.t, self.I)
+        _, intercept= self.linregress()
+        self.Dexp=self.calculate_D ( intercept, self.n, self.S, self.C)
+        
+        self.linlogexpplot.label = "Régression linéaire\nD="+str(self.Dexp)
+        
+        self.logexpplot.points = list(zip(self.logexpt, self.logexpI))
+        self.linlogexpplot.points = list (zip(self.logexpt, self.linlogexpI))
+        
+        self.graph.xmin=float(min(self.logexpt))
+        self.graph.xmax=float(max(self.logexpt))
+        self.graph.ymin=float(min(self.logexpI))
+        self.graph.ymax=float(max(self.logexpI))
+        
+        width, height = self.graph.get_plot_area_size()
+        self.graph.x_ticks_major = (self.graph.xmax-self.graph.xmin)/(width/100)
+        self.graph.x_ticks_minor = 10
+        self.graph.y_ticks_major = (self.graph.ymax-self.graph.ymin)/(height/50)
+        self.graph.y_ticks_minor = 5
         
     def get_canvas(self):
-
         return self.graph
-
-#faut-il definir un tleft tright...? 
-        #fonction a renomer
-#    def set_limit_interval(self, tleft=None, tright=None, Ibottom=None, Itop=None):
-
-        
-#        width, height = self.graph.get_plot_area_size()
-#        self.graph.x_ticks_major = (self.tright-self.tleft)/(width/100)
-##        self.graph.x_ticks_minor = 10
-#        self.graph.y_ticks_major = (self.Itop-self.Ibottom)/(height/50)
-
-
-#        self.graph.y_ticks_minor = 5
