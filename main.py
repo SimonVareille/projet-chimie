@@ -124,8 +124,10 @@ class MainWindow(Widget):
         self.buttonC.max_value=self.valMaxC
         self.buttonC.steps=self.stepsC
         
+        #tableau de valeurs exp non traité (gardé en mémoire)
         self.exptRaw=None
         self.expIRaw=None
+        #tableau de valeur expérimental traité avec l'intervale
         self.expt = None
         self.expI = None
         
