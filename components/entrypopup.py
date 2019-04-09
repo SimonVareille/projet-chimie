@@ -8,6 +8,17 @@ import os
 Builder.load_file(os.path.dirname(__file__) + '/entrypopup.kv')
 
 class EntryPopup(Popup):
+    """
+    Cette fonction a pour but de permettre à l'utilisateur de rentrer des 
+    valeurs. Pour l'utiliser il faut initialiser initValue avec un str d'une 
+    valeur numérique. 
+    Pour récuperer la valeur de retour il faut utiliser
+    bind(on_dismiss=*nomDeLaFonction*). 
+    A ce moment là la valeur de returnValue vaut initValue si on a fermé le
+    popup sans passer par "OK" et la valeur rentrée par l'utilisateur si il a 
+    été fermé avec "OK".
+    
+    """
     entry = ObjectProperty(None)
     returnValue = StringProperty(None)
     initValue = StringProperty(None)
@@ -26,7 +37,6 @@ class EntryPopup(Popup):
             self.dismiss()
         except Exception as err :
             self.returnValue = self.initValue
-            pass
         
         
         

@@ -100,8 +100,10 @@ class MainWindow(Widget):
         self.buttonC.max_value=self.valMaxC
         self.buttonC.steps=self.stepsC
         
+        #tableau de valeurs exp non traité (gardé en mémoire)
         self.exptRaw=None
         self.expIRaw=None
+        #tableau de valeur expérimental traité avec l'intervale
         self.expt = None
         self.expI = None
         
@@ -179,7 +181,7 @@ class MainWindow(Widget):
             ErrorPopup("""L'intervalle doit contenir des points dans le fichier expérimental.
 Les valeurs sont inchangées.""" ).open()                                                                                                                                           
     def on_cox_button_active(self,instance):
-        cox_popup=CoxPopup(CoxGraph, cox_curve, linspace)
+        cox_popup=CoxPopup()
         cox_popup.CoxvalDth=self.valDth
         cox_popup.CoxvalS=self.valS
         cox_popup.CoxvalC=self.valC
@@ -196,6 +198,9 @@ Les valeurs sont inchangées.""" ).open()
                                                                   self.valIntervalMin, self.valIntervalMax)
 
     def on_dCurveCheckBox_active(self, active):
+     """Cette fonction échange l'affiche de la courbe de Cottrel celle de la courbe de régression linéaire
+     lorsque les données le permettent.
+     """
         if active:
             self.curveBoxLayout.clear_widgets()
             if self.expt and min(self.expI)>0:

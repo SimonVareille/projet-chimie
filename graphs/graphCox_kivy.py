@@ -3,7 +3,7 @@ from kivy.garden.graph import Graph ,SmoothLinePlot
 from kivy.graphics import Callback
 
 class CoxGraph():
-    """Cette classe crée le graphique contenant les courbes de Cox en 
+    """Cette classe crée le graphique contenant la courbe de Cox en 
     utilisant kivy.garden.graph.
     """
     
@@ -54,7 +54,8 @@ class CoxGraph():
 
         self.graph.xmin = min(self.x)
         self.graph.xmax = max(self.x)
-        
+        #permet d'avoir une échelle indépendante de la taille de l'intervalle
+        #(évite d'avoir des traits trop serrés)
         width, height = self.graph.get_plot_area_size()
         self.graph.x_ticks_major = (self.graph.xmax-self.graph.xmin)/(width/100)
         self.graph.x_ticks_minor = 10

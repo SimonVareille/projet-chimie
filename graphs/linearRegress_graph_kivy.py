@@ -10,8 +10,24 @@ from kivy.graphics import Callback
 from kivy.garden.graph import Graph, SmoothLinePlot
 
 class GraphLinearRegression(LinearRegression):
+    """Cette classe crée l'affichage du graphique des courbes de régression linéaire.
+    """
     
     def __init__(self, n, S, C, t, I):
+        """
+        Paramètres
+        ----------
+        n : int
+            Nombre d'électrons échangés au cours de la réaction.
+        S : float
+            Surface d'échange.
+        C : float
+            Concentration de l'espèce.
+        t : list
+            Tableau de valeurs des temps expérimentaux.
+        I : list
+            Tableau de valeurs des Intensités mesurées expérimentalement.
+        """
         super(GraphLinearRegression, self).__init__(t, I)
         self.n=n 
         self.S=S
@@ -39,10 +55,10 @@ class GraphLinearRegression(LinearRegression):
            y_grid=False,
            **graph_theme)
     
-        self.logexpplot = SmoothLinePlot(color=[0, 0, 1, 1])
+        self.logexpplot = SmoothLinePlot(color=[1, 0, 0, 1])
         self.logexpplot.label = "Expérimentale"
         
-        self.linlogexpplot = SmoothLinePlot(color=[1, 0, 0, 1])
+        self.linlogexpplot = SmoothLinePlot(color=[1, 0, 1, 1])
 
         self.graph.legend = True
     
@@ -53,6 +69,9 @@ class GraphLinearRegression(LinearRegression):
             self.cb_update = Callback(self.update)
     
     def update(self, *args):
+        """Cette fonction met à jour l'affichage des courbes de régression 
+        linéaire et le calcul du coefficient de diffusion expérimentale. 
+        """
         self.logexp_and_linear_curves_tab(self.t, self.I)
         _, intercept= self.linregress()
         self.Dexp=self.calculate_D ( intercept, self.n, self.S, self.C)

@@ -10,10 +10,17 @@ Builder.load_file(os.path.dirname(__file__) +'/intervalbox.kv')
 
 
 class IntervalBox(BoxLayout):
-    val_min=NumericProperty(0)
+    """
+    Permet à l'utilisateur de rentrer les valeurs min et max de l'intervalle. 
+    Ces valeurs sont stockées dans self.val_min et self.val_max.    
+        Si l'utilisateur rentre une valeur invalide, un popup d'erreur (ErrorPopup)
+    s'affiche (cf fonction evaluation()).
+    """
+    val_min=NumericProperty(0)#valeurs arbitraires
     _display_value_min=StringProperty("0")
     val_max=NumericProperty(100)
     _display_value_max=StringProperty("100")
+
 
     def update_display_val(self):
          self._display_value_min = self.convert_to_scientific_notation(self.val_min)
@@ -59,6 +66,11 @@ class IntervalBox(BoxLayout):
         return string.replace("^","**")
 
     def evaluation(self, entry):
+        """Permet d'évaluer la valeur numérique d'une chaine de caractère et la
+        retourne.
+        Si l'evaluation via eval() aboutit à une erreur, un popup s'affiche avec
+        un court texte pour l'utilisateur et la fonction retourne None
+        """
         from math import sqrt, pow, log, log10, cos, sin, tan
         #Import local, visible uniquement dans cette méthode.
         #On importe des fonctions pour permettre un eval("sqrt(10)")
