@@ -42,7 +42,7 @@ class LinearRegression:
     F = 96485.3329  #Constante de Faraday
     
     def logexp_curves_tab(self, expt, expI):
-        """Cette fonction calcul les liste des valeurs logarithmique des liste du temps et de l'intensité.
+        """Cette fonction calcule les liste des valeurs logarithmique des liste du temps et de l'intensité.
         
         Paramètres
         ----------
@@ -56,7 +56,7 @@ class LinearRegression:
         self.logexpI=list_transformation_log(expI)
     
     def linregress (self):
-        """Cette fonction calcul à l'aide de formules mathématiques et 
+        """Cette fonction calcule à l'aide de formules mathématiques et 
         par le modèle des moindres carrés le coefficient directeur et 
         l'ordonnée à l'origine de la droite de régression linéaire. 
         
@@ -75,7 +75,7 @@ class LinearRegression:
         return(linearcoefficient,intercept)
         
     def logexp_and_linear_curves_tab (self, expt, expI):
-        """Cette fonction calcul la liste des valeurs de la droite de régression 
+        """Cette fonction calcule la liste des valeurs de la droite de régression 
         linéaire.
         
         Paramètres
@@ -90,8 +90,7 @@ class LinearRegression:
         linlogexpI : list
             Tableau des valeurs d'Intensité de la droite de régression linéaire
         """
-        self.logexpt= list_transformation_log(expt)
-        self.logexpI=list_transformation_log(expI)
+        self.logexp_curves_tab (expt, expI)
         
         linearcoefficient, intercept= self.linregress()
         self.linlogexpI=[]
