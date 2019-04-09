@@ -2,14 +2,29 @@
 
 import math as m
 
-def list_transformation_log (values):
-    loglist=list()
+def list_transformation_log (values): 
+    """Cette fonction crée une liste du logarithme népérien de chaque valeur d'une liste.
+        
+    Paramètres
+    ----------
+    values : list
+        Tableau de valeurs
 
+    Retour
+    ------
+    loglist : list
+        Tableau de valeurs log
+
+    """
+    loglist=list()
     for val in values[1:]:
         loglist.append(m.log(val))
     return (loglist)
 
 def mean (liste):
+    """Cette fonction calcule la moyenne d'une liste.
+    """
+    
     summ=m.fsum(liste)
     mean = summ/(len(liste))
     return (mean)
@@ -22,63 +37,60 @@ class LinearRegression:
     def __init__(self, t, I):
         self.t=t
         self.I=I
-#        self.tMin=t[0]
-#        self.tMax=t[-1]
-#        self.indicetMin=0
-#        self.indicetMax=len(t)-1
         self.Dexp=0
         
+    F = 96485.3329  #Constante de Faraday
+    
+    def logexp_curves_tab(self, expt, expI):
+        """Cette fonction calcule les liste des valeurs logarithmique des liste du temps et de l'intensité.
         
-#    def set_t_interval(self, tMin=None, tMax=None):
-        """Sélectionne l'intervalle dans lequel on veut effectuer la régression
-        linéaire, si différent des valeurs du tableau.
-
         Paramètres
         ----------
-        tMin : float
-            Valeur minimale de `t`. La valeur effectivement prise en compte est
-            la plus proche valeur supèrieure ou égale à `tMin` présente dans le
-            tableau `t`.
-            Si `tMin` est None, `tMin` prend la plus petite valeur de `t`.
-        tMax : float
-            Valeur maximale de `t`. La valeur effectivement prise en compte est
-            la plus proche valeur infèrieure ou égale à `tMax` présente dans le
-            tableau `t`.
-            Si `tMax` est None, `tMax` prend la plus grande valeur de `t`.
+        expt : list
+            Tableau de valeurs des temps expérimentaux
+        expI : list
+             Tableau de valeurs des Itensité expérimentales
+        
         """
-
-#        if tMin == None:
-#            tMin = self.t[0]
-#        if tMax == None:
-#            tMax = self.t[-1]
-#        self.tMin=tMin
-#        self.tMax=tMax
-#        i=0
-#        while i<len(self.t) and self.t[i]<tMin:
-#            i+=1
-#        self.indicetMin=i     
-#        i=len(self.t)-1
-#        while i>0 and self.t[i]>tMax:
-#            i-=1
-#        self.indicetMax=i
-     
-    F = 96485.3329
-    def logexp_curves_tab(self, expt, expI):
         self.logexpt= list_transformation_log(expt)
         self.logexpI=list_transformation_log(expI)
     
     def linregress (self):
+        """Cette fonction calcule à l'aide de formules mathématiques et 
+        par le modèle des moindres carrés le coefficient directeur et 
+        l'ordonnée à l'origine de la droite de régression linéaire. 
+        
+        Retour
+        ------
+        linearcoefficient : float
+            Coefficient directeur de la droite de régression linéaire
+        intercept : float
+            Ordonnée à l'origine de la droite de régression linéaire
+        
+        """
         meant = mean(list_transformation_log(self.t))
         meanI = mean(list_transformation_log(self.I))
-        #linearcoefficient=coefficient devant ln(t)
-        #intercept=ln(nFCS*sqrt(D/pi))
         linearcoefficient = m.fsum(((t)-meant)*((I)-meanI) for t,I in zip(self.logexpt,self.logexpI))/(m.fsum(((t)-meant)**2 for t in self.logexpt)) 
         intercept = meanI-linearcoefficient*meant
         return(linearcoefficient,intercept)
         
     def logexp_and_linear_curves_tab (self, expt, expI):
-        self.logexpt= list_transformation_log(expt)
-        self.logexpI=list_transformation_log(expI)
+        """Cette fonction calcule la liste des valeurs de la droite de régression 
+        linéaire.
+        
+        Paramètres
+        ----------
+        expt : list
+            Tableau de valeurs de temps expérimentales
+        expI : list
+            Tableau de valeurs d'intensité expérimentales
+            
+        Retour
+        ------
+        linlogexpI : list
+            Tableau des valeurs d'Intensité de la droite de régression linéaire
+        """
+        self.logexp_curves_tab (expt, expI)
         
         linearcoefficient, intercept= self.linregress()
         self.linlogexpI=[]
@@ -105,41 +117,12 @@ class LinearRegression:
         Retour
         ------
         D : float
+            Coefficient de diffusion retrouvé expérimentalement
             
         """
         exponentialintercept = m.exp (intercept)
         D = (exponentialintercept**2*m.pi)/(n**2*self.F**2*S**2*C**2)
         self.Dexp=D
         return (D)             
-    
-#est ce qu on peut supprimer la fonction regression?
-    def regression(self, n, S, C):
-        """Effectue la régression linéaire pour obtenir le coefficient de 
-        diffusion, le coefficinet directeur de la droite obtenue et son
-        ordonnée à l'origine.
+       
         
-        Paramètres
-        ----------
-        n : int
-            Nombre d'électrons échangés au cours de la réaction.
-        S : float
-            Surface d'échange.
-        C : float
-            Concentration de l'espèce.    
-        Retour
-        ------
-        `tuple(D, linearcoefficient, intercept)`
-        
-        D : float
-            Coefficient de diffusion.
-        linearcoefficient : float
-            Coefficient directeur de la droite.
-        intercept : réel
-            Ordonnée à l'origine de la droite.
-        """
-    
-        linearcoefficient, intercept = self.linregress()#self.t[self.indicetMin : self.indicetMax],self.I[self.indicetMin:self.indicetMax])
-
-        D = self.calculate_D (intercept, n, S, C)   
-
-        return D, linearcoefficient, intercept
