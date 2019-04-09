@@ -10,6 +10,11 @@ Builder.load_file(os.path.dirname(__file__) +'/intervalbox.kv')
 
 
 class IntervalBox(BoxLayout):
+    """
+    
+        Si l'utilisateur rentre une valeur invalide, un popup d'erreur (ErrorPopup)
+    s'affiche avec le text indiqué dans on_ok_active.
+    """
     val_min=NumericProperty(0)
     _display_value_min=StringProperty("0")
     val_max=NumericProperty(100)
