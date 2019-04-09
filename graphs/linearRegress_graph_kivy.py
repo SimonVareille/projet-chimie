@@ -55,10 +55,10 @@ class GraphLinearRegression(LinearRegression):
            y_grid=False,
            **graph_theme)
     
-        self.logexpplot = SmoothLinePlot(color=[0, 0, 1, 1])
+        self.logexpplot = SmoothLinePlot(color=[1, 0, 0, 1])
         self.logexpplot.label = "Expérimentale"
         
-        self.linlogexpplot = SmoothLinePlot(color=[1, 0, 0, 1])
+        self.linlogexpplot = SmoothLinePlot(color=[1, 0, 1, 1])
 
         self.graph.legend = True
     
