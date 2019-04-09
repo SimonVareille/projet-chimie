@@ -1,55 +1,32 @@
 # -*- coding: utf-8 -*-
 
-"""Pour la compatibilité avec python2"""
-from __future__ import division
-
-"""On gère ici les modules que l'on veut importer (en fonction de ce qui est
- disponible).
-"""
-
-import graphs.cottrel_graph_kivy as cottrel_graph
-import graphs.graphCox_kivy as coxgraph
-
-from linear_regression import LinearRegression
-import cottrel.cottrel_math as cottrel
-
-from data_reader import DataReader
+import os
 
 import kivy
 kivy.require('1.10.1')
-
-import os
-
-from kivy.config import Config
-#Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
-
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.base import EventLoop
+from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import ObjectProperty, BooleanProperty, NumericProperty
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
-from kivy.uix.boxlayout import BoxLayout
-from kivy.properties import ObjectProperty, StringProperty, BooleanProperty, \
-    NumericProperty
-from kivy.clock import Clock
 from kivy.uix.popup import Popup
 from kivy.uix.button import Button
-from components.file_chooser import OpenDialog
 
-from components.cox_popup import CoxPopup
-
-from components.interval_popup import IntervalPopup
-'''Pour le popup coxGraph
-'''
+from data_reader import DataReader
+from linear_regression import LinearRegression
+from tab_operations import TabOperations
+from graphs.cottrel_graph_kivy import CottrelGraph
 from graphs.graphCox_kivy import CoxGraph
+from graphs.linearRegress_graph_kivy import GraphLinearRegression
+from components.file_chooser import OpenDialog
+from components.cox_popup import CoxPopup
+from components.interval_popup import IntervalPopup
+from components.errorpopup import ErrorPopup
+import cottrel.cottrel_math as cm
 from cottrel.cox_math import cox_curve
 from cottrel.cottrel_math import linspace
-
-from tab_operations import TabOperations
-
-from graphs.linearRegress_graph_kivy import GraphLinearRegression
-
-from components.errorpopup import ErrorPopup
 
 class MainWindow(Widget):
     '''Classe représentant la fenêtre principale
@@ -57,7 +34,6 @@ class MainWindow(Widget):
     '''
     curveBoxLayout = ObjectProperty(None)
     expCurveSwitch = ObjectProperty(None)
-
 
     smallCurveBoxLayout = ObjectProperty(None)
 
@@ -129,13 +105,13 @@ class MainWindow(Widget):
         self.expt = None
         self.expI = None
         
-        self.mainGraph = cottrel_graph.CottrelGraph()
+        self.mainGraph = CottrelGraph()
         
         if self.expt:
-            self.t = cottrel.create_t(0, max(self.expt), 1000)
+            self.t = cm.create_t(0, max(self.expt), 1000)
         else:
-            self.t = cottrel.create_t(0, 20, 1000)
-        self.I = cottrel.courbe_cottrel_th(self.buttonN.value, self.buttonS.value, 
+            self.t = cm.create_t(0, 20, 1000)
+        self.I = cm.courbe_cottrel_th(self.buttonN.value, self.buttonS.value, 
                                            self.buttonC.value, self.buttonDth.value, self.t)
         
         self.mainGraph.set_theoric_data(self.t, self.I)
@@ -193,8 +169,8 @@ class MainWindow(Widget):
             
             #Recalcule les valeurs théoriques pour coller avec l'étendue des valeurs
             #expériementales
-            self.t = cottrel.create_t(0, max(self.expt), 1000)
-            self.I = cottrel.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
+            self.t = cm.create_t(0, max(self.expt), 1000)
+            self.I = cm.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
             self.mainGraph.set_theoric_data (self.t, self.I)
             
             self.mainGraph.set_limit_interval()
@@ -280,7 +256,7 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         self.valN=self.buttonN.value
         self.valC=self.buttonC.value
         self.valS=self.buttonS.value
-        self.I = cottrel.courbe_cottrel_th(self.valN,self.valS, self.valC, self.valDth, self.t)
+        self.I = cm.courbe_cottrel_th(self.valN,self.valS, self.valC, self.valDth, self.t)
         
         self.mainGraph.I=self.I
         self.mainGraph.update()
@@ -299,8 +275,8 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         '''Affiche la boite de dialogue d'ouverture de fichier.
         '''
         content = OpenDialog()
-        self._openPopup = Popup(title="Sélectionnez le fichier de données :", content=content,
-                            size_hint=(0.9, 0.9))
+        self._openPopup = Popup(title="Sélectionnez le fichier de données :",
+                                content=content, size_hint=(0.9, 0.9))
         content.cancel = self._openPopup.dismiss
         content.load = self.load_data_from_dialog
         self._openPopup.open()
@@ -309,8 +285,20 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         if isinstance(filename, (list, tuple)):
             if filename:
                 filename = filename[0]
-        if filename and self.load_exp_data(path, filename):
-            self._openPopup.dismiss()
+        if filename:
+            err = self.load_exp_data(path, filename)
+            if err is None:
+                self._openPopup.dismiss()
+            else:
+                if isinstance(err, FileNotFoundError):
+                    ErrorPopup(text="Le fichier spécifié est introuvable ! \
+Veuillez vérifier son nom et son chemin.").open()
+                else:
+                    ErrorPopup(text="Une erreur est survenue lors de la lecture \
+du fichier !\n\n"+str(err)).open()
+                
+        else:
+            ErrorPopup(text="Veuillez sélectionner un fichier.").open()
     
     def load_exp_data(self, path, filename):
         '''Charge les valeurs expérimentales depuis le fichier `filename` situé
@@ -323,18 +311,22 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
             Chemin du fichier à charger.
         filename : str or list-like of str
             Nom du fichier à charger.
+        
+        Retour
+        ------
+        Retourne None si la lecture s'est bien passée, retourne l'erreur sinon.
         '''
         try:
             reader = DataReader(os.path.join(path, filename))
         except FileNotFoundError as err:
             print(err)
-            return False
+            return err
         except ValueError as err:
             print("ValueError: ",err)
-            return False
+            return err
         except Exception as err:
             print(err)
-            return False
+            return err
         
         self.exptRaw = reader.get_t()
         self.expIRaw = reader.get_I()
@@ -349,8 +341,8 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         
         #Recalcule les valeurs théoriques pour coller avec l'étendue des valeurs
         #expériementales
-        self.t = cottrel.create_t(0, max(self.expt), 1000)
-        self.I = cottrel.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
+        self.t = cm.create_t(0, max(self.expt), 1000)
+        self.I = cm.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
         self.mainGraph.set_theoric_data (self.t, self.I)
         
         self.mainGraph.set_limit_interval()
@@ -358,7 +350,7 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         
         self.expDataLoaded=True
         
-        return True
+        return None
     
     def linear_regression(self):
         '''Effectue la régression linéaire sur les données expérimentales 
