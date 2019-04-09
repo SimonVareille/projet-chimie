@@ -35,6 +35,14 @@ class LinearRegression:
     """
 
     def __init__(self, t, I):
+        """
+        Paramètres
+        ----------
+        t : list
+            Tableau de valeurs des temps expérimentaux.
+        I : list
+            Tableau de valeurs des Intensités mesurées expérimentalement.
+        """
         self.t=t
         self.I=I
         self.Dexp=0
