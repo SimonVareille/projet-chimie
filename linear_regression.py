@@ -35,6 +35,14 @@ class LinearRegression:
     """
 
     def __init__(self, t, I):
+        """
+        Paramètres
+        ----------
+        t : list
+            Tableau de valeurs des temps expérimentaux.
+        I : list
+            Tableau de valeurs des Intensités mesurées expérimentalement.
+        """
         self.t=t
         self.I=I
         self.Dexp=0
@@ -42,8 +50,11 @@ class LinearRegression:
     F = 96485.3329  #Constante de Faraday
     
     def logexp_curves_tab(self, expt, expI):
+
         """Cette fonction calcule les listes des valeurs logarithmique des liste 
         du temps et de l'intensité.
+        =======
+
         
         Paramètres
         ----------
