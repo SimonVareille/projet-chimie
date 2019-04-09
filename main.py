@@ -29,9 +29,9 @@ from cottrel.cox_math import cox_curve
 from cottrel.cottrel_math import linspace
 
 class MainWindow(Widget):
-    '''Classe représentant la fenêtre principale
+    """Classe représentant la fenêtre principale
     Elle a le même nom que dans app.kv.
-    '''
+    """
     curveBoxLayout = ObjectProperty(None)
     expCurveSwitch = ObjectProperty(None)
 
@@ -100,26 +100,24 @@ class MainWindow(Widget):
         self.buttonC.max_value=self.valMaxC
         self.buttonC.steps=self.stepsC
         
-        #tableau de valeurs exp non traité (gardé en mémoire)
+        #tableau de valeurs expérimentales non traité (gardé en mémoire)
         self.exptRaw=None
         self.expIRaw=None
-        #tableau de valeur expérimental traité avec l'intervale
+        #tableau de valeurs expérimentales traité avec l'intervalle
         self.expt = None
         self.expI = None
         
         self.mainGraph = CottrelGraph()
         
-        if self.expt:
-            self.t = cm.create_t(0, max(self.expt), 1000)
-        else:
-            self.t = cm.create_t(0, 20, 1000)
+        # Initialisation des tableaux t et I théoriques
+        self.t = cm.create_t(0, 20, 1000)
         self.I = cm.courbe_cottrel_th(self.buttonN.value, self.buttonS.value, 
-                                           self.buttonC.value, self.buttonDth.value, self.t)
+                                           self.buttonC.value, self.buttonDth.value, 
+                                           self.t)
         
         self.mainGraph.set_theoric_data(self.t, self.I)
         
         self.mainGraph.set_limit_interval()
-        
         self.mainGraph.update()
         
         self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
@@ -162,21 +160,24 @@ class MainWindow(Widget):
     def on_interval_popup_closed(self, popup):
         maxtexp = max(self.exptRaw)
         mintexp = min(self.exptRaw)
-        if (mintexp<=popup.intervalbox.val_min<popup.intervalbox.val_max<=maxtexp and 
-                                                        popup.intervalbox.val_max-popup.intervalbox.val_min > 0.2) :
+        if (mintexp <= popup.intervalbox.val_min < popup.intervalbox.val_max <= maxtexp and 
+                popup.intervalbox.val_max-popup.intervalbox.val_min > 0.2) :
             self.valIntervalMin=popup.intervalbox.val_min
             self.valIntervalMax=popup.intervalbox.val_max
             self.set_exp_tab_interval()
             self.mainGraph.set_experimental_data(self.expt, self.expI)
             
-            #Recalcule les valeurs théoriques pour coller avec l'étendue des valeurs
-            #expériementales
+            #Recalcule les valeurs théoriques pour coller avec l'étendue des 
+            #valeurs expériementales
             self.t = cm.create_t(0, max(self.expt), 1000)
             self.I = cm.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
             self.mainGraph.set_theoric_data (self.t, self.I)
             
             self.mainGraph.set_limit_interval()
             self.mainGraph.update()
+            
+            if hasattr(self, 'graphLinearRegression'):
+                self.on_dCurveCheckBox_active(True)
         else :
             ErrorPopup("""L'intervalle doit contenir des points dans le fichier expérimental.
 Les valeurs sont inchangées.""" ).open()                                                                                                                                           
@@ -190,17 +191,18 @@ Les valeurs sont inchangées.""" ).open()
         cox_popup.open()
         
     def set_exp_tab_interval(self):
-        """Change les tableau expt et expI pour qu'ils correspondent à 
+        """Change les tableau `expt` et `expI` pour qu'ils correspondent à 
         l'intervalle actuel.
         """
         T=TabOperations()
         self.expt, self.expI = T.del_values_not_between_tmin_tmax(self.exptRaw, self.expIRaw, 
                                                                   self.valIntervalMin, self.valIntervalMax)
+        
 
     def on_dCurveCheckBox_active(self, active):
-     """Cette fonction échange l'affiche de la courbe de Cottrel celle de la courbe de régression linéaire
-     lorsque les données le permettent.
-     """
+        """Affiche/Efface la courbe de régression linéaire lorsque les données 
+        le permettent.
+        """
         if active:
             self.curveBoxLayout.clear_widgets()
             if self.expt and min(self.expI)>0:
@@ -230,6 +232,8 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
             
         
     def on_touch_down(self, touch):
+        """Gestion du zoom à la souris.
+        """
         if self.mainGraph.collide_plot(*self.mainGraph.to_widget(*touch.pos, relative=True)):
             if touch.is_mouse_scrolling:
                 if touch.button == 'scrolldown':
@@ -242,6 +246,8 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         return super(MainWindow, self).on_touch_down(touch)            
         
     def on_touch_move(self, touch):
+        """Gestion du zoom aux doigts.
+        """
         if len(EventLoop.touches)==2:
             for other_touch in EventLoop.touches:
                 if touch.distance(other_touch):
@@ -255,8 +261,8 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         return super(MainWindow, self).on_touch_move(touch)
     
     def update_values(self,instance,text):
-        '''Met à jour la courbe principale avec les nouvelles valeurs.
-        '''
+        """Met à jour la courbe principale avec les nouvelles valeurs.
+        """
         self.valDth=self.buttonDth.value
         self.valN=self.buttonN.value
         self.valC=self.buttonC.value
@@ -277,8 +283,8 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         spinbox.buttonMid_id.bind(text = self.update_values)
 
     def show_openDialog(self):
-        '''Affiche la boite de dialogue d'ouverture de fichier.
-        '''
+        """Affiche la boite de dialogue d'ouverture de fichier.
+        """
         content = OpenDialog()
         self._openPopup = Popup(title="Sélectionnez le fichier de données :",
                                 content=content, size_hint=(0.9, 0.9))
@@ -306,7 +312,7 @@ du fichier !\n\n"+str(err)).open()
             ErrorPopup(text="Veuillez sélectionner un fichier.").open()
     
     def load_exp_data(self, path, filename):
-        '''Charge les valeurs expérimentales depuis le fichier `filename` situé
+        """Charge les valeurs expérimentales depuis le fichier `filename` situé
         dans le dossier `path`. Si `filename` est une liste ou un tuple, seule
         la première case est considérée.
         
@@ -320,7 +326,7 @@ du fichier !\n\n"+str(err)).open()
         Retour
         ------
         Retourne None si la lecture s'est bien passée, retourne l'erreur sinon.
-        '''
+        """
         try:
             reader = DataReader(os.path.join(path, filename))
         except FileNotFoundError as err:
@@ -358,10 +364,10 @@ du fichier !\n\n"+str(err)).open()
         return None
     
     def linear_regression(self):
-        '''Effectue la régression linéaire sur les données expérimentales 
+        """Effectue la régression linéaire sur les données expérimentales 
         "de travail", c'est à dire sur celles affichées à l'écran.
         Indique au graph que la valeur de D a changée.
-        '''
+        """
         linreg = LinearRegression(self.expt, self.expI)
 
         
@@ -371,8 +377,8 @@ du fichier !\n\n"+str(err)).open()
 
 
 class AppApp(App):
-    '''Point d'entrée de l'application.
-    '''
+    """Point d'entrée de l'application.
+    """
     title = "ReDoxLab"
     def build(self):
         Window.bind(on_keyboard=self.key_input)
@@ -385,6 +391,7 @@ class AppApp(App):
         return True
     
     def key_input(self, window, key, scancode, codepoint, modifier):
+        #Gestion de la touche Esc/Echap et du bouton Back sur Android.
         if key == 27:
             content = BoxLayout(orientation = 'vertical')
             content.add_widget(Label(text = "Voulez vous vraiment fermer l'application ?"))
