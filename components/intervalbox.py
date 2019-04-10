@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from kivy.properties import  StringProperty, NumericProperty
 
 from kivy.uix.boxlayout import BoxLayout

@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sat Apr  6 19:25:47 2019
-
-@author: paula
-"""
 
 from linear_regression import LinearRegression
 from kivy.graphics import Callback
