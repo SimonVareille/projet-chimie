@@ -98,7 +98,7 @@ class CottrelGraph(CottrelGraphBase, EventDispatcher):
         return self.graph.to_widget(x, y, relative)
     
     def collide_plot(self, x, y):
-        """Determine si les coordonées tombent dans la zone des courbes.
+        """Détermine si les coordonées tombent dans la zone des courbes.
         Utilisez `x, y = self.to_widget(x, y, relative=True)` pour d'abord les
         convertir en coordonées widget si elles sont dans les coordonées de la
         fenêtre.
@@ -106,7 +106,7 @@ class CottrelGraph(CottrelGraphBase, EventDispatcher):
         Paramètres
         ----------
         `x, y` : floats
-                Les coordonées à tester.
+                Les coordonnées à tester.
         """
         return self.graph.collide_plot(x, y)
     
@@ -125,13 +125,13 @@ class CottrelGraph(CottrelGraphBase, EventDispatcher):
         dy : float
             Facteur de zoom vertical.
         cx : float
-            Abscisse du point sur lequel on zoom. Doit être exprimé dans les coordonnées
-            du widget.
+            Abscisse du point sur lequel on zoom. Doit être exprimé dans les 
+            coordonnées du widget.
         cy : float
-            Ordonnée du point sur lequel on zoom. Doit être exprimé dans les coordonnées
-            du widget.
+            Ordonnée du point sur lequel on zoom. Doit être exprimé dans les 
+            coordonnées du widget.
             
-        Pour convertir le point depuis les coordonées de la fenêtre dans les
+        Pour convertir le point depuis les coordonnées de la fenêtre dans les
         coordonnées du widget:
             `cx, cy = self.graph.to_widget(cx, cy, relative=True)`
         """

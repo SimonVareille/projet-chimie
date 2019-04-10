@@ -8,7 +8,7 @@ class _DataRow:
         self.values = []
 
 class DataReader:
-    """Classe s'occupant de lire un fichier affin d'obtenir les valeurs
+    """Classe s'occupant de lire un fichier afin d'obtenir les valeurs
     expérimentales.
     """
     def __init__(self, filename, delimiter = ';', encoding="ISO-8859-15"):

@@ -8,8 +8,8 @@ Builder.load_file(os.path.dirname(__file__) + '/errorpopup.kv')
 
 class ErrorPopup(Popup):
     """ Cette classe a pour but d'afficher un popup d'erreur avec le texte 
-    donné en paramètre. Pour lancer le popup il faut lancer la fonction open() de 
-    l'objet.
+    donné en paramètre. Pour lancer le popup il faut lancer la fonction open() 
+    de l'objet.
     """
     textid = ObjectProperty(None)
     

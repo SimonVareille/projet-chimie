@@ -6,15 +6,19 @@ from kivy.lang.builder import Builder
 
 import os
 Builder.load_file(os.path.dirname(__file__) + '/entrypopup.kv')
-
+"""
+Dans l'idéal il faudrait modifier le fonctionnement de la classe pour qu'elle
+prenne et renvoie des floats, mais il faudrait alors aussi modifier les 
+endroits où on en fait l'appel (possibilité d'amélioration).
+"""
 class EntryPopup(Popup):
     """
-    Cette fonction a pour but de permettre à l'utilisateur de rentrer des 
+    Cette fonction a pour but de permettre à l'utilisateur de saisir des 
     valeurs. Pour l'utiliser il faut initialiser initValue avec un str d'une 
     valeur numérique. 
-    Pour récuperer la valeur de retour il faut utiliser
+    Pour récupérer la valeur de retour il faut utiliser
     bind(on_dismiss=*nomDeLaFonction*). 
-    A ce moment là la valeur de returnValue vaut initValue si on a fermé le
+    A ce moment là, la valeur de returnValue vaut initValue si on a fermé le
     popup sans passer par "OK" et la valeur rentrée par l'utilisateur si il a 
     été fermé avec "OK".
     

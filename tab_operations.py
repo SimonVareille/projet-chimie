@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 class TabOperations():
-    """Cette classe à pour objectif de faire des opérations sur les tableaux des 
+    """Cette classe a pour objectif de faire des opérations sur les tableaux des 
     valeurs expérimentales.
     """
         
@@ -21,7 +21,7 @@ class TabOperations():
         ------
         Retourne l'indice de la première valeur de `expt` supérieure ou égale
         à `t`.
-        Retourne `len(expt)` si non trouvée.
+        Retourne `len(expt)` si l'indice n'est pas trouvé.
         """
         value_to_return = 0
         while (value_to_return < len(expt) and expt[value_to_return] < t):

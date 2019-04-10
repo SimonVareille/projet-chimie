@@ -2,8 +2,8 @@
 
 class CottrelGraphBase:
     """Classe mère permettant d'avoir une base commune pour
-    la création du graphique principal, que l'on utilise **matplotlib** ou 
-    **kivy.garden.graph**.
+    la création du graphique principal, quelque soit l'interface graphique 
+    utilisée.
     """
     def __init__(self, t=[], I=[]):
         self.t=t
@@ -57,12 +57,11 @@ class CottrelGraphBase:
     def set_theoric_data (self, t, I):
         self.t=t
         self.I=I
-        #self.I=cottrel.courbe_cottrel_th(self.n, self.S, self.C, self.D, self.t)
     def get_theoric_data(self):
         return self.t, self.I
         
     def display_experimental(self, displayExperimental = True):
-        """Affiche la courbe expériementale si `displayTheoric == True`.
+        """Affiche la courbe expérimentale si `displayTheoric == True`.
         """
         self._display_experimental=displayExperimental
         

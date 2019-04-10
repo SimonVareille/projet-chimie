@@ -14,7 +14,7 @@ Builder.load_file(os.path.dirname(__file__) + '/cox_popup.kv')
 
 class CoxPopup(Popup):
     """
-    Popup qui permet d'affiche la courbe Cox avec un Slider interractif pour 
+    Popup qui permet d'afficher la courbe Cox avec un Slider interractif pour 
     le paramètre self.Coxvalt.           
     """
     grahCoxLayout=ObjectProperty(None)

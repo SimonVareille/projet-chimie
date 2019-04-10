@@ -7,10 +7,10 @@ def cox_curve(D, t, x):
     """Crée les valeurs de la courbe Cox pour `t` et `D` donnés.
     Paramètres
     ----------
-    D : réel
-        Valeur de `D` ( != 0).
-    t : réel
-        Valeur de `t` ( != 0).
+    D : float
+        Valeur de `D` ( >= 0).
+    t : float
+        Valeur de `t` ( >= 0).
     x : list
         Liste de valeurs de `x` (en cm).
     Retour
