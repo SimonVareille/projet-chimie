@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ObjectProperty
-from kivy.lang.builder import Builder
 import os
 import platform
 
-"""directement importé du site officiel de kivy (d'où les commentaires en anglais)
+from kivy.uix.floatlayout import FloatLayout
+from kivy.properties import ObjectProperty
+from kivy.lang.builder import Builder
+from kivy.clock import Clock
+
+from components.errorpopup import ErrorPopup
+
+"""Adapté du site officiel de kivy (d'où les commentaires en anglais)
 https://kivy.org/doc/stable/api-kivy.uix.filechooser.html
 """
 Builder.load_file(os.path.dirname(__file__) +'/file_chooser.kv')
@@ -32,8 +36,15 @@ class OpenDialog(FloatLayout):
             self.filechooser.rootpath = "/sdcard"
             self.filechooser.path = "/sdcard/Download"
         elif platform.system() == "Linux":
-            self.filechooser.path = "~/"
+            self.filechooser.path = os.path.expanduser("~/")
+        Clock.schedule_once(self.on_loaded)
+        #self.filechooser.bind(on_parent=self.on_loaded)
     
+    def on_loaded(self, *args, **kwargs):
+        if not os.access(self.filechooser.path, os.R_OK):
+            ErrorPopup(text="Vous n'avez pas les droits pour accéder au stockage !\n\
+Veuillez autoriser l'appli à y accéder en passant par les paramètres.").open()
+        
     load = ObjectProperty(None)
     ''' Function to call when the "Ouvrir" button is released.
     Must be defined as follow:
