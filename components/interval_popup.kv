@@ -1,3 +1,4 @@
+#:kivy 1.10.1
 #: import IntervalBox components.intervalbox.IntervalBox
 
 <IntervalPopup@Popup>:
@@ -12,11 +13,11 @@
         IntervalBox:
             id:intervalbox
             size_hint:(.8,1)
-        CustButton:
+        Button:
+            font_size:.3*self.height
             size_hint:(.2,1)           
             text: "OK"
             on_press: root.dismiss()
 
 
-<CustButton@Button>:
-    font_size:.3*self.height    
+   

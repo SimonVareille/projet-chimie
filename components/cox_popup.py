@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from kivy.uix.popup import Popup
 from kivy.properties import  NumericProperty, ObjectProperty, StringProperty
 from kivy.lang.builder import Builder

@@ -1,3 +1,5 @@
+#:kivy 1.10.1
+
 <CoxPopup@Popup>:
     id : coxpopup
     sliderCoxT:SliderCoxT
@@ -23,14 +25,9 @@
                 size_hint:(1,.8)
                 orientation:"vertical"
                 on_value: root.on_slider_T_active()
-                #on_touch_down:root.on_slider_T_active()
         BoxLayout:
             size_hint: (.8,1)
             orientation:"vertical"
                 
             BoxLayout:
                 id:grahCoxLayout
-
-
-<CustButton@Button>:
-    font_size:.3*self.height    
