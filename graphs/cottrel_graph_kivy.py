@@ -53,6 +53,7 @@ class CottrelGraph(CottrelGraphBase, EventDispatcher):
         self.bind(ticks_labels=self.graph.setter('y_grid_label'))
         self.bind(ticks_labels=self.graph.setter('x_grid_label'))
         
+        self._update_ticks_counts = 0 # Pour éviter un clignotement
         with self.graph.canvas:
             Callback(self.update_ticks)
             
@@ -81,15 +82,17 @@ class CottrelGraph(CottrelGraphBase, EventDispatcher):
         
         self.graph.ymin = float(self.Ibottom)
         self.graph.ymax = float(self.Itop) if self.Ibottom!=self.Itop else 1.0
-        
+        self._update_ticks_counts = 0
         self.update_ticks()
     
     def update_ticks(self, *args):
-        width, height = self.graph.get_plot_area_size()
-        self.graph.x_ticks_major = (self.graph.xmax-self.graph.xmin)/(width/100)
-        self.graph.x_ticks_minor = 10
-        self.graph.y_ticks_major = (self.graph.ymax-self.graph.ymin)/(height/50)
-        self.graph.y_ticks_minor = 5
+        if self._update_ticks_counts < 10:
+            self._update_ticks_counts+=1
+            width, height = self.graph.get_plot_area_size()
+            self.graph.x_ticks_major = (self.graph.xmax-self.graph.xmin)/(width/100)
+            self.graph.x_ticks_minor = 10
+            self.graph.y_ticks_major = (self.graph.ymax-self.graph.ymin)/(height/50)
+            self.graph.y_ticks_minor = 5
             
     def get_canvas(self):
         return self.graph
