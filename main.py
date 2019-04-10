@@ -258,7 +258,7 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         if self.buttonDth.value >=0:
             self.valDth=self.buttonDth.value
         else :
-            ErrorPopup(text="Dth ne peut pas prendre une valeur négative !\nLa valeur de Dth utilisée pour le graphique est inchangée").open()
+            ErrorPopup(text="Dth ne peut pas prendre une valeur négative !\nLa valeur de Dth utilisée pour le graphique est inchangée.").open()
         self.valN=self.buttonN.value
         self.valC=self.buttonC.value
         self.valS=self.buttonS.value
