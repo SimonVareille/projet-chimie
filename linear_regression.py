@@ -18,7 +18,9 @@ def list_transformation_log (values):
 
     """
     loglist=list()
-    for val in values[1:]:
+    #on élimine la première valeur du tableau car elle 
+    #correspond à t=0 dont on ne peut pas prendre le log
+    for val in values[1:]: 
         loglist.append(m.log(val))
     return (loglist)
 
