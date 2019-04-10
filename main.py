@@ -173,11 +173,24 @@ class MainWindow(Widget):
             self.mainGraph.set_limit_interval()
             self.mainGraph.update()
             
+            if not hasattr(self, 'graphLinearRegression') and self.ids['dCurveCheckBox'].active:
+                if self.expt and min(self.expI)>0:
+                    self.graphLinearRegression = GraphLinearRegression(self.valN, self.valS, self.valC, 
+                                                                       self.expt, self.expI)
             if hasattr(self, 'graphLinearRegression'):
-                self.graphLinearRegression.t = self.expt
-                self.graphLinearRegression.I = self.expI
-                # TODO : Empécher les valeurs négatives
-                self.graphLinearRegression.update()
+                if self.expt and min(self.expI)>0:
+                    if self.graphLinearRegression.get_canvas() not in self.curveBoxLayout.children:
+                        self.curveBoxLayout.clear_widgets()
+                        self.curveBoxLayout.add_widget(self.graphLinearRegression.get_canvas())
+                    self.graphLinearRegression.t = self.expt
+                    self.graphLinearRegression.I = self.expI
+                    self.graphLinearRegression.update()
+                else:
+                    self.curveBoxLayout.clear_widgets()
+                    self.curveBoxLayout.add_widget(Label(text="""[color=FF0000]Attention !
+Les données expérimentales contiennent des valeurs négatives ou nulles.
+Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'intervalle de travail»[/color]""",
+                    markup=True, halign='center', valign='center', font_size=20))
         else :
             ErrorPopup("""L'intervalle doit contenir des points dans le fichier expérimental.
 Les valeurs sont inchangées.""" ).open()                                                                                                                                           
