@@ -101,7 +101,7 @@ class MainWindow(Widget):
         #tableau de valeurs exp non traité (gardé en mémoire)
         self.exptRaw=None
         self.expIRaw=None
-        #tableau de valeur expérimental traité avec l'intervale
+        #tableau de valeurs expérimentales traité avec l'intervalle
         self.expt = None
         self.expI = None
         

@@ -3,7 +3,6 @@
 from kivy.uix.popup import Popup
 from kivy.properties import ObjectProperty
 from kivy.lang.builder import Builder
-from .intervalbox import IntervalBox #utile dans le .kv
 
 import os
 Builder.load_file(os.path.dirname(__file__) + '/interval_popup.kv')
