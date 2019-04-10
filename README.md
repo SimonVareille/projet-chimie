@@ -3,25 +3,16 @@ Le repo du projet, le nom pourra être changé ulterieurement.
 
 ------
 ### Prérequis
-Afin de pouvoir exécuter ce projet, il faut avoir installé les modules suivants:  
-- `numpy`, `scipy` et `matplotlib` :  
-    https://www.scipy.org/install.html
+Afin de pouvoir exécuter ce projet, il faut avoir installé les modules suivants: 
 - `backports.csv` :  
     `pip install backports.csv`
 - `kivy` :  
     https://kivy.org/#download
 - `kivy-garden` :  
     https://kivy.org/doc/stable/api-kivy.garden.html
-- `kivy.garden.matplotlib` :  
-    https://kivy.org/doc/stable/api-kivy.garden.html  
-    En remplaçant `graph` par `matplotlib` pour installer `kivy.garden.matplotlib`  
+- `kivy.garden.graph` :  
+    https://kivy.org/doc/stable/api-kivy.garden.html
 
-------
-
-On peut maintenant lancer `main.py`. Cela affiche la courbe principale mais ce n'est pas encore interractif.  
-
-Pour utiliser `kivy.garden.graph`, il suffit de changer la valeur de `USE_MATPLOTLIB` du fichier `config.py` à `False`.  
-Pour ne pas utiliser `numpy`, il suffit de changer la valeur de `USE_NUMPY` du fichier `config.py` à `False`.  
+------ 
       
-
-Il faudrait rajouter la façon dont on crée le .apk dans ce fichier texte.
+Pour créer le `.apk` :

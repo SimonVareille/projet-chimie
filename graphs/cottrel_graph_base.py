@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
 class CottrelGraphBase:
-    """Cette classe est la classe mère permettant d'avoir une base commune pour
+    """Classe mère permettant d'avoir une base commune pour
     la création du graphique principal, que l'on utilise **matplotlib** ou 
     **kivy.garden.graph**.
-    Les variables `n`, `S`, `C` et `D` ne sont peut-être pas utiles dans cette
-    classe... À voir...
     """
     def __init__(self, t=[], I=[]):
         self.t=t
@@ -49,6 +47,8 @@ class CottrelGraphBase:
         return self.D
     
     def display_theoric(self, displayTheoric = True):
+        """Affiche la courbe théorique si `displayTheoric == True`.
+        """
         self._display_theoric=displayTheoric
     
     def is_theoric_displayed(self):
@@ -62,6 +62,8 @@ class CottrelGraphBase:
         return self.t, self.I
         
     def display_experimental(self, displayExperimental = True):
+        """Affiche la courbe expériementale si `displayTheoric == True`.
+        """
         self._display_experimental=displayExperimental
         
     def is_experimental_displayed(self):
@@ -71,12 +73,23 @@ class CottrelGraphBase:
         self.expt=expt
         self.expI=expI
         
-    def set_expD(self, expD) :
-        self.expD=expD
-        
     def set_limit_interval(self, tleft=None, tright=None, Ibottom=None, Itop=None):
         """Sélectionne la zone que l'on veut afficher. Par défaut l'ensemble 
         des points est affiché.
+        
+        Paramètres
+        ----------
+        tleft : float
+            Valeur minimale de l'abscisse.
+        tright : float
+            Valeur maximale de l'abscisse.
+        Ibottom : float
+            Valeur minimale de l'ordonnée.
+        Itop : float
+            Valeur maximale de l'ordonnée.
+        
+        `Ǹone` initialise le paramètre automatiquement pour contenir l'ensemble
+        des données.
         """
         if tleft == None:
             tleft = 0

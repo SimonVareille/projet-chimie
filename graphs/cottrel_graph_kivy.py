@@ -69,10 +69,6 @@ class CottrelGraph(CottrelGraphBase, EventDispatcher):
                 
         if self._display_experimental:                
             self.expplot.points = list(zip(self.expt,self.expI))
-            if self.expD != None:
-                self.expplot.label = 'Expérimentale\nD = {}'.format(self.expD)
-            else:
-                self.expplot.label = 'Expérimentale'
             
             if self.expplot not in self.graph.plots:
                 self.graph.add_plot(self.expplot)

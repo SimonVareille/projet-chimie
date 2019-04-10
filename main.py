@@ -15,18 +15,14 @@ from kivy.uix.popup import Popup
 from kivy.uix.button import Button
 
 from data_reader import DataReader
-from linear_regression import LinearRegression
 from tab_operations import TabOperations
 from graphs.cottrel_graph_kivy import CottrelGraph
-from graphs.graphCox_kivy import CoxGraph
 from graphs.linearRegress_graph_kivy import GraphLinearRegression
 from components.file_chooser import OpenDialog
 from components.cox_popup import CoxPopup
 from components.interval_popup import IntervalPopup
 from components.errorpopup import ErrorPopup
 import cottrel.cottrel_math as cm
-from cottrel.cox_math import cox_curve
-from cottrel.cottrel_math import linspace
 
 class MainWindow(Widget):
     """Classe représentant la fenêtre principale
@@ -177,7 +173,10 @@ class MainWindow(Widget):
             self.mainGraph.update()
             
             if hasattr(self, 'graphLinearRegression'):
-                self.on_dCurveCheckBox_active(True)
+                self.graphLinearRegression.t = self.expt
+                self.graphLinearRegression.I = self.expI
+                # TODO : Empécher les valeurs négatives
+                self.graphLinearRegression.update()
         else :
             ErrorPopup("""L'intervalle doit contenir des points dans le fichier expérimental.
 Les valeurs sont inchangées.""" ).open()                                                                                                                                           
@@ -194,8 +193,7 @@ Les valeurs sont inchangées.""" ).open()
         """Change les tableau `expt` et `expI` pour qu'ils correspondent à 
         l'intervalle actuel.
         """
-        T=TabOperations()
-        self.expt, self.expI = T.del_values_not_between_tmin_tmax(self.exptRaw, self.expIRaw, 
+        self.expt, self.expI = TabOperations.del_values_not_between_tmin_tmax(self.exptRaw, self.expIRaw, 
                                                                   self.valIntervalMin, self.valIntervalMax)
         
 
@@ -207,6 +205,7 @@ Les valeurs sont inchangées.""" ).open()
             self.curveBoxLayout.clear_widgets()
             if self.expt and min(self.expI)>0:
                 self.graphLinearRegression = GraphLinearRegression(self.valN, self.valS, self.valC, self.expt, self.expI)
+                self.graphLinearRegression.update()
                 self.curveBoxLayout.add_widget(self.graphLinearRegression.get_canvas())
             else:
                 self.curveBoxLayout.add_widget(Label(text="""[color=FF0000]Attention !
@@ -273,11 +272,10 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         self.mainGraph.update()
         
         if hasattr(self, 'graphLinearRegression'):
-#            self.graphLinearRegression.n = self.valN
-#            self.graphLinearRegression.S = self.valS
-#            self.graphLinearRegression.C = self.valC
-            self.on_dCurveCheckBox_active(True)
-            #self.graphLinearRegression.update()
+            self.graphLinearRegression.n = self.valN
+            self.graphLinearRegression.S = self.valS
+            self.graphLinearRegression.C = self.valC
+            self.graphLinearRegression.update()
 
     def bind_update_values(self, spinbox):
         spinbox.buttonMid_id.bind(text = self.update_values)
@@ -362,18 +360,6 @@ du fichier !\n\n"+str(err)).open()
         self.expDataLoaded=True
         
         return None
-    
-    def linear_regression(self):
-        """Effectue la régression linéaire sur les données expérimentales 
-        "de travail", c'est à dire sur celles affichées à l'écran.
-        Indique au graph que la valeur de D a changée.
-        """
-        linreg = LinearRegression(self.expt, self.expI)
-
-        
-        expD, coeff = linreg.regression(self.valN, self.valS, self.valC)
-        
-        self.mainGraph.set_expD(expD)
 
 
 class AppApp(App):

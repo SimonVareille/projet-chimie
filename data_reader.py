@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-#from __future__ import unicode_literals
 from backports import csv
 import os
 
@@ -9,7 +8,7 @@ class _DataRow:
         self.values = []
 
 class DataReader:
-    """Classe s'occupant de lire un fichier CSV affin d'obtenir les valeurs
+    """Classe s'occupant de lire un fichier affin d'obtenir les valeurs
     expérimentales.
     """
     def __init__(self, filename, delimiter = ';', encoding="ISO-8859-15"):
@@ -19,9 +18,9 @@ class DataReader:
         Paramètres
         ----------
         filename : str
-            Nom du fichier csv à lire.
+            Nom du fichier csv ou crv à lire.
         delimiter : str
-            Caractère délimitant les cellules.
+            Caractère délimitant les cellules (pour un fichier csv).
         encoding : str
             Type d'encodage du fichier.
         """
@@ -81,8 +80,7 @@ class DataReader:
         """
         Retour
         ------
-        values : list
-            tTableau de valeurs de t.
+        Tableau de valeurs de t.
         """
         return self.tData.values
     
@@ -90,6 +88,11 @@ class DataReader:
         return self.tData.name
     
     def get_I(self):
+        """
+        Retour
+        ------
+        Tableau de valeurs de I.
+        """
         return self.IData.values
     
     def get_I_label(self):

@@ -3,7 +3,8 @@
 import math as m
 
 def list_transformation_log (values): 
-    """Cette fonction crée une liste du logarithme népérien de chaque valeur d'une liste.
+    """Crée une liste du logarithme népérien de chaque valeur 
+    d'une liste.
         
     Paramètres
     ----------
@@ -22,7 +23,7 @@ def list_transformation_log (values):
     return (loglist)
 
 def mean (liste):
-    """Cette fonction calcule la moyenne d'une liste.
+    """Calcule la moyenne d'une liste.
     """
     
     summ=m.fsum(liste)
@@ -30,7 +31,7 @@ def mean (liste):
     return (mean)
 
 class LinearRegression:
-    """Cette classe permet d'effectuer la régression linéaire sur les valeurs 
+    """Permet d'effectuer la régression linéaire sur les valeurs 
     expérimentales.
     """
 
@@ -50,57 +51,55 @@ class LinearRegression:
     F = 96485.3329  #Constante de Faraday
     
     def logexp_curves_tab(self, expt, expI):
-
-        """Cette fonction calcule les listes des valeurs logarithmique des liste 
-        du temps et de l'intensité.
-        =======
-
+        """Calcule les listes des valeurs logarithmique des 
+        listes du temps et de l'intensité.
         
         Paramètres
         ----------
         expt : list
-            Tableau de valeurs des temps expérimentaux
+            Tableau de valeurs des temps expérimentaux.
         expI : list
-             Tableau de valeurs des Itensité expérimentales
+             Tableau de valeurs des intensités expérimentales.
         
         """
         self.logexpt= list_transformation_log(expt)
-        self.logexpI=list_transformation_log(expI)
+        self.logexpI= list_transformation_log(expI)
     
     def linregress (self):
-        """Cette fonction calcule à l'aide de formules mathématiques et 
+        """Calcule à l'aide de formules mathématiques et 
         par le modèle des moindres carrés le coefficient directeur et 
         l'ordonnée à l'origine de la droite de régression linéaire. 
         
         Retour
         ------
         linearcoefficient : float
-            Coefficient directeur de la droite de régression linéaire
+            Coefficient directeur de la droite de régression linéaire.
         intercept : float
-            Ordonnée à l'origine de la droite de régression linéaire
+            Ordonnée à l'origine de la droite de régression linéaire.
         
         """
         meant = mean(list_transformation_log(self.t))
         meanI = mean(list_transformation_log(self.I))
-        linearcoefficient = m.fsum(((t)-meant)*((I)-meanI) for t,I in zip(self.logexpt,self.logexpI))/(m.fsum(((t)-meant)**2 for t in self.logexpt)) 
+        linearcoefficient = m.fsum( (t-meant)*(I-meanI) for t,I in zip(self.logexpt,self.logexpI) )\
+            / ( m.fsum(((t)-meant)**2 for t in self.logexpt) ) 
         intercept = meanI-linearcoefficient*meant
         return(linearcoefficient,intercept)
         
     def logexp_and_linear_curves_tab (self, expt, expI):
-        """Cette fonction calcule la liste des valeurs de la droite de régression 
+        """Calcule la liste des valeurs de la droite de régression 
         linéaire.
         
         Paramètres
         ----------
         expt : list
-            Tableau de valeurs de temps expérimentales
+            Tableau de valeurs des temps expérimentaux.
         expI : list
-            Tableau de valeurs d'intensité expérimentales
+            Tableau de valeurs des intensités expérimentales.
             
         Retour
         ------
         linlogexpI : list
-            Tableau des valeurs d'Intensité de la droite de régression linéaire
+            Tableau des valeurs d'intensité de la droite de régression linéaire.
         """
         self.logexp_curves_tab (expt, expI)
         
