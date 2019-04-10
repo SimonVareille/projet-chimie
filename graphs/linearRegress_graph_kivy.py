@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from linear_regression import LinearRegression
-from kivy.graphics import Callback
 from kivy.garden.graph import Graph, SmoothLinePlot
+from kivy.clock import Clock
 
 class GraphLinearRegression(LinearRegression):
     """Cette classe crée l'affichage du graphique des courbes de régression
@@ -60,9 +60,9 @@ class GraphLinearRegression(LinearRegression):
     
         self.graph.add_plot(self.logexpplot) 
         self.graph.add_plot(self.linlogexpplot)
-        self._update_ticks_counts = 0 # Pour éviter un clignotement
-        with self.graph.canvas:
-            self.cb_update = Callback(self.update_ticks)
+        
+        self._trigger = Clock.create_trigger(self.update_ticks)
+        self.graph._plot_area.bind(pos=self._trigger)
     
     def update(self, *args):
         """Cette fonction met à jour l'affichage des courbes de régression 
@@ -81,17 +81,15 @@ class GraphLinearRegression(LinearRegression):
         self.graph.xmax=float(max(self.logexpt))
         self.graph.ymin=float(min(self.logexpI))
         self.graph.ymax=float(max(self.logexpI))
-        self._update_ticks_counts = 0
+        
         self.update_ticks()
     
     def update_ticks(self, *args):
-        if self._update_ticks_counts < 10:
-            self._update_ticks_counts+=1
-            width, height = self.graph.get_plot_area_size()
-            self.graph.x_ticks_major = (self.graph.xmax-self.graph.xmin)/(width/100)
-            self.graph.x_ticks_minor = 10
-            self.graph.y_ticks_major = (self.graph.ymax-self.graph.ymin)/(height/50)
-            self.graph.y_ticks_minor = 5
+        width, height = self.graph.get_plot_area_size()
+        self.graph.x_ticks_major = (self.graph.xmax-self.graph.xmin)/(width/100)
+        self.graph.x_ticks_minor = 10
+        self.graph.y_ticks_major = (self.graph.ymax-self.graph.ymin)/(height/50)
+        self.graph.y_ticks_minor = 5
         
     def get_canvas(self):
         return self.graph

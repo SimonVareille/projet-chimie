@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from kivy.garden.graph import Graph ,SmoothLinePlot
-from kivy.graphics import Callback
+from kivy.clock import Clock
 
 class CoxGraph():
     """Cette classe crée le graphique contenant la courbe de Cox en 
@@ -43,9 +43,8 @@ class CoxGraph():
 
         self.graph.add_plot(self.coxplot)
         
-        self._update_ticks_counts = 0 # Pour éviter un clignotement
-        with self.graph.canvas:
-            Callback(self.update)
+        self._trigger = Clock.create_trigger(self.update_ticks)
+        self.graph._plot_area.bind(pos=self._trigger)
         
     def update(self, *args): 
         """Met à jour l'affichage.
@@ -56,17 +55,14 @@ class CoxGraph():
         self.graph.xmin = min(self.x)
         self.graph.xmax = max(self.x)
         
-        self._update_ticks_counts = 0
         self.update_ticks()
     
     def update_ticks(self, *args):
-        if self._update_ticks_counts < 10:
-            self._update_ticks_counts+=1
-            width, height = self.graph.get_plot_area_size()
-            self.graph.x_ticks_major = (self.graph.xmax-self.graph.xmin)/(width/100)
-            self.graph.x_ticks_minor = 10
-            self.graph.y_ticks_major = (self.graph.ymax-self.graph.ymin)/(height/50)
-            self.graph.y_ticks_minor = 5
+        width, height = self.graph.get_plot_area_size()
+        self.graph.x_ticks_major = (self.graph.xmax-self.graph.xmin)/(width/100)
+        self.graph.x_ticks_minor = 10
+        self.graph.y_ticks_major = (self.graph.ymax-self.graph.ymin)/(height/50)
+        self.graph.y_ticks_minor = 5
         
     def get_canvas(self):
         return (self.graph)
