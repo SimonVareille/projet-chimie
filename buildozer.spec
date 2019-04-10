@@ -7,7 +7,8 @@ title = ReDoxLab
 package.name = redoxlab
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.redoxlab
+package.domain = com.inp.chimie.stps
+
 
 # (str) Source code where the main.py live
 source.dir = .
