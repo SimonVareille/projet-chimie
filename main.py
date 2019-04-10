@@ -18,15 +18,13 @@ from data_reader import DataReader
 from linear_regression import LinearRegression
 from tab_operations import TabOperations
 from graphs.cottrel_graph_kivy import CottrelGraph
-from graphs.graphCox_kivy import CoxGraph
 from graphs.linearRegress_graph_kivy import GraphLinearRegression
 from components.file_chooser import OpenDialog
 from components.cox_popup import CoxPopup
 from components.interval_popup import IntervalPopup
 from components.errorpopup import ErrorPopup
 import cottrel.cottrel_math as cm
-from cottrel.cox_math import cox_curve
-from cottrel.cottrel_math import linspace
+
 
 class MainWindow(Widget):
     '''Classe représentant la fenêtre principale
