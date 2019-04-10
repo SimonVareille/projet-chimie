@@ -219,9 +219,9 @@ Les valeurs sont inchangées.""" ).open()
                                                                   self.valIntervalMin, self.valIntervalMax)
 
     def on_dCurveCheckBox_active(self, active):
-     """Cette fonction échange l'affiche de la courbe de Cottrel celle de la courbe de régression linéaire
-     lorsque les données le permettent.
-     """
+        """Cette fonction échange l'affiche de la courbe de Cottrel celle de la courbe de régression linéaire
+            lorsque les données le permettent.
+        """
         if active:
             self.curveBoxLayout.clear_widgets()
             if self.expt and min(self.expI)>0:
