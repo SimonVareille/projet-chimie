@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-"""Pour la compatibilité avec python2"""
-from __future__ import division
+
+from __future__ import division #Pour la compatibilité avec python2
+
 import math 
 
-F = 96485.3329
+F = 96485.3329 #constante de Faraday
 
 def linspace(start, stop, num):
     '''Cette fonction est adaptée de  `numpy.linspace`

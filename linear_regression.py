@@ -42,7 +42,7 @@ class LinearRegression:
         t : list
             Tableau de valeurs des temps expérimentaux.
         I : list
-            Tableau de valeurs des Intensités mesurées expérimentalement.
+            Tableau de valeurs des intensités mesurées expérimentalement.
         """
         self.t=t
         self.I=I
@@ -51,7 +51,7 @@ class LinearRegression:
     F = 96485.3329  #Constante de Faraday
     
     def logexp_curves_tab(self, expt, expI):
-        """Calcule les listes des valeurs logarithmique des 
+        """Calcule les listes des valeurs logarithmiques des 
         listes du temps et de l'intensité.
         
         Paramètres
@@ -66,8 +66,8 @@ class LinearRegression:
         self.logexpI= list_transformation_log(expI)
     
     def linregress (self):
-        """Calcule à l'aide de formules mathématiques et 
-        par le modèle des moindres carrés le coefficient directeur et 
+        """Calcule, à l'aide de formules mathématiques et 
+        par le modèle des moindres carrés, le coefficient directeur et 
         l'ordonnée à l'origine de la droite de régression linéaire. 
         
         Retour
@@ -112,7 +112,7 @@ class LinearRegression:
         
     def calculate_D (self, intercept, n, S, C):
         """Calcule le coefficient de diffusion D à l'aide des valeurs `n`, `S`
-        et `C`.
+        , `C` et de l'ordonnée à l'origine .
         
         Paramètres
         ----------

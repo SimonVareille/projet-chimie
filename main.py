@@ -72,25 +72,25 @@ class MainWindow(Widget):
     def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
         
-        #Valeurs pour Dth
+        #Valeurs pour le bouton Dth
         self.buttonDth.value=self.valDth
         self.buttonDth.min_value=self.valMinDth
         self.buttonDth.max_value=self.valMaxDth
         self.buttonDth.steps=self.stepsDth
         
-        #Valeurs pour N
+        #Valeurs pour le bouton N
         self.buttonN.value=self.valN
         self.buttonN.min_value=self.valMinN
         self.buttonN.max_value=self.valMaxN
         self.buttonN.steps=self.stepsN
     
-        #Valeurs pour S
+        #Valeurs pour le bouton S
         self.buttonS.value=self.valS
         self.buttonS.min_value=self.valMinS
         self.buttonS.max_value=self.valMaxS
         self.buttonS.steps=self.stepsS
         
-        #Valeurs pour C
+        #Valeurs pour le bouton C
         self.buttonC.value=self.valC
         self.buttonC.min_value=self.valMinC
         self.buttonC.max_value=self.valMaxC
@@ -99,7 +99,7 @@ class MainWindow(Widget):
         #tableau de valeurs expérimentales non traité (gardé en mémoire)
         self.exptRaw=None
         self.expIRaw=None
-        #tableau de valeurs expérimentales traité avec l'intervalle
+        #tableau de valeurs exp traité suivant l'intervalle sélectionné
         self.expt = None
         self.expI = None
         
@@ -108,8 +108,8 @@ class MainWindow(Widget):
         # Initialisation des tableaux t et I théoriques
         self.t = cm.create_t(0, 20, 1000)
         self.I = cm.courbe_cottrel_th(self.buttonN.value, self.buttonS.value, 
-                                           self.buttonC.value, self.buttonDth.value, 
-                                           self.t)
+                        self.buttonC.value, self.buttonDth.value, self.t)
+                                           
         
         self.mainGraph.set_theoric_data(self.t, self.I)
         
@@ -166,7 +166,8 @@ class MainWindow(Widget):
             #Recalcule les valeurs théoriques pour coller avec l'étendue des 
             #valeurs expériementales
             self.t = cm.create_t(0, max(self.expt), 1000)
-            self.I = cm.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
+            self.I = cm.courbe_cottrel_th(self.valN, self.valS, self.valC, 
+                                                          self.valDth, self.t)
             self.mainGraph.set_theoric_data (self.t, self.I)
             
             self.mainGraph.set_limit_interval()
@@ -190,7 +191,7 @@ Les valeurs sont inchangées.""" ).open()
         cox_popup.open()
         
     def set_exp_tab_interval(self):
-        """Change les tableau `expt` et `expI` pour qu'ils correspondent à 
+        """Change les tableaux `expt` et `expI` pour qu'ils correspondent à 
         l'intervalle actuel.
         """
         self.expt, self.expI = TabOperations.del_values_not_between_tmin_tmax(self.exptRaw, self.expIRaw, 
@@ -199,12 +200,13 @@ Les valeurs sont inchangées.""" ).open()
 
     def on_dCurveCheckBox_active(self, active):
         """Affiche/Efface la courbe de régression linéaire lorsque les données 
-        le permettent.
+        le permettent, ou un message d'erreur si elles ne le permettent pas.
         """
         if active:
             self.curveBoxLayout.clear_widgets()
             if self.expt and min(self.expI)>0:
-                self.graphLinearRegression = GraphLinearRegression(self.valN, self.valS, self.valC, self.expt, self.expI)
+                self.graphLinearRegression = GraphLinearRegression(self.valN, self.valS, self.valC, 
+                                                                   self.expt, self.expI)
                 self.graphLinearRegression.update()
                 self.curveBoxLayout.add_widget(self.graphLinearRegression.get_canvas())
             else:
@@ -346,14 +348,14 @@ du fichier !\n\n"+str(err)).open()
         self.expt = self.exptRaw
         self.expI = self.expIRaw
             
-        #Gère avec la modification d'intervalle
+        #Pour la modification d'intervalle
         self.valIntervalMin = (min(self.expt))
         self.valIntervalMax = (max(self.expt))
         
         self.mainGraph.set_experimental_data(self.expt, self.expI)
         
         #Recalcule les valeurs théoriques pour coller avec l'étendue des valeurs
-        #expériementales
+        #expérimentales
         self.t = cm.create_t(0, max(self.expt), 1000)
         self.I = cm.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
         self.mainGraph.set_theoric_data (self.t, self.I)
@@ -395,15 +397,15 @@ class AppApp(App):
             content.add_widget(buttons)
             popup = Popup(title = "Fermer ?", content=content, auto_dismiss=True, size_hint=(0.3, 0.2))
             
-            # bind the on_press event of the button to the dismiss function
+            #lie l'evènement "on_press" du buton à la fonction dismiss() 
             button_cancel.bind(on_press=popup.dismiss)
             button_close.bind(on_press=popup.dismiss)
             button_close.bind(on_press = self.close)
             
-            # open the popup
+            #ouvre le popup
             popup.open()
             return True  
-        else:           # the key now does nothing
+        else:           #la touche ne fait maintenant plus rien
             return False
     
     def close(self, *args, **kwargs):

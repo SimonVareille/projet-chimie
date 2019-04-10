@@ -5,7 +5,8 @@ from kivy.graphics import Callback
 from kivy.garden.graph import Graph, SmoothLinePlot
 
 class GraphLinearRegression(LinearRegression):
-    """Cette classe crée l'affichage du graphique des courbes de régression linéaire.
+    """Cette classe crée l'affichage du graphique des courbes de régression
+    linéaire.
     """
     
     def __init__(self, n, S, C, t, I):
@@ -21,7 +22,7 @@ class GraphLinearRegression(LinearRegression):
         t : list
             Tableau de valeurs des temps expérimentaux.
         I : list
-            Tableau de valeurs des Intensités mesurées expérimentalement.
+            Tableau de valeurs des intensités mesurées expérimentalement.
         """
         super(GraphLinearRegression, self).__init__(t, I)
         self.n=n 
