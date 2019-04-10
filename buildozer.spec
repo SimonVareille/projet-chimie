@@ -30,7 +30,7 @@ source.include_exts = py,png,jpg,kv,atlas,csv
 
 # (str) Application versioning (method 1)
 
-version = 0.4
+version = 0.5
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
@@ -48,10 +48,10 @@ requirements = python3, kivy, backports.csv
 #garden_requirements = graph, matplotlib
 
 # (str) Presplash of the application
-#presplash.filename = %(source.dir)s/data/presplash.png
+presplash.filename = %(source.dir)s/presplash.png
 
 # (str) Icon of the application
-#icon.filename = %(source.dir)s/data/icon.png
+icon.filename = %(source.dir)s/icon.png
 
 # (str) Supported orientation (one of landscape, portrait or all)
 orientation = landscape
@@ -84,7 +84,7 @@ fullscreen = 0
 # red, blue, green, black, white, gray, cyan, magenta, yellow, lightgray,
 # darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
 # olive, purple, silver, teal.
-#android.presplash_color = fuchsia
+android.presplash_color = white
 
 # (list) Permissions
 android.permissions = READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE
