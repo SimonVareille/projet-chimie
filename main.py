@@ -192,8 +192,9 @@ Les données expérimentales contiennent des valeurs négatives ou nulles.
 Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'intervalle de travail»[/color]""",
                     markup=True, halign='center', valign='center', font_size=20))
         else :
-            ErrorPopup("""L'intervalle doit contenir des points dans le fichier expérimental.
-Les valeurs sont inchangées.""" ).open()                                                                                                                                           
+            ErrorPopup("L'intervalle doit être contenu entre {}s et {}s.\n\
+Les valeurs sont inchangées.".format(mintexp, maxtexp)).open()
+                                                                                                                                         
     def on_cox_button_active(self,instance):
         cox_popup=CoxPopup()
         cox_popup.CoxvalDth=self.valDth
