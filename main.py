@@ -275,7 +275,7 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
         return super(MainWindow, self).on_touch_move(touch)
     
     def update_values(self,instance,text):
-        '''Met à jour la courbe principale avec les nouvelles valeurs.
+        '''Met à jour les courbes avec les nouvelles valeurs.
         '''
         if self.buttonDth.value >=0:
             self.valDth=self.buttonDth.value
