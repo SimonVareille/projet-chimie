@@ -107,7 +107,7 @@ class MainWindow(Widget):
         
         # Initialisation des tableaux t et I théoriques
         self.t = cm.create_t(0, 20, 1000)
-        self.I = cm.courbe_cottrel_th(self.buttonN.value, self.buttonS.value, 
+        self.I = cm.cottrel_curve_gen(self.buttonN.value, self.buttonS.value, 
                         self.buttonC.value, self.buttonDth.value, self.t)
                                            
         
@@ -166,7 +166,7 @@ class MainWindow(Widget):
             #Recalcule les valeurs théoriques pour coller avec l'étendue des 
             #valeurs expériementales
             self.t = cm.create_t(0, max(self.expt), 1000)
-            self.I = cm.courbe_cottrel_th(self.valN, self.valS, self.valC, 
+            self.I = cm.cottrel_curve_gen(self.valN, self.valS, self.valC, 
                                                           self.valDth, self.t)
             self.mainGraph.set_theoric_data (self.t, self.I)
             
@@ -301,7 +301,7 @@ La valeur de {0} utilisée pour le graphique est inchangée."
             ErrorPopup(text=error_text.format("S", "ou nulle ")).open()
             self.buttonS.value = self.valS
             
-        self.I = cm.courbe_cottrel_th(self.valN,self.valS, self.valC, self.valDth, self.t)
+        self.I = cm.cottrel_curve_gen(self.valN,self.valS, self.valC, self.valDth, self.t)
         
         self.mainGraph.I=self.I
         self.mainGraph.update()
@@ -386,7 +386,7 @@ du fichier !\n\n"+str(err)).open()
         #Recalcule les valeurs théoriques pour coller avec l'étendue des valeurs
         #expérimentales
         self.t = cm.create_t(0, max(self.expt), 1000)
-        self.I = cm.courbe_cottrel_th(self.valN, self.valS, self.valC, self.valDth, self.t)
+        self.I = cm.cottrel_curve_gen(self.valN, self.valS, self.valC, self.valDth, self.t)
         self.mainGraph.set_theoric_data (self.t, self.I)
         
         self.mainGraph.set_limit_interval()
