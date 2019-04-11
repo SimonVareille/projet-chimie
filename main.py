@@ -277,14 +277,29 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
     def update_values(self,instance,text):
         '''Met à jour les courbes avec les nouvelles valeurs.
         '''
+        error_text="{0} ne peut pas prendre une valeur négative {1}!\n\
+La valeur de {0} utilisée pour le graphique est inchangée."
         if self.buttonDth.value >=0:
             self.valDth=self.buttonDth.value
         else :
-            ErrorPopup(text="Dth ne peut pas prendre une valeur négative !\n\
-La valeur de Dth utilisée pour le graphique est inchangée.").open()
-        self.valN=self.buttonN.value
-        self.valC=self.buttonC.value
-        self.valS=self.buttonS.value
+            ErrorPopup(text=error_text.format("Dth", '')).open()
+            self.buttonDth.value = self.valDth
+        if self.buttonN.value>0:
+            self.valN=self.buttonN.value
+        else :
+            ErrorPopup(text=error_text.format("n", "ou nulle ")).open()
+            self.buttonN.value = self.valN
+        if self.buttonC.value>0:
+            self.valC=self.buttonC.value
+        else :
+            ErrorPopup(text=error_text.format("C",  "ou nulle ")).open()
+            self.buttonC.value = self.valC
+        if self.buttonS.value>0:
+            self.valS=self.buttonS.value
+        else :
+            ErrorPopup(text=error_text.format("S", "ou nulle ")).open()
+            self.buttonS.value = self.valS
+            
         self.I = cm.courbe_cottrel_th(self.valN,self.valS, self.valC, self.valDth, self.t)
         
         self.mainGraph.I=self.I
