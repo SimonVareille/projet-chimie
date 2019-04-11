@@ -22,11 +22,16 @@ class IntervalBox(BoxLayout):
     _display_value_min=StringProperty("0")
     val_max=NumericProperty(100)
     _display_value_max=StringProperty("100")
+    
+    correction_I = NumericProperty(0)
+    _display_value_correction_I = StringProperty("0")
+    
 
 
     def update_display_val(self):
          self._display_value_min = self.convert_to_scientific_notation(self.val_min)
          self._display_value_max = self.convert_to_scientific_notation(self.val_max)
+         self._display_value_correction_I = self.convert_to_scientific_notation(self.correction_I)
         
     def change_value_button_min(self, popup):
         value = self.evaluation(popup.returnValue)
@@ -57,6 +62,18 @@ class IntervalBox(BoxLayout):
         entry_popup.bind(on_dismiss=self.change_value_button_max)
         entry_popup.open()
         
+    def change_value_button_correction_I(self, popup):
+        value = self.evaluation(popup.returnValue)
+        #Si value == "", self.value ne change pas de valeur.
+        self.correction_I = value if value is not None else self.correction_I
+         
+        self._display_value_correction_I = self.convert_to_scientific_notation(self.correction_I)
+
+    def opening_popup_correction_I(self):
+        entry_popup=EntryPopup()
+        entry_popup.initValue = str(self.correction_I)
+        entry_popup.bind(on_dismiss=self.change_value_button_correction_I)
+        entry_popup.open()        
         
         
     def ConvertToCalculate(self, string):

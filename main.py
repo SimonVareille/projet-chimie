@@ -102,6 +102,8 @@ class MainWindow(Widget):
         #tableau de valeurs exp traité suivant l'intervalle sélectionné
         self.expt = None
         self.expI = None
+        #valeur à ajouter aux I du tableau en cas de problème 
+        self.correctI = 0
         
         self.mainGraph = CottrelGraph()
         
@@ -149,6 +151,7 @@ class MainWindow(Widget):
             interval_popup=IntervalPopup() 
             interval_popup.intervalbox.val_min=self.valIntervalMin
             interval_popup.intervalbox.val_max=self.valIntervalMax
+            interval_popup.intervalbox.correction_I = self.correctI
             interval_popup.intervalbox.update_display_val()
             interval_popup.bind(on_dismiss=self.on_interval_popup_closed)
             interval_popup.open()
@@ -160,7 +163,10 @@ class MainWindow(Widget):
                 popup.intervalbox.val_max-popup.intervalbox.val_min > 0.2) :
             self.valIntervalMin=popup.intervalbox.val_min
             self.valIntervalMax=popup.intervalbox.val_max
+            self.correctI = popup.intervalbox.correction_I
             self.set_exp_tab_interval()
+            self.set_correction_I()
+
             self.mainGraph.set_experimental_data(self.expt, self.expI)
             
             #Recalcule les valeurs théoriques pour coller avec l'étendue des 
@@ -210,7 +216,8 @@ Les valeurs sont inchangées.".format(mintexp, maxtexp)).open()
         """
         self.expt, self.expI = TabOperations.del_values_not_between_tmin_tmax(self.exptRaw, self.expIRaw, 
                                                                   self.valIntervalMin, self.valIntervalMax)
-        
+    def set_correction_I(self):
+        self.expI = TabOperations.add_x_to_tab(self.expI,self.correctI)
 
     def on_dCurveCheckBox_active(self, active):
         """Affiche/Efface la courbe de régression linéaire lorsque les données 

@@ -43,7 +43,25 @@ class TabOperations():
             
         tab_expI_to_return = expI[rank_first : rank_last]
         return tab_expt_to_return, tab_expI_to_return
+    
+    def add_x_to_tab(tab, x):
+        """Permet d'ajouter une valeur à toutes les valeurs d'un tableau.
         
+        Paramètres
+        ----------
+        tab : list
+            Tableau de valeurs à modifié.
+        x : float
+            Valeur à ajouter.
+        
+        Retour
+        ------
+        Retourne le tableau modifié.
+        """
+        tab_to_return=[]
+        for i in range (len(tab)):
+            tab_to_return.append(tab[i]+x)
+        return tab_to_return
         
         
         
