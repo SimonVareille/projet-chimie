@@ -94,14 +94,14 @@ class CottrelGraphBase:
             tleft = 0
         if tright == None:
             if self._display_theoric:
-                tright = max(max(self.t), max(self.expt)) if self._display_experimental else max(self.t)
+                tright = max(self.expt) if self._display_experimental else max(self.t)
             else:
                 tright = max(self.expt) if self._display_experimental else 5
         if Ibottom == None:
             Ibottom = 0
         if Itop == None:
             if self._display_theoric:
-                Itop = max(max(self.I), max(self.expI)) if self._display_experimental else max(self.I)
+                Itop = max(self.expI) if self._display_experimental else max(self.I)
             else:
                 Itop = max(self.expI) if self._display_experimental else 1
         
