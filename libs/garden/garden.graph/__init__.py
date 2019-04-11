@@ -1860,6 +1860,7 @@ class LegendBox(Widget):
         if plot in self._plots or not plot.label:
             return
         self._plots.append(plot)
+        plot.bind(label=self._update_labels)
         self._update_widgets()
         self._redraw_all()
         
@@ -1872,6 +1873,7 @@ class LegendBox(Widget):
         if plot not in self._plots:
             return
         self._plots.remove(plot)
+        plot.unbind(label=self._update_labels)
         self._update_widgets()
         self._redraw_all()
     
@@ -1887,10 +1889,12 @@ class LegendBox(Widget):
         """
         for plot in self._plots:
             if plot not in plots or not plot.label:
+                plot.unbind(label=self._update_labels)
                 self._plots.remove(plot)
         for plot in plots:
             if plot in self._plots or not plot.label:
                 continue
+            plot.bind(label=self._update_labels)
             self._plots.append(plot)
         
         self._update_widgets()
@@ -1977,6 +1981,28 @@ class LegendBox(Widget):
         for label, symbol in zip(self._labels, self._symbols):
             self.root.add_widget(symbol)
             self.root.add_widget(label)
+            symbol.pos = self.pos
+    
+    def _update_labels(self, *args):
+        width_symbol = 0
+        for plot, label, symbol in zip(self._plots, self._labels, self._symbols):
+            label.text=plot.label
+            label.font_size = self.font_size
+            label.texture_update()
+            label.size_hint = (None, None)
+            label.size = label.texture_size
+            label.height += 10
+            symbol.height = label.height
+            width_symbol = symbol.width
+        
+        if self._labels:
+            width = max(label.width for label in self._labels)
+            height = sum(label.height for label in self._labels)
+            
+            self.root.width = width + width_symbol
+            self.root.height = height
+        
+        for symbol in self._symbols:
             symbol.pos = self.pos
 
 if __name__ == '__main__':
