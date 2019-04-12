@@ -2,7 +2,7 @@
 
 import math 
 
-F = 96485.3329 #constante de Faraday
+F = 96485.3329 #constante de Faraday en C.mol-1
 
 def linspace(start, stop, num):
     '''Adaptée de `numpy.linspace`
@@ -75,24 +75,26 @@ def create_t(start, stop, num):
 def cottrel_curve_gen(n, S, C, D, t):
     '''Crée un tableau de valeurs d'intensité selon l'équation de Cottrel : 
         `I = n × F × S × C × √(D ÷ (π × t))`
+
+
         
         Paramètres
         ----------
         n : int
-            Nombre d'électrons échangés au cours de la réaction.
+            Nombre d'électrons échangés au cours de la réaction. (mol)
         S : float
-            Surface d'échange de l'électrode.
+            Surface d'échange de l'électrode. (cm²)
         C : float
-            Concentration de l'espèce chimique étudiée.
+            Concentration interfaciale de l'espèce chimique étudiée. (mol•cm-3)
         D : float
-            Coefficient de diffusion de l'espèce chimique étudiée.
+            Coefficient de diffusion de l'espèce chimique étudiée. (cm²•s-1)
         t : list-like
-            Valeurs de t pour lesquelles on veut calculer l'intensité.
+            Valeurs de t pour lesquelles on veut calculer l'intensité. (s)
         
         Retour
         ------
         I : list
-            Valeurs de l'intensité pour les temps `t`.
+            Valeurs de l'intensité pour les temps `t`. (A)
     '''
     constant = n*F*S*C*math.sqrt(D/math.pi)
     
