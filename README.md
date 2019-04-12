@@ -1,5 +1,6 @@
 ﻿# Projet-Chimie
-Le repo du projet, le nom pourra être changé ulterieurement.
+Application pour Android de visualisation de courbes de Cottrel
+
 
 ------
 ### Prérequis
