@@ -1,4 +1,4 @@
-# Projet-Chimie
+# ReDoxLab
 Application pour Android de visualisation de courbes de Cottrel
 
 
