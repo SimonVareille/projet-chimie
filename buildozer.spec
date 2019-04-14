@@ -30,7 +30,7 @@ source.include_exts = py,png,jpg,kv,atlas,csv
 
 # (str) Application versioning (method 1)
 
-version = 0.5
+version = 1.0
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
