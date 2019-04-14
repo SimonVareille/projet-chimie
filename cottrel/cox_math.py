@@ -4,13 +4,17 @@ from __future__ import division
 from math import sqrt, erf
 
 def cox_curve(D, t, x):
-    """Crée les valeurs de la courbe Cox pour `t` et `D` donnés.
+    """Crée les valeurs de la courbe Cox pour `t` et `D` donnés selon 
+    l'équation :
+    
+    `Cox = erf( x ÷ (2 × √(D × t) )`
+    
     Paramètres
     ----------
     D : float
-        Valeur de `D` ( >= 0).
+        Valeur de `D` (cm²•s-1).
     t : float
-        Valeur de `t` ( >= 0).
+        Valeur de `t` (s).
     x : list
         Liste de valeurs de `x` (en cm).
     Retour

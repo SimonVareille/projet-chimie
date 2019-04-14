@@ -14,9 +14,9 @@ Builder.load_file(os.path.dirname(__file__) +'/intervalbox.kv')
 class IntervalBox(BoxLayout):
     """
     Permet à l'utilisateur de rentrer les valeurs min et max de l'intervalle. 
-    Ces valeurs sont stockées dans self.val_min et self.val_max.    
-        Si l'utilisateur rentre une valeur invalide, un popup d'erreur 
-    (ErrorPopup) s'affiche (cf fonction evaluation()).
+    Ces valeurs sont stockées dans `val_min` et `val_max`.    
+    Si l'utilisateur rentre une valeur invalide, un popup d'erreur 
+    (`ErrorPopup`) s'affiche (cf méthode `evaluation()`).
     """
     val_min=NumericProperty(0)
     _display_value_min=StringProperty("0")
@@ -82,8 +82,8 @@ class IntervalBox(BoxLayout):
     def evaluation(self, entry):
         """Permet d'évaluer la valeur numérique d'une chaine de caractères et
         la retourne.
-        Si l'evaluation via eval() aboutit à une erreur, un popup s'affiche avec
-        un court texte pour l'utilisateur et la fonction retourne None
+        Si l'evaluation via `eval()` aboutit à une erreur, un popup s'affiche avec
+        un court texte pour l'utilisateur et la fonction retourne `None`.
         """
         #Import local, visible uniquement dans cette méthode.
         #On importe des fonctions pour permettre un eval("sqrt(10)")
@@ -95,7 +95,8 @@ class IntervalBox(BoxLayout):
                 toReturn=eval(self.ConvertToCalculate(entry))
                 return(toReturn)
             except Exception as err:
-                ErrorPopup("Erreur dans l'expression saisie.\nPar exemple : \n05 n'est pas reconnu comme 5\n++ n'est pas reconnu").open()
+                ErrorPopup("Erreur dans l'expression saisie.\nPar exemple : \n\
+05 n'est pas reconnu comme 5\n++ n'est pas reconnu").open()
                 return None
     def convert_to_scientific_notation(self,number):
         value_to_return=str(number)

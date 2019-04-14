@@ -1,21 +1,24 @@
 # -*- coding: utf-8 -*-
-from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 
-from kivy.uix.boxlayout import BoxLayout
-from .entrypopup import EntryPopup
-from kivy.lang.builder import Builder
-from .errorpopup import ErrorPopup
 import os
+
+from kivy.properties import ObjectProperty, StringProperty, NumericProperty
+from kivy.lang.builder import Builder
+from kivy.uix.boxlayout import BoxLayout
+
+from .entrypopup import EntryPopup
+from .errorpopup import ErrorPopup
+
 
 Builder.load_file(os.path.dirname(__file__) +'/spinbox.kv')
 
 class SpinBox(BoxLayout):
     """
     Permet à l'utilisateur de rentrer une valeur sous la forme d'un bouton qui 
-    ouvre un popup de saisie (via EntryPopup) et de boutons + et - permettant 
-    d'ajouter ou de retrancher self.steps à la valeur saisie.
-        Si l'utilisateur rentre une valeur invalide via EntryPopop, 
-    un popup d'erreur (ErrorPopup) s'affiche (cf fonction evaluation()).
+    ouvre un popup de saisie (via `EntryPopup`) et de boutons + et - permettant 
+    d'ajouter ou de retrancher `steps` à la valeur saisie.
+    Si l'utilisateur rentre une valeur invalide via `EntryPopop`, 
+    un popup d'erreur (`ErrorPopup`) s'affiche (cf méthode `evaluation()`).
     """
     
     value = NumericProperty(1)
@@ -81,8 +84,8 @@ class SpinBox(BoxLayout):
     def evaluation(self, entry):
         """Permet d'évaluer la valeur numérique d'une chaine de caractère et la
         retourne.
-        Si l'evaluation via eval() aboutie à une erreur, un popup s'affiche avec
-        un court texte pour l'utilisateur et la fonction retourne None
+        Si l'evaluation via `eval()` aboutie à une erreur, un popup s'affiche avec
+        un court texte pour l'utilisateur et la fonction retourne `None`.
         """
         #Import local, visible uniquement dans cette méthode.
         #On importe des fonctions pour permettre un eval("sqrt(10)")
@@ -94,7 +97,8 @@ class SpinBox(BoxLayout):
                 toReturn=eval(self.ConvertToCalculate(entry))
                 return(toReturn)
             except Exception as err:
-                ErrorPopup("Erreur dans l'expression saisie.\nPar exemple : \n05 n'est pas reconnu comme 5\n++ n'est pas reconnu").open()
+                ErrorPopup("Erreur dans l'expression saisie.\nPar exemple : \n\
+05 n'est pas reconnu comme 5\n++ n'est pas reconnu").open()
                 return None
             
     def on_value(self, instance, value):

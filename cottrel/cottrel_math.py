@@ -76,8 +76,6 @@ def cottrel_curve_gen(n, S, C, D, t):
     '''Crée un tableau de valeurs d'intensité selon l'équation de Cottrel : 
         `I = n × F × S × C × √(D ÷ (π × t))`
 
-
-        
         Paramètres
         ----------
         n : int

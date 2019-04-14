@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from linear_regression import LinearRegression
 from kivy.garden.graph import Graph, SmoothLinePlot
 from kivy.clock import Clock
 
+from linear_regression import LinearRegression
+
 class GraphLinearRegression(LinearRegression):
-    """Cette classe crée l'affichage du graphique des courbes de régression
-    linéaire.
+    """Crée le graphique des courbes de régression linéaire.
     """
     
     def __init__(self, n, S, C, t, I):
@@ -65,8 +65,8 @@ class GraphLinearRegression(LinearRegression):
         self.graph._plot_area.bind(pos=self._trigger)
     
     def update(self, *args):
-        """Cette fonction met à jour l'affichage des courbes de régression 
-        linéaire et le calcul du coefficient de diffusion expérimentale. 
+        """Met à jour l'affichage des courbes de régression linéaire et le 
+        calcul du coefficient de diffusion expérimental. 
         """
         self.logexp_and_linear_curves_tab(self.t, self.I)
         _, intercept= self.linregress()
@@ -85,6 +85,8 @@ class GraphLinearRegression(LinearRegression):
         self.update_ticks()
     
     def update_ticks(self, *args):
+        """Met à jour l'échelle.
+        """
         width, height = self.graph.get_plot_area_size()
         self.graph.x_ticks_major = (self.graph.xmax-self.graph.xmin)/(width/100)
         self.graph.x_ticks_minor = 10

@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 from kivy.uix.popup import Popup
 from kivy.properties import  NumericProperty, ObjectProperty, StringProperty
 from kivy.lang.builder import Builder
+
 from cottrel.cox_math import cox_curve
 from graphs.graphCox_kivy import CoxGraph
 from cottrel.cottrel_math import linspace
 
-
-
-import os
 Builder.load_file(os.path.dirname(__file__) + '/cox_popup.kv')
 
 class CoxPopup(Popup):
     """
     Popup qui permet d'afficher la courbe Cox avec un Slider interractif pour 
-    le paramètre self.Coxvalt.           
+    le paramètre `self.Coxvalt`.
     """
     grahCoxLayout=ObjectProperty(None)
     

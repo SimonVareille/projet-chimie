@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 from kivy.uix.popup import Popup
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.lang.builder import Builder
 
-import os
 Builder.load_file(os.path.dirname(__file__) + '/entrypopup.kv')
 """
 Dans l'idéal il faudrait modifier le fonctionnement de la classe pour qu'elle
@@ -13,15 +14,13 @@ endroits où on en fait l'appel (possibilité d'amélioration).
 """
 class EntryPopup(Popup):
     """
-    Cette fonction a pour but de permettre à l'utilisateur de saisir des 
-    valeurs. Pour l'utiliser il faut initialiser initValue avec un str d'une 
-    valeur numérique. 
+    Permet à l'utilisateur de saisir des valeurs. Pour l'utiliser il faut 
+    initialiser `initValue` avec une valeur numérique convertie en `str`. 
     Pour récupérer la valeur de retour il faut utiliser
-    bind(on_dismiss=*nomDeLaFonction*). 
-    A ce moment là, la valeur de returnValue vaut initValue si on a fermé le
+    `bind(on_dismiss=<nomDeLaFonction>)`. 
+    A ce moment là, la valeur de `returnValue` vaut `initValue` si on a fermé le
     popup sans passer par "OK" et la valeur rentrée par l'utilisateur si il a 
     été fermé avec "OK".
-    
     """
     entry = ObjectProperty(None)
     returnValue = StringProperty(None)

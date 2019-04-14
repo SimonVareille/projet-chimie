@@ -8,14 +8,20 @@ from kivy.clock import Clock
 from .cottrel_graph_base import CottrelGraphBase
 
 class CottrelGraph(CottrelGraphBase, EventDispatcher):
-    """Cette classe crée le graphique contenant les courbes de Cottrel en 
-    utilisant kivy.garden.graph.
+    """Crée le graphique contenant les courbes de Cottrel en utilisant 
+    `kivy.garden.graph`.
     """
     legend=BooleanProperty(True)
     ticks_labels=BooleanProperty(True)
     
     def __init__(self, t=[], I=[]):
         """
+        Paramètres
+        ----------
+        t : list
+            Tableau de valeurs de temps.
+        I : list
+            Tableau de valeurs d'intensité.
         """
         super(CottrelGraph, self).__init__(t, I)
         graph_theme = {
@@ -92,6 +98,8 @@ class CottrelGraph(CottrelGraphBase, EventDispatcher):
         self.update_ticks()
     
     def update_ticks(self, *args):
+        """Met à jour l'échelle.
+        """
         width, height = self.graph.get_plot_area_size()
         self.graph.x_ticks_major = (self.graph.xmax-self.graph.xmin)/(width/100)
         self.graph.x_ticks_minor = 10
@@ -102,6 +110,8 @@ class CottrelGraph(CottrelGraphBase, EventDispatcher):
         return self.graph
     
     def to_widget(self, x, y, relative=False):
+        """Voir `kivy.widget.Widget.to_widget`.
+        """
         return self.graph.to_widget(x, y, relative)
     
     def collide_plot(self, x, y):

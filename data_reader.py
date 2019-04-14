@@ -13,8 +13,6 @@ class DataReader:
     """
     def __init__(self, filename, delimiter = ';', encoding="ISO-8859-15"):
         """
-        Initialisation de la classe.
-        
         Paramètres
         ----------
         filename : str

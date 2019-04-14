@@ -20,7 +20,7 @@ class OpenDialog(FloatLayout):
     Display an interface to load files.
     
     Usage:
-        content = LoadDialog(load=self.load, cancel=self.dismiss_popup)
+        content = OpenDialog(load=self.load, cancel=self.dismiss_popup)
         self._popup = Popup(title="Load file", content=content,
                             size_hint=(0.9, 0.9))
         self._popup.open()
@@ -38,7 +38,6 @@ class OpenDialog(FloatLayout):
         elif platform.system() == "Linux":
             self.filechooser.path = os.path.expanduser("~/")
         Clock.schedule_once(self.on_loaded)
-        #self.filechooser.bind(on_parent=self.on_loaded)
     
     def on_loaded(self, *args, **kwargs):
         if not os.access(self.filechooser.path, os.R_OK):

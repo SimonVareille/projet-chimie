@@ -3,11 +3,19 @@ from kivy.garden.graph import Graph ,SmoothLinePlot
 from kivy.clock import Clock
 
 class CoxGraph():
-    """Cette classe crée le graphique contenant la courbe de Cox en 
-    utilisant kivy.garden.graph.
+    """Crée le graphique contenant la courbe de Cox en utilisant 
+    `kivy.garden.graph`.
     """
     
     def __init__(self, x=[], cox=[]):
+        """
+        Paramètres
+        ----------
+        x : list
+            Tableau des distances à l'électrode.
+        cox : list
+            Tableau de la concentration.
+        """
         self.x = x
         self.cox = cox
 
@@ -49,7 +57,6 @@ class CoxGraph():
     def update(self, *args): 
         """Met à jour l'affichage.
         """
-
         self.coxplot.points = list(zip(self.x,self.cox))
 
         self.graph.xmin = min(self.x)
@@ -58,6 +65,8 @@ class CoxGraph():
         self.update_ticks()
     
     def update_ticks(self, *args):
+        """Met à jour l'échelle.
+        """
         width, height = self.graph.get_plot_area_size()
         self.graph.x_ticks_major = (self.graph.xmax-self.graph.xmin)/(width/100)
         self.graph.x_ticks_minor = 10

@@ -7,14 +7,20 @@ import os
 Builder.load_file(os.path.dirname(__file__) + '/errorpopup.kv')
 
 class ErrorPopup(Popup):
-    """ Cette classe a pour but d'afficher un popup d'erreur avec le texte 
-    donné en paramètre. Pour lancer le popup il faut lancer la fonction open() 
-    de l'objet.
+    """ Affiche un popup d'erreur.
+    
+    Utilisation :
+        `ErrorPopup(text="Voici le texte d'erreur.").open()`
     """
     textid = ObjectProperty(None)
     
-    
     def __init__(self,text):
+        """
+        Paramètres
+        ----------
+        text : str
+            Texte à afficher.
+        """
         super(ErrorPopup, self).__init__()
         self.textid.text = text
 
