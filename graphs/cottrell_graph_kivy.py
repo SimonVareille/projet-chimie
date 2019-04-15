@@ -5,10 +5,10 @@ from kivy.properties import BooleanProperty
 #from kivy.graphics import Callback
 from kivy.clock import Clock
 
-from .cottrel_graph_base import CottrelGraphBase
+from .cottrell_graph_base import CottrellGraphBase
 
-class CottrelGraph(CottrelGraphBase, EventDispatcher):
-    """Crée le graphique contenant les courbes de Cottrel en utilisant 
+class CottrellGraph(CottrellGraphBase, EventDispatcher):
+    """Crée le graphique contenant les courbes de Cottrell en utilisant 
     `kivy.garden.graph`.
     """
     legend=BooleanProperty(True)
@@ -23,7 +23,7 @@ class CottrelGraph(CottrelGraphBase, EventDispatcher):
         I : list
             Tableau de valeurs d'intensité.
         """
-        super(CottrelGraph, self).__init__(t, I)
+        super(CottrellGraph, self).__init__(t, I)
         graph_theme = {
                 'label_options': {
                     'color': [0, 0, 0, 1],  # color of tick labels and titles
@@ -32,7 +32,7 @@ class CottrelGraph(CottrelGraphBase, EventDispatcher):
                 'tick_color': [0, 0, 0, 1],  # ticks and grid
                 'border_color': [0, 0, 0, 1]}  # border drawn around each graph
                 
-        self.graph = Graph(title = 'Courbes de Cottrel',
+        self.graph = Graph(title = 'Courbes de Cottrell',
                            xlabel='Temps (s)',
                            ylabel='Intensité (A)',
                            x_ticks_minor=5,

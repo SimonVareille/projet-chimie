@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-class CottrelGraphBase:
+class CottrellGraphBase:
     """Classe mère permettant d'avoir une base commune pour
     la création du graphique principal, quelque soit l'interface graphique 
     utilisée.

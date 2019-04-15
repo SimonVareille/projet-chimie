@@ -6,9 +6,9 @@ from kivy.uix.popup import Popup
 from kivy.properties import  NumericProperty, ObjectProperty, StringProperty
 from kivy.lang.builder import Builder
 
-from cottrel.cox_math import cox_curve
+from cottrell.cox_math import cox_curve
 from graphs.graphCox_kivy import CoxGraph
-from cottrel.cottrel_math import linspace
+from cottrell.cottrell_math import linspace
 
 Builder.load_file(os.path.dirname(__file__) + '/cox_popup.kv')
 

@@ -72,8 +72,8 @@ def create_t(start, stop, num):
         return linspace(start, stop, num)[1:]
     return linspace(start, stop, num)
 
-def cottrel_curve_gen(n, S, C, D, t):
-    '''Crée un tableau de valeurs d'intensité selon l'équation de Cottrel : 
+def cottrell_curve_gen(n, S, C, D, t):
+    '''Crée un tableau de valeurs d'intensité selon l'équation de Cottrell : 
         `I = n × F × S × C × √(D ÷ (π × t))`
 
         Paramètres

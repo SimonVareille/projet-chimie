@@ -1,5 +1,5 @@
 # ReDoxLab
-Application pour Android de visualisation de courbes de Cottrel
+Application pour Android de visualisation de courbes de Cottrell
 
 
 ------

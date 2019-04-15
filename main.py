@@ -16,13 +16,13 @@ from kivy.uix.button import Button
 
 from data_reader import DataReader
 from tab_operations import TabOperations
-from graphs.cottrel_graph_kivy import CottrelGraph
+from graphs.cottrell_graph_kivy import CottrellGraph
 from graphs.linearRegress_graph_kivy import GraphLinearRegression
 from components.file_chooser import OpenDialog
 from components.cox_popup import CoxPopup
 from components.interval_popup import IntervalPopup
 from components.errorpopup import ErrorPopup
-import cottrel.cottrel_math as cm
+import cottrell.cottrell_math as cm
 
 class MainWindow(Widget):
     """Classe représentant la fenêtre principale
@@ -105,11 +105,11 @@ class MainWindow(Widget):
         #valeur à ajouter aux I du tableau en cas de problème 
         self.correctI = 0
         
-        self.mainGraph = CottrelGraph()
+        self.mainGraph = CottrellGraph()
         
         # Initialisation des tableaux t et I théoriques
         self.t = cm.create_t(0, 20, 1000)
-        self.I = cm.cottrel_curve_gen(self.buttonN.value, self.buttonS.value, 
+        self.I = cm.cottrell_curve_gen(self.buttonN.value, self.buttonS.value, 
                         self.buttonC.value, self.buttonDth.value, self.t)
                                            
         
@@ -172,7 +172,7 @@ class MainWindow(Widget):
             #Recalcule les valeurs théoriques pour coller avec l'étendue des 
             #valeurs expériementales
             self.t = cm.create_t(0, max(self.expt), 1000)
-            self.I = cm.cottrel_curve_gen(self.valN, self.valS, self.valC, 
+            self.I = cm.cottrell_curve_gen(self.valN, self.valS, self.valC, 
                                                           self.valDth, self.t)
             self.mainGraph.set_theoric_data (self.t, self.I)
             
@@ -308,7 +308,7 @@ La valeur de {0} utilisée pour le graphique est inchangée."
             ErrorPopup(text=error_text.format("S", "ou nulle ")).open()
             self.buttonS.value = self.valS
             
-        self.I = cm.cottrel_curve_gen(self.valN,self.valS, self.valC, self.valDth, self.t)
+        self.I = cm.cottrell_curve_gen(self.valN,self.valS, self.valC, self.valDth, self.t)
         
         self.mainGraph.I=self.I
         self.mainGraph.update()
@@ -393,7 +393,7 @@ du fichier !\n\n"+str(err)).open()
         #Recalcule les valeurs théoriques pour coller avec l'étendue des valeurs
         #expérimentales
         self.t = cm.create_t(0, max(self.expt), 1000)
-        self.I = cm.cottrel_curve_gen(self.valN, self.valS, self.valC, self.valDth, self.t)
+        self.I = cm.cottrell_curve_gen(self.valN, self.valS, self.valC, self.valDth, self.t)
         self.mainGraph.set_theoric_data (self.t, self.I)
         
         self.mainGraph.set_limit_interval()
