@@ -41,6 +41,9 @@ The current availables plots are:
     * `MeshStemPlot`
     * `MeshLinePlot`
     * `SmoothLinePlot` - require Kivy 1.8.1
+    * `ContourPlot`
+    * `BarPlot`
+    * `DotPlot`
 
 .. note::
 
