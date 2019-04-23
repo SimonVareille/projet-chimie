@@ -49,6 +49,7 @@ class CottrellGraph(CottrellGraphBase, EventDispatcher):
                            ymin=float(self.Ibottom),
                            ymax=float(self.Itop),
                            legend=self.legend,
+                           precision="%#.4g",
                            **graph_theme)
         
         self.thplot = SmoothLinePlot(color=[0, 0, 1, 1])

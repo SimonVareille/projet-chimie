@@ -49,6 +49,7 @@ class GraphLinearRegression(LinearRegression):
            padding=5,
            x_grid=False,
            y_grid=False,
+           precision="%#.4g",
            **graph_theme)
     
         self.logexpplot = SmoothLinePlot(color=[1, 0, 0, 1])

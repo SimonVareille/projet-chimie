@@ -44,6 +44,7 @@ class CoxGraph():
                            xmax=float(0.05), 
                            ymin=float(0),
                            ymax=float(1),
+                           precision="%#.4g",
                            **graph_theme)
         
         self.coxplot = SmoothLinePlot(color=[0, 0, 1, 1])
