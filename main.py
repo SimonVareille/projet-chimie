@@ -6,13 +6,15 @@ import kivy
 kivy.require('1.10.1')
 from kivy.app import App
 from kivy.core.window import Window
+from kivy.config import Config, ConfigParser
 from kivy.base import EventLoop
-from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty, BooleanProperty, NumericProperty
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.button import Button
+from kivy.uix.settings import Settings, SettingsWithTabbedPanel
 
 from data_reader import DataReader
 from tab_operations import TabOperations
@@ -23,6 +25,10 @@ from components.cox_popup import CoxPopup
 from components.interval_popup import IntervalPopup
 from components.errorpopup import ErrorPopup
 import cottrell.cottrell_math as cm
+
+Config.read('config.ini')
+# set config
+Config.write()
 
 class MainWindow(Widget):
     """Classe représentant la fenêtre principale
@@ -408,9 +414,42 @@ class AppApp(App):
     """Point d'entrée de l'application.
     """
     title = "ReDoxLab"
+    use_kivy_settings = False
     def build(self):
         Window.bind(on_keyboard=self.key_input)
-        return MainWindow()
+        
+        self.settings_cls = SettingsWithTabbedPanel
+        
+        self.root = MainWindow()
+        
+        return self.root
+    
+    def build_config(self, config):
+        """
+        Définie les valeurs par défaut pour les sections de configuration.
+        """
+        config.setdefaults('Theme', {'theme': 'Default',})
+
+    def build_settings(self, settings):
+        """
+        Ajoute notre propre section à l'objet de configuration par défaut.
+        """
+        settings.add_json_panel('Theme', self.config, 'settings.json')
+
+    def on_config_change(self, config, section, key, value):
+        """
+        Répond aux changements dans la configuration.
+        """
+
+        if section == "Theme":
+            if key == "theme":
+                self.root.theme = value
+
+    def close_settings(self, settings=None):
+        """
+        Appelé quand le panneau des paramètres est clos.
+        """
+        super(AppApp, self).close_settings(settings)
     
     def on_pause(self):
         return True

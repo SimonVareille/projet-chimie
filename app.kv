@@ -28,14 +28,28 @@
 
             BoxLayout:
                 orientation:'vertical'
-                Button:
-                    id: importDataButton
-                    text: 'Importer les données expérimentales'
-                    halign: 'center'
-                    valign: 'center'
-                    color: 1, 1, 1, 1
-                    markup:True
-                    on_release: root.show_openDialog()
+                BoxLayout:
+                    orientation:'horizontal'
+                    Button:
+                        id: settingsButton
+                        font_name: 'materialdesignicons-webfont'
+                        font_size: 52
+                        text: u'\uf493'
+                        halign: 'center'
+                        valign: 'center'
+                        color: 0,0, 0, 1
+                        markup: True
+                        size_hint: 0.25, 1
+                        background_color: 0, 0, 0, 0
+                        on_release: app.open_settings()
+                    Button:
+                        id: importDataButton
+                        text: 'Importer les données expérimentales'
+                        halign: 'center'
+                        valign: 'center'
+                        color: 1, 1, 1, 1
+                        markup:True
+                        on_release: root.show_openDialog()
                 Button:
                     text:"Sélectionner l'intervalle de travail"
                     color: 1, 1, 1, 1
@@ -45,7 +59,7 @@
                     Label:
                         id: expCurve
                         size_hint: 0.60, 1
-                        text:'Courbe Expérimentale'
+                        text: 'Courbe Expérimentale'
                         color: 0, 0, 0, 1
                         markup:True
                     Switch:

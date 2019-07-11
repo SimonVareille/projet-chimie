@@ -1,0 +1,14 @@
+[
+    {
+        "type": "title",
+        "title": "Apparence"
+    },
+    {
+        "type": "options",
+        "title": "Thème",
+        "desc": "Définie le thème utilisé par l'application.",
+        "section": "Theme",
+        "key": "theme",
+        "options": ["Default", "Material Design"] 
+    }
+]
