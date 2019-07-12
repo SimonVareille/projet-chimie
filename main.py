@@ -74,6 +74,8 @@ class MainWindow(Widget):
     
     expDataLoaded=BooleanProperty(False)
     
+    theme = 'Kivy'
+    
 
     def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
@@ -428,7 +430,7 @@ class AppApp(App):
         """
         Définie les valeurs par défaut pour les sections de configuration.
         """
-        config.setdefaults('Theme', {'theme': 'Default',})
+        config.setdefaults('Theme', {'theme': 'Kivy',})
 
     def build_settings(self, settings):
         """

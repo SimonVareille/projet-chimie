@@ -9,6 +9,6 @@
         "desc": "Définie le thème utilisé par l'application.",
         "section": "Theme",
         "key": "theme",
-        "options": ["Default", "Material Design"] 
+        "options": ["Kivy", "Material Design"] 
     }
 ]
