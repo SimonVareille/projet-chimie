@@ -1,0 +1,23 @@
+#:kivy 1.10.1
+#: import IntervalBox components.intervalbox.IntervalBox
+
+<IntervalPopup@Popup>:
+    id : intervalpopup
+    intervalbox:intervalbox
+    title:""
+    separator_height:0    
+    auto_dismiss: False
+    size_hint: (.7,.3)
+    BoxLayout:
+        orientation:"horizontal"
+        IntervalBox:
+            id:intervalbox
+            size_hint:(.8,1)
+        Button:
+            font_size:.3*self.height
+            size_hint:(.2,1)           
+            text: "OK"
+            on_press: root.dismiss()
+
+
+   

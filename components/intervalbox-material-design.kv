@@ -1,0 +1,21 @@
+#:kivy 1.10.1
+
+<IntervalBox>:
+    orientation:"vertical"
+    BoxLayout:
+        size_hint: (1,.55)
+        orientation:"horizontal"
+        CustButton:   
+            size_hint:(.5,1)  
+            text:"valeur min : " + root._display_value_min + "s"
+            on_release:root.opening_popup_min()
+        CustButton:   
+            size_hint:(.5,1)  
+            text:"valeur max : "+ root._display_value_max + "s"
+            on_release:root.opening_popup_max()
+    CustButton:
+        size_hint: (1,.45)
+        text:"valeur de correction de I : "+ root._display_value_correction_I 
+        on_release:root.opening_popup_correction_I()
+        
+    

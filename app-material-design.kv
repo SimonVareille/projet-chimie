@@ -1,0 +1,191 @@
+#:kivy 1.10.1
+
+#:import MDLabel kivymd.label.MDLabel
+#:import MDIconButton kivymd.button.MDIconButton
+#:import MDRaisedButton kivymd.button.MDRaisedButton
+#:import MDRectangleFlatButton kivymd.button.MDRectangleFlatButton
+#:import MDCheckbox kivymd.selectioncontrols.MDCheckbox
+#:import MDSwitch kivymd.selectioncontrols.MDSwitch
+#:import MDSlider kivymd.slider.MDSlider
+#:import SpinBox components.spinbox.SpinBox
+
+<MainWindow>:
+    curveBoxLayout: curveBoxLayout
+    expCurveSwitch: expCurveSwitch
+    buttonDth: buttonDth
+    buttonN: buttonN
+    buttonS: buttonS
+    buttonC: buttonC
+    sliderDth:sliderDth
+    smallCurveBoxLayout:smallCurveBoxLayout
+
+    BoxLayout:
+        size: root.width, root.height
+        canvas.before:
+            Color:
+                rgba: 0.85, 0.85, 1, 1
+            Rectangle:
+                pos:self.pos
+                size:self.size
+        BoxLayout:
+            orientation:'vertical'
+            size_hint: 0.2, 1
+            pos: 0, 0
+
+            BoxLayout:
+                orientation:'vertical'
+                BoxLayout:
+                    orientation:'horizontal'
+                    MDIconButton:
+                        id: settingsButton
+                        icon: 'settings'
+                        size_hint: 0.25, 1
+                        on_release: app.open_settings()
+                    #MDRaisedButton:
+                    MDRaisedButton:
+                        id: importDataButton
+                        text: 'Importer les données expérimentales'
+                        elevation_normal: 10
+                        opposite_colors: True
+                        markup:True
+                        size_hint: 0.8, 0.8
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        on_release: root.show_openDialog()
+                MDRaisedButton:
+                    text:"Sélectionner l'intervalle de travail"
+                    elevation_normal: 5
+                    opposite_colors: True
+                    on_release:root.on_interval_define_button_active(self)
+                    size_hint: 1, 1
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    disabled: not root.expDataLoaded
+                FloatLayout:
+                    MDLabel:
+                        id: expCurve
+                        text: 'Courbe Expérimentale'
+                        markup:True
+                        halign: 'center'
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        size_hint_x: 0.60
+                        pos_hint: {'center_x': .3, 'center_y': .5}
+                    MDSwitch:
+                        id: expCurveSwitch
+                        size_hint: None, None
+                        size: dp(36), dp(48)
+                        active: False
+                        pos_hint: {'center_x': .8, 'center_y': .5}
+                        on_active: root.on_expCurveSwitch_active(self.active)
+                        disabled: not root.expDataLoaded
+                FloatLayout:
+                    MDLabel:
+                        id: thCurve
+                        text:'Courbe théorique'
+                        markup:True
+                        halign: 'center'
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        size_hint_x: 0.60
+                        pos_hint: {'center_x': .3, 'center_y': .5}
+                    MDSwitch:
+                        id: thCurveSwitch
+                        #size_hint: 0.40, 1
+                        size_hint: None, None
+                        size: dp(36), dp(48)
+                        pos_hint: {'center_x': .8, 'center_y': .5}
+                        active: root.thCurveSwitchActive
+                        on_active: root.on_thCurveSwitch_active(self.active)
+                FloatLayout:
+                    MDLabel:
+                        id: dCurveLabel 
+                        text:'Régression linéaire'
+                        markup:True
+                        halign: 'center'
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                        size_hint_x: 0.60
+                        pos_hint: {'center_x': .3, 'center_y': .5}
+                    MDSwitch:
+                        id: dCurveCheckBox
+                        size_hint: None, None
+                        size: dp(36), dp(48)
+                        pos_hint: {'center_x': .8, 'center_y': .5}
+                        on_active:root.on_dCurveCheckBox_active(self.active)
+                        disabled: not root.expDataLoaded
+                MDFillRoundFlatButton:
+                    id: CoxCurveButton
+                    text:'Courbe Cox'
+                    markup: True
+                    elevation_normal: 2
+                    opposite_colors: True
+                    size_hint: 0.8, 0.8
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    on_release:root.on_cox_button_active(self)
+
+
+            BoxLayout:
+                id: smallCurveBoxLayout
+                
+            #Paramètres
+            
+            BoxLayout:
+                orientation:"vertical"
+                MDLabel:
+                    text:"Paramètres"
+                    font_style: 'Overline'
+                    font_size: 18
+                    halign: 'center'
+                    valign: 'center'
+                    #size_hint_y: None
+                    #height: self.texture_size[1]
+                BoxLayout:
+                    size_hint: 1, 2
+                    Label:
+                        text:"D[sub]th[/sub]"
+                        color: 0, 0, 0, 1
+                        size_hint: 0.25, 1
+                        markup: True
+                    BoxLayout:
+                        orientation:"vertical"
+                        SpinBox:
+                            id:buttonDth  
+                            value: sliderDth.value
+                        MDSlider:
+                            id:sliderDth
+                            orientation:"horizontal"
+                            value: buttonDth.value
+                            min: buttonDth.min_value
+                            max: buttonDth.max_value
+                            step: buttonDth.steps
+                BoxLayout:
+                    Label:
+                        text:"n"
+                        color: 0, 0, 0, 1
+                        size_hint: 0.25, 1
+                    SpinBox:
+                        id:buttonN
+                        steps: 1
+                        
+                BoxLayout:
+                    Label:
+                        text:"S"
+                        color: 0, 0, 0, 1
+                        size_hint: 0.25, 1
+                    SpinBox:
+                        id:buttonS
+
+                BoxLayout:
+                    Label:
+                        text:"C"
+                        color: 0, 0, 0, 1
+                        size_hint: 0.25, 1
+                    SpinBox:
+                        id:buttonC
+
+
+        BoxLayout:
+            id: curveBoxLayout
+            size_hint: 0.8, 1
+
+
+

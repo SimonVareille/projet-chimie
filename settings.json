@@ -1,14 +1,14 @@
 [
     {
         "type": "title",
-        "title": "Apparence"
+        "title": "Redémarrage de l'application necessaire"
     },
     {
         "type": "options",
         "title": "Thème",
         "desc": "Définie le thème utilisé par l'application.",
-        "section": "Theme",
+        "section": "Apparence",
         "key": "theme",
-        "options": ["Kivy", "Material Design"] 
+        "options": ["default", "material-design"] 
     }
 ]

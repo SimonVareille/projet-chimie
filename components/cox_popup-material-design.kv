@@ -1,0 +1,33 @@
+#:kivy 1.10.1
+
+<CoxPopup@Popup>:
+    id : coxpopup
+    sliderCoxT:SliderCoxT
+    grahCoxLayout:grahCoxLayout
+    title:""
+    separator_height:0    
+    auto_dismiss: True
+    size_hint: (.9,.9)
+    BoxLayout:
+        orientation:"horizontal"
+        
+        BoxLayout:   
+            orientation:"vertical"         
+            size_hint: (.2,1)
+            Label:
+                text:"t = " + str(root._coxvaltToDisplay) + "s"
+                size_hint:(1,.1)
+            Slider:
+                id:SliderCoxT
+                max:root.maxt
+                min:root.mint
+                step:root.step
+                size_hint:(1,.8)
+                orientation:"vertical"
+                on_value: root.on_slider_T_active()
+        BoxLayout:
+            size_hint: (.8,1)
+            orientation:"vertical"
+                
+            BoxLayout:
+                id:grahCoxLayout

@@ -8,7 +8,7 @@ from kivy.lang.builder import Builder
 import os
 from .errorpopup import ErrorPopup
 
-Builder.load_file(os.path.dirname(__file__) +'/intervalbox.kv')
+#Builder.load_file(os.path.dirname(__file__) +'/intervalbox.kv')
 
 
 class IntervalBox(BoxLayout):

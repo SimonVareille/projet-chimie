@@ -1,0 +1,23 @@
+#:kivy 1.10.1
+<OpenDialog>:
+    filechooser: filechooser
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        Label:
+            size_hint_y: 0.10
+            text: "Emplacement actuel: " + filechooser.path
+        FileChooserIconView:
+            id: filechooser
+            filters: ['*.csv', '*.CSV', '*.crv', '*.CRV']
+
+        BoxLayout:
+            size_hint_y: 0.10
+            Button:
+                text: "Annuler"
+                on_release: root.cancel()
+
+            Button:
+                text: "Ouvrir"
+                on_release: root.load(filechooser.path, filechooser.selection)

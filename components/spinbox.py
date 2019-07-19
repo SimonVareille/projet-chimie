@@ -10,7 +10,7 @@ from .entrypopup import EntryPopup
 from .errorpopup import ErrorPopup
 
 
-Builder.load_file(os.path.dirname(__file__) +'/spinbox.kv')
+#Builder.load_file(os.path.dirname(__file__) +'/spinbox.kv')
 
 class SpinBox(BoxLayout):
     """

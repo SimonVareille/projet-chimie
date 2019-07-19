@@ -4,7 +4,7 @@ from kivy.properties import ObjectProperty
 from kivy.lang.builder import Builder
 
 import os
-Builder.load_file(os.path.dirname(__file__) + '/errorpopup.kv')
+#Builder.load_file(os.path.dirname(__file__) + '/errorpopup.kv')
 
 class ErrorPopup(Popup):
     """ Affiche un popup d'erreur.

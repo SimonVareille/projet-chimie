@@ -6,7 +6,7 @@ from kivy.uix.popup import Popup
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.lang.builder import Builder
 
-Builder.load_file(os.path.dirname(__file__) + '/entrypopup.kv')
+#Builder.load_file(os.path.dirname(__file__) + '/entrypopup.kv')
 """
 Dans l'idéal il faudrait modifier le fonctionnement de la classe pour qu'elle
 prenne et renvoie des floats, mais il faudrait alors aussi modifier les 

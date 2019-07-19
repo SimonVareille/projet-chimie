@@ -10,7 +10,7 @@ from cottrell.cox_math import cox_curve
 from graphs.graphCox_kivy import CoxGraph
 from cottrell.cottrell_math import linspace
 
-Builder.load_file(os.path.dirname(__file__) + '/cox_popup.kv')
+#Builder.load_file(os.path.dirname(__file__) + '/cox_popup.kv')
 
 class CoxPopup(Popup):
     """

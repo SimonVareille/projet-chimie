@@ -8,13 +8,17 @@ from kivy.app import App
 from kivy.core.window import Window
 from kivy.config import Config, ConfigParser
 from kivy.base import EventLoop
-from kivy.properties import ObjectProperty, BooleanProperty, NumericProperty
+from kivy.lang.builder import Builder
+from kivy.properties import ObjectProperty, BooleanProperty, NumericProperty, \
+                            StringProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.button import Button
 from kivy.uix.settings import Settings, SettingsWithTabbedPanel
+
+from kivymd.theming import ThemeManager
 
 from data_reader import DataReader
 from tab_operations import TabOperations
@@ -74,9 +78,6 @@ class MainWindow(Widget):
     
     expDataLoaded=BooleanProperty(False)
     
-    theme = 'Kivy'
-    
-
     def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
         
@@ -417,8 +418,32 @@ class AppApp(App):
     """
     title = "ReDoxLab"
     use_kivy_settings = False
+    
+    theme_cls = ThemeManager()
+    theme_cls.primary_palette = 'Blue'
+    
     def build(self):
         Window.bind(on_keyboard=self.key_input)
+        
+        config = self.config
+        self.theme = config.get('Apparence', 'theme')
+        
+        try:
+            Builder.load_file("app-{}.kv".format(self.theme))
+            
+            Builder.load_file("components/cox_popup-{}.kv".format(self.theme))
+            Builder.load_file("components/entrypopup-{}.kv".format(self.theme))
+            Builder.load_file("components/errorpopup-{}.kv".format(self.theme))
+            Builder.load_file("components/file_chooser-{}.kv".format(self.theme))
+            Builder.load_file("components/intervalbox-{}.kv".format(self.theme))
+            Builder.load_file("components/interval_popup-{}.kv".format(self.theme))
+            Builder.load_file("components/spinbox-{}.kv".format(self.theme))
+        except FileNotFoundError as err:
+            print("""Erreur lors de l'ouverture du fichier kv : {}
+Chargement du fichier kv par défaut.""".format(err))
+            self.theme = 'default'
+            config.set('Apparence', 'theme', 'default')
+            Builder.load_file("app-default.kv")
         
         self.settings_cls = SettingsWithTabbedPanel
         
@@ -430,22 +455,27 @@ class AppApp(App):
         """
         Définie les valeurs par défaut pour les sections de configuration.
         """
-        config.setdefaults('Theme', {'theme': 'Kivy',})
+        config.setdefaults('Apparence', {'theme': 'default',})
 
     def build_settings(self, settings):
         """
         Ajoute notre propre section à l'objet de configuration par défaut.
         """
-        settings.add_json_panel('Theme', self.config, 'settings.json')
+        settings.add_json_panel('Apparence', self.config, 'settings.json')
 
     def on_config_change(self, config, section, key, value):
         """
         Répond aux changements dans la configuration.
         """
 
-        if section == "Theme":
+        if section == "Apparence":
             if key == "theme":
-                self.root.theme = value
+                pass
+#                Builder.unload_file("app-{}.kv".format(self.theme))
+#                try:
+#                    Builder.load_file("app-{}.kv".format(value))
+#                except FileNotFoundError:
+#                    Builder.load_file("app-default.kv")
 
     def close_settings(self, settings=None):
         """

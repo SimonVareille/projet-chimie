@@ -13,7 +13,7 @@ from components.errorpopup import ErrorPopup
 """Adapté du site officiel de kivy (d'où les commentaires en anglais)
 https://kivy.org/doc/stable/api-kivy.uix.filechooser.html
 """
-Builder.load_file(os.path.dirname(__file__) +'/file_chooser.kv')
+#Builder.load_file(os.path.dirname(__file__) +'/file_chooser.kv')
 
 class OpenDialog(FloatLayout):
     """ Component to put inside another widget (in a popup for exemple).
