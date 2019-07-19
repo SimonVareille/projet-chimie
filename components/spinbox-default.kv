@@ -1,21 +1,21 @@
 #:kivy 1.10.1
 <SpinBox>:
     
-    buttonMinus_id: buttonMinus
-    buttonPlus_id: buttonPlus
-    buttonMid_id: buttonMid
+    minus_id: minus
+    value_id: value
+    plus_id: plus
         
     orientation:"horizontal"
 
     Button:
-        id: buttonMinus
+        id: minus
         size_hint: 0.25, 1
         text:"-"
         on_release: root.substract_one()
         font_size: .7*self.height
 
     Button:
-        id: buttonMid
+        id: value
         size_hint: 0.5, 1
         multiline: False
         font_size: .5*self.height
@@ -24,7 +24,7 @@
         on_release : root.opening_popup()
         
     Button:
-        id: buttonPlus
+        id: plus
         size_hint: 0.25, 1
         text:"+"
         on_release: root.add_one()

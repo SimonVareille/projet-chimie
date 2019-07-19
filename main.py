@@ -329,7 +329,7 @@ La valeur de {0} utilisée pour le graphique est inchangée."
             self.graphLinearRegression.update()
 
     def bind_update_values(self, spinbox):
-        spinbox.buttonMid_id.bind(text = self.update_values)
+        spinbox.value_id.bind(text = self.update_values)
 
     def show_openDialog(self):
         """Affiche la boite de dialogue d'ouverture de fichier.

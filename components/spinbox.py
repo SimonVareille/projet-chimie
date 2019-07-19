@@ -24,7 +24,7 @@ class SpinBox(BoxLayout):
     value = NumericProperty(1)
     min_value = NumericProperty(0)
     max_value = NumericProperty(100)
-    buttonMid_id = ObjectProperty(None)
+    value_id = ObjectProperty(None)
 
     steps = NumericProperty(0.1)
     

@@ -1,31 +1,35 @@
 #:kivy 1.10.1
+#:import MDIconButton kivymd.button.MDIconButton
+#:import MDRectangleFlatButton kivymd.button.MDRectangleFlatButton
+
 <SpinBox>:
     
-    buttonMinus_id: buttonMinus
-    buttonPlus_id: buttonPlus
-    buttonMid_id: buttonMid
+    minus_id: minus
+    value_id: value
+    plus_id: plus
         
     orientation:"horizontal"
 
-    Button:
-        id: buttonMinus
+    MDIconButton:
+        id: minus
+        icon: 'minus-box-outline'
         size_hint: 0.25, 1
-        text:"-"
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         on_release: root.substract_one()
-        font_size: .7*self.height
 
-    Button:
-        id: buttonMid
-        size_hint: 0.5, 1
+    MDRectangleFlatButton:
+        id: value
         multiline: False
+        elevation_normal: 5
         font_size: .5*self.height
         text: root._display_value
-        background_color : 0,0,0.5,1
+        size_hint: 0.5, 0.9
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         on_release : root.opening_popup()
-        
-    Button:
-        id: buttonPlus
+
+    MDIconButton:
+        id: plus
+        icon: 'plus-box-outline'
         size_hint: 0.25, 1
-        text:"+"
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         on_release: root.add_one()
-        font_size: .7*self.height
