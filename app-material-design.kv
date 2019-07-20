@@ -4,6 +4,8 @@
 #:import MDIconButton kivymd.button.MDIconButton
 #:import MDRaisedButton kivymd.button.MDRaisedButton
 #:import MDRectangleFlatButton kivymd.button.MDRectangleFlatButton
+#:import MDRoundFlatIconButton kivymd.button.MDRoundFlatIconButton
+#:import MDRectangleFlatIconButton kivymd.button.MDRectangleFlatIconButton
 #:import MDCheckbox kivymd.selectioncontrols.MDCheckbox
 #:import MDSwitch kivymd.selectioncontrols.MDSwitch
 #:import MDSlider kivymd.slider.MDSlider
@@ -21,12 +23,6 @@
 
     BoxLayout:
         size: root.width, root.height
-        canvas.before:
-            Color:
-                rgba: 0.85, 0.85, 1, 1
-            Rectangle:
-                pos:self.pos
-                size:self.size
         BoxLayout:
             orientation:'vertical'
             size_hint: 0.2, 1
@@ -60,15 +56,9 @@
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     disabled: not root.expDataLoaded
                 FloatLayout:
-                    MDLabel:
+                    CustomMDLabel:
                         id: expCurve
                         text: 'Courbe Expérimentale'
-                        markup:True
-                        halign: 'center'
-                        size_hint_y: None
-                        height: self.texture_size[1]
-                        size_hint_x: 0.60
-                        pos_hint: {'center_x': .3, 'center_y': .5}
                     MDSwitch:
                         id: expCurveSwitch
                         size_hint: None, None
@@ -78,15 +68,9 @@
                         on_active: root.on_expCurveSwitch_active(self.active)
                         disabled: not root.expDataLoaded
                 FloatLayout:
-                    MDLabel:
+                    CustomMDLabel:
                         id: thCurve
                         text:'Courbe théorique'
-                        markup:True
-                        halign: 'center'
-                        size_hint_y: None
-                        height: self.texture_size[1]
-                        size_hint_x: 0.60
-                        pos_hint: {'center_x': .3, 'center_y': .5}
                     MDSwitch:
                         id: thCurveSwitch
                         #size_hint: 0.40, 1
@@ -96,15 +80,9 @@
                         active: root.thCurveSwitchActive
                         on_active: root.on_thCurveSwitch_active(self.active)
                 FloatLayout:
-                    MDLabel:
+                    CustomMDLabel:
                         id: dCurveLabel 
                         text:'Régression linéaire'
-                        markup:True
-                        halign: 'center'
-                        size_hint_y: None
-                        height: self.texture_size[1]
-                        size_hint_x: 0.60
-                        pos_hint: {'center_x': .3, 'center_y': .5}
                     MDSwitch:
                         id: dCurveCheckBox
                         size_hint: None, None
@@ -114,7 +92,7 @@
                         disabled: not root.expDataLoaded
                 MDFillRoundFlatButton:
                     id: CoxCurveButton
-                    text:'Courbe Cox'
+                    text:'Courbe C[sub]ox[/sub]'
                     markup: True
                     elevation_normal: 2
                     opposite_colors: True
@@ -134,17 +112,16 @@
                     text:"Paramètres"
                     font_style: 'Overline'
                     font_size: 18
+                    theme_text_color: 'Primary'
                     halign: 'center'
                     valign: 'center'
                     #size_hint_y: None
                     #height: self.texture_size[1]
                 BoxLayout:
                     size_hint: 1, 2
-                    Label:
+                    CustomMDLabel:
                         text:"D[sub]th[/sub]"
-                        color: 0, 0, 0, 1
                         size_hint: 0.25, 1
-                        markup: True
                     BoxLayout:
                         orientation:"vertical"
                         SpinBox:
@@ -158,26 +135,23 @@
                             max: buttonDth.max_value
                             step: buttonDth.steps
                 BoxLayout:
-                    Label:
+                    CustomMDLabel:
                         text:"n"
-                        color: 0, 0, 0, 1
                         size_hint: 0.25, 1
                     SpinBox:
                         id:buttonN
                         steps: 1
                         
                 BoxLayout:
-                    Label:
+                    CustomMDLabel:
                         text:"S"
-                        color: 0, 0, 0, 1
                         size_hint: 0.25, 1
                     SpinBox:
                         id:buttonS
 
                 BoxLayout:
-                    Label:
+                    CustomMDLabel:
                         text:"C"
-                        color: 0, 0, 0, 1
                         size_hint: 0.25, 1
                     SpinBox:
                         id:buttonC
@@ -188,4 +162,11 @@
             size_hint: 0.8, 1
 
 
-
+<CustomMDLabel@MDLabel>:
+    markup:True
+    theme_text_color: 'Primary'
+    halign: 'center'
+    size_hint_y: None
+    height: self.texture_size[1]
+    size_hint_x: 0.60
+    pos_hint: {'center_x': .3, 'center_y': .5}
