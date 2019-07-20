@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
+from kivy.app import App
 from kivy.garden.graph import Graph ,SmoothLinePlot
 from kivy.clock import Clock
+from kivy.utils import get_color_from_hex
+
+from kivymd.color_definitions import colors
 
 class CoxGraph():
     """Crée le graphique contenant la courbe de Cox en utilisant 
@@ -19,14 +23,26 @@ class CoxGraph():
         self.x = x
         self.cox = cox
 
-        graph_theme = {
-                'label_options': {
-                    'color': [0, 0, 0, 1],  # color of tick labels and titles
-                    'bold': False,
-                    'markup': True},
-                'background_color': [1, 1, 1, 1],  # back ground color of canvas
-                'tick_color': [0, 0, 0, 1],  # ticks and grid
-                'border_color': [0, 0, 0, 1]}  # border drawn around each graph
+        theme_cls = App.get_running_app().theme_cls
+        graph_theme={}
+        if App.get_running_app().theme == 'default':
+            graph_theme = {
+                    'label_options': {
+                        'color': [0, 0, 0, 1],  # color of tick labels and titles
+                        'bold': False,
+                        'markup': True},
+                    'background_color': [1, 1, 1, 1],  # back ground color of canvas
+                    'tick_color': [0, 0, 0, 1],  # ticks and grid
+                    'border_color': [0, 0, 0, 1]}  # border drawn around each graph
+        elif App.get_running_app().theme ==  'material-design':
+            graph_theme = {
+                    'label_options': {
+                        'color': get_color_from_hex(colors[theme_cls.primary_palette][theme_cls.primary_hue]),#[0, 0, 0, 1],  # color of tick labels and titles
+                        'bold': False,
+                        'markup': True},
+                    'background_color': get_color_from_hex(colors[theme_cls.theme_style]["Background"]),#[1, 1, 1, 1],  # back ground color of canvas
+                    'tick_color': get_color_from_hex(colors[theme_cls.accent_palette][theme_cls.accent_hue]),#[0, 0, 0, 1],  # ticks and grid
+                    'border_color': get_color_from_hex(colors[theme_cls.accent_palette][theme_cls.accent_hue])}#[0, 0, 0, 1]}  # border drawn around each graph
                 
         self.graph = Graph(title = 'Courbe C[sub]ox[/sub]',
                            xlabel='x',

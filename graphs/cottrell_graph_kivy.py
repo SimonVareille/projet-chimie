@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+from kivy.app import App
 from kivy.garden.graph import Graph, SmoothLinePlot
 from kivy.event import EventDispatcher
 from kivy.properties import BooleanProperty
-#from kivy.graphics import Callback
+from kivy.utils import get_color_from_hex
 from kivy.clock import Clock
+
+from kivymd.color_definitions import colors
 
 from .cottrell_graph_base import CottrellGraphBase
 
@@ -24,13 +27,24 @@ class CottrellGraph(CottrellGraphBase, EventDispatcher):
             Tableau de valeurs d'intensité.
         """
         super(CottrellGraph, self).__init__(t, I)
-        graph_theme = {
-                'label_options': {
-                    'color': [0, 0, 0, 1],  # color of tick labels and titles
-                    'bold': False},
-                'background_color': [1, 1, 1, 1],  # back ground color of canvas
-                'tick_color': [0, 0, 0, 1],  # ticks and grid
-                'border_color': [0, 0, 0, 1]}  # border drawn around each graph
+        theme_cls = App.get_running_app().theme_cls
+        graph_theme={}
+        if App.get_running_app().theme == 'default':
+            graph_theme = {
+                    'label_options': {
+                        'color': [0, 0, 0, 1],  # color of tick labels and titles
+                        'bold': False},
+                    'background_color': [1, 1, 1, 1],  # back ground color of canvas
+                    'tick_color': [0, 0, 0, 1],  # ticks and grid
+                    'border_color': [0, 0, 0, 1]}  # border drawn around each graph
+        elif App.get_running_app().theme ==  'material-design':
+            graph_theme = {
+                    'label_options': {
+                        'color': get_color_from_hex(colors[theme_cls.primary_palette][theme_cls.primary_hue]),#[0, 0, 0, 1],  # color of tick labels and titles
+                        'bold': False},
+                    'background_color': get_color_from_hex(colors[theme_cls.theme_style]["Background"]),#[1, 1, 1, 1],  # back ground color of canvas
+                    'tick_color': get_color_from_hex(colors[theme_cls.accent_palette][theme_cls.accent_hue]),#[0, 0, 0, 1],  # ticks and grid
+                    'border_color': get_color_from_hex(colors[theme_cls.accent_palette][theme_cls.accent_hue])}#[0, 0, 0, 1]}  # border drawn around each graph
                 
         self.graph = Graph(title = 'Courbes de Cottrell',
                            xlabel='Temps (s)',

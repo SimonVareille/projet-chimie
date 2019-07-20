@@ -469,7 +469,7 @@ Chargement du fichier kv par défaut.""".format(path.format(self.theme), err))
         """
         Définie les valeurs par défaut pour les sections de configuration.
         """
-        config.setdefaults('Apparence', {'theme': 'default',})
+        config.setdefaults('Apparence', {'theme': 'material-design',})
         config.setdefaults('Apparence', {'theme-colors': '{}, {}, {}'.format(
                 self.theme_cls.theme_style, self.theme_cls.primary_palette, 
                 self.theme_cls.accent_palette),})
