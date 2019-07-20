@@ -28,6 +28,7 @@ from components.file_chooser import OpenDialog
 from components.cox_popup import CoxPopup
 from components.interval_popup import IntervalPopup
 from components.errorpopup import ErrorPopup
+from components.settingthemepicker import SettingThemePicker
 import cottrell.cottrell_math as cm
 
 Config.read('config.ini')
@@ -336,7 +337,7 @@ La valeur de {0} utilisée pour le graphique est inchangée."
         """
         content = OpenDialog()
         self._openPopup = Popup(title="Sélectionnez le fichier de données :",
-                                content=content, size_hint=(0.9, 0.9))
+                                content=content, size_hint=(0.7, 0.7))
         content.cancel = self._openPopup.dismiss
         content.load = self.load_data_from_dialog
         self._openPopup.open()
@@ -419,48 +420,65 @@ class AppApp(App):
     title = "ReDoxLab"
     use_kivy_settings = False
     
+    theme = 'default'
+    
     theme_cls = ThemeManager()
-    theme_cls.primary_palette = 'Blue'
+    theme_cls.primary_palette = "BlueGray"
+    theme_cls.accent_palette = "Gray"
+    theme_cls.theme_style = "Dark"
     
     def build(self):
         Window.bind(on_keyboard=self.key_input)
         
+        #Chargement des configuration
         config = self.config
-        self.theme = config.get('Apparence', 'theme')
+        self.theme = config.get('Apparence', 'theme') 
+        self.theme_cls.theme_style, self.theme_cls.primary_palette,\
+            self.theme_cls.accent_palette = config.get('Apparence', 'theme-colors') .split(', ')
         
-        try:
-            Builder.load_file("app-{}.kv".format(self.theme))
-            
-            Builder.load_file("components/cox_popup-{}.kv".format(self.theme))
-            Builder.load_file("components/entrypopup-{}.kv".format(self.theme))
-            Builder.load_file("components/errorpopup-{}.kv".format(self.theme))
-            Builder.load_file("components/file_chooser-{}.kv".format(self.theme))
-            Builder.load_file("components/intervalbox-{}.kv".format(self.theme))
-            Builder.load_file("components/interval_popup-{}.kv".format(self.theme))
-            Builder.load_file("components/spinbox-{}.kv".format(self.theme))
-        except FileNotFoundError as err:
-            print("""Erreur lors de l'ouverture du fichier kv : {}
-Chargement du fichier kv par défaut.""".format(err))
-            self.theme = 'default'
-            config.set('Apparence', 'theme', 'default')
-            Builder.load_file("app-default.kv")
         
-        self.settings_cls = SettingsWithTabbedPanel
+        self.load_theme_kv("app-{}.kv")
+        
+        self.load_theme_kv("components/cox_popup-{}.kv")
+        self.load_theme_kv("components/entrypopup-{}.kv")
+        self.load_theme_kv("components/errorpopup-{}.kv")
+        self.load_theme_kv("components/file_chooser-{}.kv")
+        self.load_theme_kv("components/intervalbox-{}.kv")
+        self.load_theme_kv("components/interval_popup-{}.kv")
+        self.load_theme_kv("components/spinbox-{}.kv")
+        
+        self.settings_cls = Settings
+        
+        #print(self.theme_cls.primary_color)
         
         self.root = MainWindow()
         
         return self.root
     
+    def load_theme_kv(self, path):
+        """
+        path must be similar to "/optional/mywidget{}.kv" to be parsed by format.
+        """
+        try:
+            Builder.load_file(path.format(self.theme))
+        except FileNotFoundError as err:
+            print("""Erreur lors de l'ouverture du fichier {} : {}
+Chargement du fichier kv par défaut.""".format(path.format(self.theme), err))
+            Builder.load_file(path.format("default"))
     def build_config(self, config):
         """
         Définie les valeurs par défaut pour les sections de configuration.
         """
         config.setdefaults('Apparence', {'theme': 'default',})
+        config.setdefaults('Apparence', {'theme-colors': '{}, {}, {}'.format(
+                self.theme_cls.theme_style, self.theme_cls.primary_palette, 
+                self.theme_cls.accent_palette),})
 
     def build_settings(self, settings):
         """
         Ajoute notre propre section à l'objet de configuration par défaut.
         """
+        settings.register_type('theme-picker', SettingThemePicker)
         settings.add_json_panel('Apparence', self.config, 'settings.json')
 
     def on_config_change(self, config, section, key, value):
@@ -482,7 +500,7 @@ Chargement du fichier kv par défaut.""".format(err))
         Appelé quand le panneau des paramètres est clos.
         """
         super(AppApp, self).close_settings(settings)
-    
+        
     def on_pause(self):
         return True
     

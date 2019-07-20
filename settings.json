@@ -10,5 +10,17 @@
         "section": "Apparence",
         "key": "theme",
         "options": ["default", "material-design"] 
+    },
+    
+    {
+        "type": "title",
+        "title": "Changements immédiats"
+    },
+    {
+        "type": "theme-picker",
+        "title": "Couleurs",
+        "desc": "Définie les couleurs utilisées par l'application.",
+        "section": "Apparence",
+        "key": "theme-colors"
     }
 ]
