@@ -1,4 +1,5 @@
 #:kivy 1.10.1
+#:import MDSlider kivymd.slider.MDSlider
 
 <CoxPopup@Popup>:
     id : coxpopup
@@ -16,8 +17,9 @@
             size_hint: (.2,1)
             Label:
                 text:"t = " + str(root._coxvaltToDisplay) + "s"
+                font_size: '25dp'
                 size_hint:(1,.1)
-            Slider:
+            MDSlider:
                 id:SliderCoxT
                 max:root.maxt
                 min:root.mint

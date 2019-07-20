@@ -1,21 +1,29 @@
 #:kivy 1.10.1
+#:import MDRectangleFlatButton kivymd.button.MDRectangleFlatButton
+#:import MDRaisedButton kivymd.button.MDRaisedButton
 
 <IntervalBox>:
     orientation:"vertical"
     BoxLayout:
-        size_hint: (1,.55)
+        size_hint: (1,.5)
         orientation:"horizontal"
-        CustButton:   
+        MDRectangleFlatButton:   
             size_hint:(.5,1)  
             text:"valeur min : " + root._display_value_min + "s"
+            font_size: 0.3*self.height
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             on_release:root.opening_popup_min()
-        CustButton:   
+        MDRectangleFlatButton:   
             size_hint:(.5,1)  
             text:"valeur max : "+ root._display_value_max + "s"
+            font_size: 0.3*self.height
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             on_release:root.opening_popup_max()
-    CustButton:
-        size_hint: (1,.45)
+    MDRectangleFlatButton:
+        size_hint: (1,.5)
         text:"valeur de correction de I : "+ root._display_value_correction_I 
+        font_size: 0.3*self.height
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
         on_release:root.opening_popup_correction_I()
         
     

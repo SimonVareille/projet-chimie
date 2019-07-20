@@ -1,4 +1,9 @@
 #:kivy 1.10.1
+#:import MDRoundFlatIconButton kivymd.button.MDRoundFlatIconButton
+#:import MDRectangleFlatIconButton kivymd.button.MDRectangleFlatIconButton
+#:import MDFillRoundFlatIconButton kivymd.button.MDFillRoundFlatIconButton
+#:import MDRaisedButton kivymd.button.MDRaisedButton
+
 <OpenDialog>:
     filechooser: filechooser
     BoxLayout:
@@ -14,10 +19,21 @@
 
         BoxLayout:
             size_hint_y: 0.10
-            Button:
+            spacing: dp(10)
+            Widget:
+            MDRoundFlatIconButton:
                 text: "Annuler"
+                icon: 'cancel'
+                font_size: 0.6*self.height
+                elevation_normal: 5
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 on_release: root.cancel()
 
-            Button:
+            MDFillRoundFlatIconButton:
                 text: "Ouvrir"
+                icon: 'check-circle-outline'
+                font_size: 0.6*self.height
+                elevation_normal: 10
+                opposite_colors: True
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                 on_release: root.load(filechooser.path, filechooser.selection)

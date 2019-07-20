@@ -1,4 +1,7 @@
 #:kivy 1.10.1
+#:import MDTextFieldRect kivymd.textfields.MDTextFieldRect
+#:import MDRectangleFlatButton kivymd.button.MDRectangleFlatButton
+#:import MDRaisedButton kivymd.button.MDRaisedButton
 
 <EntryPopup@Popup>:
     title:""
@@ -13,12 +16,15 @@
         padding: 10
         spacing: 10
         
-        RelativeLayout:
-            id: relativeLayout
-            TextInput:
-                id: entry
-                font_size: .5*self.height
-                multiline: False
+        MDTextFieldRect:
+            id: entry
+            icon_type: 'without'
+            multiline: False
+            valign: 'center'
+            font_size:.6*self.height
+            hint_text: str(root.initValue)
+            width: root.width
+            
         BoxLayout:
             spacing: 10
             CustButton:
@@ -82,8 +88,11 @@
         
         BoxLayout:
             spacing: 10
-            CustButton:
+            MDRaisedButton:
                 text: "AC"
+                font_size:.7*self.height
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: 0.9, 0.9
                 on_press: entry.text = ""
             CustButton:
                 text: "0"
@@ -91,10 +100,14 @@
             CustButton:
                 text: "."
                 on_press: entry.text += self.text
-            CustButton:
+            MDRaisedButton:
                 text: "OK"
+                font_size:.7*self.height
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                size_hint: 0.9, 0.9
                 on_press: root.on_ok_active()
 
-
-<CustButton@Button>:
-    font_size:.3*self.height    
+<CustButton@MDRectangleFlatButton>:
+    font_size:.8*self.height
+    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+    size_hint: 0.9, 0.9

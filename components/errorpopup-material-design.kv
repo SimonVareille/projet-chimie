@@ -1,19 +1,21 @@
 #:kivy 1.10.1
+#:import MDRaisedButton kivymd.button.MDRaisedButton
 
 <ErrorPopup@Popup>:
     title:"Message d'erreur"
     textid:text
     auto_dismiss: True
-    size_hint: (.7,.3)
+    size_hint: .7, .3
     BoxLayout:
         TextInput:
             markup : True
             disabled : True
-            size_hint: (.8,1)
+            size_hint: .8, 1
             id : text
-        Button:
+        MDRaisedButton:
             text:"OK"
-            size_hint: (.2,1)
+            size_hint: .2, 1
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             on_release: root.dismiss()
 
 
