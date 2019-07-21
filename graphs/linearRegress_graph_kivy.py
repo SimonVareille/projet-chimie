@@ -33,25 +33,14 @@ class GraphLinearRegression(LinearRegression):
         self.S=S
         self.C=C
         
-        theme_cls = App.get_running_app().theme_cls
-        graph_theme={}
-        if App.get_running_app().theme == 'default':
-            graph_theme = {
-                    'label_options': {
-                        'color': [0, 0, 0, 1],  # color of tick labels and titles
-                        'bold': False},
-                    'background_color': [1, 1, 1, 1],  # back ground color of canvas
-                    'tick_color': [0, 0, 0, 1],  # ticks and grid
-                    'border_color': [0, 0, 0, 1]}  # border drawn around each graph
-        elif App.get_running_app().theme ==  'material-design':
-            graph_theme = {
-                    'label_options': {
-                        'color': get_color_from_hex(colors[theme_cls.primary_palette][theme_cls.primary_hue]),#[0, 0, 0, 1],  # color of tick labels and titles
-                        'bold': False},
-                    'background_color': get_color_from_hex(colors[theme_cls.theme_style]["Background"]),#[1, 1, 1, 1],  # back ground color of canvas
-                    'tick_color': get_color_from_hex(colors[theme_cls.accent_palette][theme_cls.accent_hue]),#[0, 0, 0, 1],  # ticks and grid
-                    'border_color': get_color_from_hex(colors[theme_cls.accent_palette][theme_cls.accent_hue])}#[0, 0, 0, 1]}  # border drawn around each graph
-            
+        graph_theme = {
+            'label_options': {
+                'color': [0, 0, 0, 1],  # color of tick labels and titles
+                'bold': False},
+            'background_color': [1, 1, 1, 1],  # back ground color of canvas
+            'tick_color': [0, 0, 0, 1],  # ticks and grid
+            'border_color': [0, 0, 0, 1]}  # border drawn around each graph
+
         self.graph = Graph(title = 'Courbes de Regression lineaire',
            xlabel='log Temps (s)',
            ylabel='log Intensité (A)',
@@ -108,6 +97,13 @@ class GraphLinearRegression(LinearRegression):
         self.graph.x_ticks_minor = 10
         self.graph.y_ticks_major = (self.graph.ymax-self.graph.ymin)/(height/50)
         self.graph.y_ticks_minor = 5
+    
+    def update_colors(self, *args):
+        theme_cls = App.get_running_app().theme_cls
+        self.graph.label_options['color'] = get_color_from_hex(colors[theme_cls.primary_palette][theme_cls.primary_hue])
+        self.graph.background_color = get_color_from_hex(colors[theme_cls.theme_style]["Background"])
+        self.graph.tick_color = get_color_from_hex(colors[theme_cls.accent_palette][theme_cls.accent_hue])
+        self.graph.border_color = get_color_from_hex(colors[theme_cls.accent_palette][theme_cls.accent_hue])
         
     def get_canvas(self):
         return self.graph

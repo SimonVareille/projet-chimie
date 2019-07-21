@@ -261,6 +261,14 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
             self.mainGraph.set_limit_interval()
             self.mainGraph.update()
             self.curveBoxLayout.add_widget(self.mainGraph.get_canvas())
+    
+    def on_theme_colors(self, *args):
+        """Appelé lors de la modification des couleurs du thème.
+        """
+        self.mainGraph.update_colors(*args)
+        if hasattr(self, 'graphLinearRegression') and \
+           self.graphLinearRegression is not None:
+            self.graphLinearRegression.update_colors(*args)
             
         
     def on_touch_down(self, touch):
@@ -429,13 +437,13 @@ class AppApp(App):
     
     def build(self):
         Window.bind(on_keyboard=self.key_input)
+        self.register_event_type('on_theme_colors')
         
         #Chargement des configuration
         config = self.config
         self.theme = config.get('Apparence', 'theme') 
         self.theme_cls.theme_style, self.theme_cls.primary_palette,\
             self.theme_cls.accent_palette = config.get('Apparence', 'theme-colors') .split(', ')
-        
         
         self.load_theme_kv("app-{}.kv")
         
@@ -452,6 +460,10 @@ class AppApp(App):
         #print(self.theme_cls.primary_color)
         
         self.root = MainWindow()
+        self.bind(on_theme_colors=self.root.on_theme_colors)
+        
+        if self.theme == 'material-design':
+            self.dispatch('on_theme_colors', config.get('Apparence', 'theme-colors'))
         
         return self.root
     
@@ -489,11 +501,12 @@ Chargement du fichier kv par défaut.""".format(path.format(self.theme), err))
         if section == "Apparence":
             if key == "theme":
                 pass
-#                Builder.unload_file("app-{}.kv".format(self.theme))
-#                try:
-#                    Builder.load_file("app-{}.kv".format(value))
-#                except FileNotFoundError:
-#                    Builder.load_file("app-default.kv")
+            if key == "theme-colors":
+                if self.theme == 'material-design':
+                    self.dispatch('on_theme_colors', value)
+    
+    def on_theme_colors(self, *args):
+        pass
 
     def close_settings(self, settings=None):
         """
@@ -510,25 +523,43 @@ Chargement du fichier kv par défaut.""".format(path.format(self.theme), err))
     def key_input(self, window, key, scancode, codepoint, modifier):
         #Gestion de la touche Esc/Echap et du bouton Back sur Android.
         if key == 27:
-            content = BoxLayout(orientation = 'vertical')
-            content.add_widget(Label(text = "Voulez vous vraiment fermer l'application ?"))
             
-            buttons = BoxLayout(orientation = 'horizontal')
-            button_close = Button(text='Fermer')
-            button_cancel = Button(text='Annuler')
-            buttons.add_widget(button_close)
-            buttons.add_widget(button_cancel)
-            
-            content.add_widget(buttons)
-            popup = Popup(title = "Fermer ?", content=content, auto_dismiss=True, size_hint=(0.3, 0.2))
-            
-            #lie l'evènement "on_press" du buton à la fonction dismiss() 
-            button_cancel.bind(on_press=popup.dismiss)
-            button_close.bind(on_press=popup.dismiss)
-            button_close.bind(on_press = self.close)
-            
-            #ouvre le popup
-            popup.open()
+            if self.theme == "default":
+                content = BoxLayout(orientation = 'vertical')
+                content.add_widget(Label(text = "Voulez vous vraiment fermer l'application ?"))
+                
+                buttons = BoxLayout(orientation = 'horizontal')
+                button_close = Button(text='Fermer')
+                button_cancel = Button(text='Annuler')
+                buttons.add_widget(button_close)
+                buttons.add_widget(button_cancel)
+                
+                content.add_widget(buttons)
+                popup = Popup(title = "Fermer ?", content=content, auto_dismiss=True, size_hint=(0.3, 0.2))
+                
+                #lie l'evènement "on_press" du buton à la fonction dismiss() 
+                button_cancel.bind(on_press=popup.dismiss)
+                button_close.bind(on_press=popup.dismiss)
+                button_close.bind(on_press = self.close)
+                
+                #ouvre le popup
+                popup.open()
+            elif self.theme == "material-design":
+                from kivymd.dialog import MDDialog
+                
+                def callback(self, result):
+                    if result == "Fermer":
+                        self.close()
+                    popup.dismiss()
+                
+                popup = MDDialog(
+                        title="Fermer ?", size_hint=(0.3, 0.2),
+                        text_button_ok="Fermer",
+                        text="Voulez vous vraiment fermer l'application ?",
+                        text_button_cancel="Annuler",
+                        events_callback=lambda *args: callback(self, args[0])
+                )
+                popup.open()
             return True  
         else:           #la touche ne fait maintenant plus rien
             return False

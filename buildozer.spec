@@ -38,7 +38,7 @@ version = 1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy, hostpython3crystax, python3crystax, 
-requirements = python3, kivy, backports.csv
+requirements = python3, kivy, backports.csv, git+https://github.com/HeaTTheatR/KivyMD.git
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
