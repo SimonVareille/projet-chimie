@@ -572,7 +572,7 @@ class Graph(Widget):
             plot._update(xlog, xmin, xmax, ylog, ymin, ymax, size)
 
     def _update_colors(self, *args):
-        self._mesh_ticks_color.rgba = tuple(self.tiZck_color)
+        self._mesh_ticks_color.rgba = tuple(self.tick_color)
         self._background_color.rgba = tuple(self.background_color)
         self._mesh_rect_color.rgba = tuple(self.border_color)
 
