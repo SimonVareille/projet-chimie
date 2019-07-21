@@ -600,6 +600,8 @@ class Graph(Widget):
                 self._title = title
 
             title.font_size = font_size
+            for k, v in self.label_options.items():
+                setattr(title, k, v)
         else:
             title = self._title
             if title:
@@ -648,6 +650,9 @@ class Graph(Widget):
                 font_size=font_size, angle=self.x_ticks_angle,
                 **self.label_options)
             self.add_widget(grids[k])
+        for i in range(grid_len):
+            for k, v in self.label_options.items():
+                setattr(grids[i], k, v)
         return xpoints_major, xpoints_minor
 
     def _redraw_y(self, *args):
@@ -689,6 +694,9 @@ class Graph(Widget):
         for k in range(grid_len, n_labels):
             grids[k] = Label(font_size=font_size, **self.label_options)
             self.add_widget(grids[k])
+        for i in range(grid_len):
+            for k, v in self.label_options.items():
+                setattr(grids[i], k, v)
         return ypoints_major, ypoints_minor
 
     def _redraw_size(self, *args):
