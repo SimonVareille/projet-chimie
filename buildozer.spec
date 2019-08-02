@@ -14,7 +14,7 @@ package.domain = com.inp.chimie.stps
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,csv
+source.include_exts = py,png,jpg,kv,atlas,crv,json
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
@@ -30,7 +30,7 @@ source.include_exts = py,png,jpg,kv,atlas,csv
 
 # (str) Application versioning (method 1)
 
-version = 1.0
+version = 1.1
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
@@ -38,11 +38,13 @@ version = 1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy, hostpython3crystax, python3crystax, 
-requirements = python3, kivy, backports.csv, git+https://github.com/HeaTTheatR/KivyMD.git
+requirements = python3, kivy, backports.csv, KivyMD
+#git+https://github.com/HeaTTheatR/KivyMD.git
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
 # requirements.source.kivy = ../../kivy
+#requirements.source.KivyMD = ~/Projets/python/KivyMD
 
 # (list) Garden requirements
 #garden_requirements = graph, matplotlib
