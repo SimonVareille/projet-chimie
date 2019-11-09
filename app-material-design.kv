@@ -10,6 +10,7 @@
 #:import MDSwitch kivymd.selectioncontrols.MDSwitch
 #:import MDSlider kivymd.slider.MDSlider
 #:import SpinBox components.spinbox.SpinBox
+#:import Animation kivy.animation.Animation
 
 <MainWindow>:
     curveBoxLayout: curveBoxLayout
@@ -128,12 +129,14 @@
                         icon: 'restore'
                         theme_text_color: 'Primary'
                         text_color: app.theme_cls.primary_color
-                        size_hint_x: 0.25 if self.visible else 0
+                        size_hint_x: 0
                         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                         visible: False
-                        opacity: 1 if self.visible else 0
-                        disabled: not self.visible
+                        opacity: 0
                         on_release: root.restoreMainGraphZoom()
+                        on_visible: 
+                            Animation(size_hint_x=0.25 if self.visible else 0, duration=0.5).start(self)
+                            Animation(opacity = 1 if self.visible else 0, duration=0.5).start(self)
                 BoxLayout:
                     size_hint: 1, 2
                     CustomMDLabel:

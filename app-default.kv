@@ -1,7 +1,7 @@
 #:kivy 1.10.1
 
-
 #:import SpinBox components.spinbox.SpinBox
+#:import Animation kivy.animation.Animation
 
 <MainWindow>:
     curveBoxLayout: curveBoxLayout
@@ -111,6 +111,7 @@
                 BoxLayout:
                     Label:
                         text:"Paramètres"
+                        markup: True
                         color: 0, 0, 0, 1
                     Button:
                         id: restoreMainGraphZoomButton
@@ -122,12 +123,14 @@
                         color: 0,0, 0, 1
                         markup: True
                         background_color: 0, 0, 0, 0
-                        size_hint_x: 0.25 if self.visible else 0
+                        size_hint_x: 0
                         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                         visible: False
-                        opacity: 1 if self.visible else 0
-                        disabled: not self.visible
+                        opacity: 0
                         on_release: root.restoreMainGraphZoom()
+                        on_visible:
+                            Animation(size_hint_x=0.25 if self.visible else 0, duration=0.5).start(self)
+                            Animation(opacity = 1 if self.visible else 0, duration=0.5).start(self)
                 BoxLayout:
                     size_hint: 1, 2
                     Label:
