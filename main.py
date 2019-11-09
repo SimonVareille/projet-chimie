@@ -432,7 +432,7 @@ class AppApp(App):
     title = "ReDoxLab"
     use_kivy_settings = False
     
-    theme = 'default'
+    theme = 'material-design'
     
     theme_cls = ThemeManager()
     theme_cls.primary_palette = "BlueGray"
@@ -447,7 +447,7 @@ class AppApp(App):
         config = self.config
         self.theme = config.get('Apparence', 'theme') 
         self.theme_cls.theme_style, self.theme_cls.primary_palette,\
-            self.theme_cls.accent_palette = config.get('Apparence', 'theme-colors') .split(', ')
+            self.theme_cls.accent_palette = config.get('Apparence', 'theme-colors').split(', ')
         
         self.load_theme_kv("app-{}.kv")
         
