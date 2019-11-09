@@ -12,6 +12,7 @@
     buttonC: buttonC
     sliderDth:sliderDth
     smallCurveBoxLayout:smallCurveBoxLayout
+    restoreMainGraphZoomButton: restoreMainGraphZoomButton
 
     BoxLayout:
         size: root.width, root.height
@@ -107,9 +108,26 @@
             
             BoxLayout:
                 orientation:"vertical"
-                Label:
-                    text:"Paramètres"
-                    color: 0, 0, 0, 1
+                BoxLayout:
+                    Label:
+                        text:"Paramètres"
+                        color: 0, 0, 0, 1
+                    Button:
+                        id: restoreMainGraphZoomButton
+                        font_name: 'materialdesignicons-webfont'
+                        font_size: 48
+                        text: u'\uf99a'
+                        halign: 'center'
+                        valign: 'center'
+                        color: 0,0, 0, 1
+                        markup: True
+                        background_color: 0, 0, 0, 0
+                        size_hint_x: 0.25 if self.visible else 0
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        visible: False
+                        opacity: 1 if self.visible else 0
+                        disabled: not self.visible
+                        on_release: root.restoreMainGraphZoom()
                 BoxLayout:
                     size_hint: 1, 2
                     Label:

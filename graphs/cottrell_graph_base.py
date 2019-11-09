@@ -2,7 +2,7 @@
 
 class CottrellGraphBase:
     """Classe mère permettant d'avoir une base commune pour
-    la création du graphique principal, quelque soit l'interface graphique 
+    la création du graphique principal, quelle que soit l'interface graphique 
     utilisée.
     """
     def __init__(self, t=[], I=[]):
@@ -21,10 +21,10 @@ class CottrellGraphBase:
         self._display_theoric=True
         self._display_experimental=False
 
-        self.tleft=0
-        self.tright = max(t) if t else 5
-        self.Ibottom=0
-        self.Itop = max(I) if I else 2
+        self.tleft_stored = self.tleft = 0
+        self.tright_stored = self.tright = max(t) if t else 5
+        self.Ibottom_stored = self.Ibottom = 0
+        self.Itop_stored = self.Itop = max(I) if I else 2
         
     def set_n (self, n):
         self.n=n
@@ -61,7 +61,7 @@ class CottrellGraphBase:
         return self.t, self.I
         
     def display_experimental(self, displayExperimental = True):
-        """Affiche la courbe expérimentale si `displayTheoric == True`.
+        """Affiche la courbe expérimentale si `displayExperimental == True`.
         """
         self._display_experimental=displayExperimental
         
@@ -72,7 +72,8 @@ class CottrellGraphBase:
         self.expt=expt
         self.expI=expI
         
-    def set_limit_interval(self, tleft=None, tright=None, Ibottom=None, Itop=None):
+    def set_limit_interval(self, tleft=None, tright=None, Ibottom=None, \
+                           Itop=None, store=True):
         """Sélectionne la zone que l'on veut afficher. Par défaut l'ensemble 
         des points est affiché.
         
@@ -86,6 +87,9 @@ class CottrellGraphBase:
             Valeur minimale de l'ordonnée.
         Itop : float
             Valeur maximale de l'ordonnée.
+        store : bool
+            Flag pour sauvegarder les nouvelles limites afin de les restaurer 
+            plus tard.
         
         `Ǹone` initialise le paramètre automatiquement pour contenir l'ensemble
         des données.
@@ -109,3 +113,9 @@ class CottrellGraphBase:
         self.tright=tright
         self.Ibottom=Ibottom
         self.Itop=Itop
+        
+        if store:
+            self.tleft_stored = self.tleft
+            self.tright_stored = self.tright
+            self.Ibottom_stored = self.Ibottom
+            self.Itop_stored = self.Itop

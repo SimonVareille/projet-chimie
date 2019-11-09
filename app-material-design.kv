@@ -20,6 +20,7 @@
     buttonC: buttonC
     sliderDth: sliderDth
     smallCurveBoxLayout: smallCurveBoxLayout
+    restoreMainGraphZoomButton: restoreMainGraphZoomButton
 
     BoxLayout:
         size: root.width, root.height
@@ -112,15 +113,27 @@
             
             BoxLayout:
                 orientation:"vertical"
-                MDLabel:
-                    text:"Paramètres"
-                    font_style: 'Overline'
-                    font_size: 18
-                    theme_text_color: 'Primary'
-                    halign: 'center'
-                    valign: 'center'
-                    #size_hint_y: None
-                    #height: self.texture_size[1]
+                BoxLayout:
+                    MDLabel:
+                        text:"Paramètres"
+                        font_style: 'Overline'
+                        font_size: 18
+                        theme_text_color: 'Primary'
+                        halign: 'center'
+                        valign: 'center'
+                        #size_hint_x: 0.9
+                        #height: self.texture_size[1]
+                    MDIconButton:
+                        id: restoreMainGraphZoomButton
+                        icon: 'restore'
+                        theme_text_color: 'Primary'
+                        text_color: app.theme_cls.primary_color
+                        size_hint_x: 0.25 if self.visible else 0
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        visible: False
+                        opacity: 1 if self.visible else 0
+                        disabled: not self.visible
+                        on_release: root.restoreMainGraphZoom()
                 BoxLayout:
                     size_hint: 1, 2
                     CustomMDLabel:

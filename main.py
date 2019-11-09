@@ -281,6 +281,7 @@ Veuillez les enlever avec le bouton[/color] [color=000000]«Sélectionner l'inte
                 elif touch.button == 'scrollup':
                     #Zoom in
                     self.mainGraph.zoom(1.05, 1.05, *self.mainGraph.to_widget(*touch.pos, relative=True))
+                self.restoreMainGraphZoomButton.visible = True
                 return True
         return super(MainWindow, self).on_touch_down(touch)            
         
@@ -338,6 +339,10 @@ La valeur de {0} utilisée pour le graphique est inchangée."
 
     def bind_update_values(self, spinbox):
         spinbox.value_id.bind(text = self.update_values)
+    
+    def restoreMainGraphZoom(self):
+        self.restoreMainGraphZoomButton.visible = False
+        self.mainGraph.restoreZoom()
 
     def show_openDialog(self):
         """Affiche la boite de dialogue d'ouverture de fichier.

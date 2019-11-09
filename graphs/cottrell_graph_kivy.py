@@ -181,5 +181,13 @@ class CottrellGraph(CottrellGraphBase, EventDispatcher):
         Ibottom = dcy - yratio*yrange
         Itop = Ibottom + yrange
         
-        self.set_limit_interval(tleft, tright, Ibottom, Itop)
+        self.set_limit_interval(tleft, tright, Ibottom, Itop, store=False)
+        self.update()
+    
+    def restoreZoom(self):
+        """
+        Restore l'état de zoom du graphique.
+        """
+        self.set_limit_interval(self.tleft_stored, self.tright_stored, \
+                                self.Ibottom_stored, self.Itop_stored)
         self.update()
