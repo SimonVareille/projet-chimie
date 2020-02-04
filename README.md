@@ -9,13 +9,13 @@ Afin de pouvoir exécuter ce projet, il faut avoir installé les modules suivant
     `pip install backports.csv` or  
     `conda install -c conda-forge backports.csv`
 - `kivy` :  
-    [](https://kivy.org/#download)
+    [https://kivy.org/#download](https://kivy.org/#download)
 - `kivy-garden` :  
-    [](https://kivy.org/doc/stable/api-kivy.garden.html)
+    [https://kivy.org/doc/stable/api-kivy.garden.html](https://kivy.org/doc/stable/api-kivy.garden.html)
 - `kivy.garden.graph` :  
-    [](https://kivy.org/doc/stable/api-kivy.garden.html)
+    [https://kivy.org/doc/stable/api-kivy.garden.html](https://kivy.org/doc/stable/api-kivy.garden.html)
 - `KivyMD` :  
-	[](https://github.com/HeaTTheatR/KivyMD)
+	[https://github.com/HeaTTheatR/KivyMD](https://github.com/HeaTTheatR/KivyMD)
 
 ------ 
 ## Compilation pour Android
